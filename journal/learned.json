@@ -1,0 +1,106 @@
+{
+ "updated": "2026-10-20",
+ "params": {
+  "ELO_BLEND": 0.25,
+  "ZC_MARKET_SHARE": 0.9,
+  "MIN_EDGE": 0.05,
+  "UPSET_FAV_PROB": 0.55,
+  "UPSET_MIN_GAP": 0.03,
+  "LONG_MIN_EDGE": 0.05,
+  "ZC_DOUBLE_MAX_P": 0.6
+ },
+ "log": [
+  {
+   "date": "2026-10-20",
+   "train_rows": 1306,
+   "valid_rows": 1059,
+   "cl_rows": 0,
+   "checks": [
+    {
+     "param": "ELO_BLEND",
+     "objective": "logloss",
+     "current": 0.25,
+     "candidate": 0.3,
+     "train_current": -0.9764383812381271,
+     "train_candidate": -0.9763926971276112,
+     "valid_current": -0.989376232328153,
+     "valid_candidate": -0.9892537587693437,
+     "n_valid": 1059,
+     "adopted": false
+    },
+    {
+     "param": "ZC_MARKET_SHARE",
+     "objective": "logloss",
+     "current": 0.0,
+     "candidate": 0.9,
+     "train_current": -0.9764383812381271,
+     "train_candidate": -0.9593503890389824,
+     "valid_current": -0.989376232328153,
+     "valid_candidate": -0.9771447229568971,
+     "n_valid": 1059,
+     "adopted": true
+    },
+    {
+     "param": "MIN_EDGE",
+     "objective": "roi",
+     "current": 0.05,
+     "candidate": 0.03,
+     "train_current": -0.09432409012131712,
+     "train_candidate": -0.05930434782608701,
+     "valid_current": -0.014113207547169805,
+     "valid_candidate": -0.025890000000000066,
+     "n_valid": 1000,
+     "adopted": false
+    },
+    {
+     "param": "UPSET_FAV_PROB",
+     "objective": "roi",
+     "current": 0.6,
+     "candidate": 0.55,
+     "train_current": -0.2831693989071038,
+     "train_candidate": -0.21270992366412214,
+     "valid_current": -0.06106951871657755,
+     "valid_candidate": -0.021089494163424125,
+     "n_valid": 257,
+     "adopted": true
+    },
+    {
+     "param": "UPSET_MIN_GAP",
+     "objective": "roi",
+     "current": 0.03,
+     "candidate": 0.02,
+     "train_current": -0.21270992366412214,
+     "train_candidate": -0.16385416666666663,
+     "valid_current": -0.021089494163424125,
+     "valid_candidate": -0.08944078947368418,
+     "n_valid": 304,
+     "adopted": false
+    },
+    {
+     "param": "LONG_MIN_EDGE",
+     "objective": "roi",
+     "current": 0.05,
+     "candidate": 0.03,
+     "train_current": -0.19936475409836077,
+     "train_candidate": -0.1818294849023092,
+     "valid_current": -0.05134210526315791,
+     "valid_candidate": -0.03644943820224719,
+     "n_valid": 445,
+     "adopted": false
+    },
+    {
+     "param": "ZC_DOUBLE_MAX_P",
+     "objective": "hits",
+     "current": 0.6,
+     "candidate": 0.5,
+     "train_current": 7.533333333333333,
+     "train_candidate": 7.533333333333333,
+     "valid_current": 7.660714285714286,
+     "valid_candidate": 7.660714285714286,
+     "n_valid": 280,
+     "adopted": false
+    }
+   ]
+  }
+ ]
+}

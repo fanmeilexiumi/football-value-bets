@@ -1,0 +1,2393 @@
+[
+ {
+  "id": "CL|2026-10-21|Sabah FK|Dortmund",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-20",
+  "home": "Sabah FK",
+  "away": "Dortmund",
+  "bj_date": "2026-10-21",
+  "bj_time": "00:45",
+  "day": "2026-10-20",
+  "model": null,
+  "market": {
+   "H": 0.0895,
+   "D": 0.1495,
+   "A": 0.761,
+   "O25": 0.6605,
+   "U25": 0.3395
+  },
+  "call": "A",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-21|Fenerbahce|Slavia Praha",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-20",
+  "home": "Fenerbahce",
+  "away": "Slavia Praha",
+  "bj_date": "2026-10-21",
+  "bj_time": "00:45",
+  "day": "2026-10-20",
+  "model": null,
+  "market": {
+   "H": 0.6285,
+   "D": 0.2046,
+   "A": 0.1669,
+   "O25": 0.6279,
+   "U25": 0.3721
+  },
+  "call": "H",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-21|Man City|AEK Athens",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-20",
+  "home": "Man City",
+  "away": "AEK Athens",
+  "bj_date": "2026-10-21",
+  "bj_time": "03:00",
+  "day": "2026-10-20",
+  "model": null,
+  "market": {
+   "H": 0.903,
+   "D": 0.0748,
+   "A": 0.0223,
+   "O25": 0.7727,
+   "U25": 0.2273
+  },
+  "call": "H",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-21|Roma|Slovan Bratislava",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-20",
+  "home": "Roma",
+  "away": "Slovan Bratislava",
+  "bj_date": "2026-10-21",
+  "bj_time": "03:00",
+  "day": "2026-10-20",
+  "model": {
+   "H": 0.912,
+   "D": 0.057,
+   "A": 0.031,
+   "O25": 0.8076
+  },
+  "market": {
+   "H": 0.8809,
+   "D": 0.0883,
+   "A": 0.0308,
+   "O25": 0.7833,
+   "U25": 0.2167
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "H",
+    "odds": 1.16,
+    "edge": 0.0579,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-21|Stuttgart|Ath Madrid",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-20",
+  "home": "Stuttgart",
+  "away": "Ath Madrid",
+  "bj_date": "2026-10-21",
+  "bj_time": "03:00",
+  "day": "2026-10-20",
+  "model": {
+   "H": 0.293,
+   "D": 0.229,
+   "A": 0.478,
+   "O25": 0.5773
+  },
+  "market": {
+   "H": 0.2872,
+   "D": 0.2425,
+   "A": 0.4703,
+   "O25": 0.6702,
+   "U25": 0.3298
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "U25",
+    "odds": 2.8,
+    "edge": 0.1836,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-21|Paris SG|Barcelona",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-20",
+  "home": "Paris SG",
+  "away": "Barcelona",
+  "bj_date": "2026-10-21",
+  "bj_time": "03:00",
+  "day": "2026-10-20",
+  "model": {
+   "H": 0.6411,
+   "D": 0.1867,
+   "A": 0.1722,
+   "O25": 0.6137
+  },
+  "market": {
+   "H": 0.3987,
+   "D": 0.2047,
+   "A": 0.3967,
+   "O25": 0.821,
+   "U25": 0.179
+  },
+  "call": "H",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-21|Napoli|Bodo/Glimt",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-20",
+  "home": "Napoli",
+  "away": "Bodo/Glimt",
+  "bj_date": "2026-10-21",
+  "bj_time": "03:00",
+  "day": "2026-10-20",
+  "model": {
+   "H": 0.4455,
+   "D": 0.2332,
+   "A": 0.3213,
+   "O25": 0.573
+  },
+  "market": {
+   "H": 0.5601,
+   "D": 0.2294,
+   "A": 0.2105,
+   "O25": 0.6054,
+   "U25": 0.3946
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "U25",
+    "odds": 2.47,
+    "edge": 0.0547,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-21|Liverpool|Villarreal",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-20",
+  "home": "Liverpool",
+  "away": "Villarreal",
+  "bj_date": "2026-10-21",
+  "bj_time": "03:00",
+  "day": "2026-10-20",
+  "model": {
+   "H": 0.6608,
+   "D": 0.1795,
+   "A": 0.1597,
+   "O25": 0.6209
+  },
+  "market": {
+   "H": 0.6595,
+   "D": 0.1939,
+   "A": 0.1467,
+   "O25": 0.6691,
+   "U25": 0.3309
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "U25",
+    "odds": 2.79,
+    "edge": 0.0578,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-21|Porto|PSV",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-20",
+  "home": "Porto",
+  "away": "PSV",
+  "bj_date": "2026-10-21",
+  "bj_time": "03:00",
+  "day": "2026-10-20",
+  "model": {
+   "H": 0.5004,
+   "D": 0.2251,
+   "A": 0.2746,
+   "O25": 0.5794
+  },
+  "market": {
+   "H": 0.6361,
+   "D": 0.1986,
+   "A": 0.1653,
+   "O25": 0.6289,
+   "U25": 0.3711
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.8,
+    "edge": 0.0803,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 2.5,
+    "edge": 0.0515,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 4.8,
+    "edge": 0.0803,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-22|Como|Man United",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-21",
+  "home": "Como",
+  "away": "Man United",
+  "bj_date": "2026-10-22",
+  "bj_time": "00:45",
+  "day": "2026-10-21",
+  "model": {
+   "H": 0.4212,
+   "D": 0.2353,
+   "A": 0.3435,
+   "O25": 0.5714
+  },
+  "market": {
+   "H": 0.4269,
+   "D": 0.2495,
+   "A": 0.3236,
+   "O25": 0.5955,
+   "U25": 0.4045
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "A",
+    "odds": 3.1,
+    "edge": 0.0648,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 3.1,
+    "edge": 0.0648,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-22|Lille|Galatasaray",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-21",
+  "home": "Lille",
+  "away": "Galatasaray",
+  "bj_date": "2026-10-22",
+  "bj_time": "00:45",
+  "day": "2026-10-21",
+  "model": {
+   "H": 0.6846,
+   "D": 0.1704,
+   "A": 0.145,
+   "O25": 0.6304
+  },
+  "market": {
+   "H": 0.4493,
+   "D": 0.253,
+   "A": 0.2977,
+   "O25": 0.5917,
+   "U25": 0.4083
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "O25",
+    "odds": 1.67,
+    "edge": 0.0528,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "SP1|2026-10-22|Levante|Ath Bilbao",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-10-21",
+  "home": "Levante",
+  "away": "Ath Bilbao",
+  "bj_date": "2026-10-22",
+  "bj_time": "02:00",
+  "day": "2026-10-21",
+  "model": {
+   "H": 0.3724,
+   "D": 0.2747,
+   "A": 0.3529,
+   "O25": 0.5026
+  },
+  "market": {
+   "H": 0.2622,
+   "D": 0.2858,
+   "A": 0.4521,
+   "O25": 0.4815,
+   "U25": 0.5185
+  },
+  "call": "A",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-22|Bayern Munich|Arsenal",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-21",
+  "home": "Bayern Munich",
+  "away": "Arsenal",
+  "bj_date": "2026-10-22",
+  "bj_time": "03:00",
+  "day": "2026-10-21",
+  "model": {
+   "H": 0.5101,
+   "D": 0.2232,
+   "A": 0.2667,
+   "O25": 0.5809
+  },
+  "market": {
+   "H": 0.476,
+   "D": 0.24,
+   "A": 0.2841,
+   "O25": 0.602,
+   "U25": 0.398
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "H",
+    "odds": 2.14,
+    "edge": 0.0917,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-22|Aston Villa|Viking FK",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-21",
+  "home": "Aston Villa",
+  "away": "Viking FK",
+  "bj_date": "2026-10-22",
+  "bj_time": "03:00",
+  "day": "2026-10-21",
+  "model": null,
+  "market": {
+   "H": 0.806,
+   "D": 0.1294,
+   "A": 0.0646,
+   "O25": 0.7646,
+   "U25": 0.2354
+  },
+  "call": "H",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-22|Club Brugge|Lens",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-21",
+  "home": "Club Brugge",
+  "away": "Lens",
+  "bj_date": "2026-10-22",
+  "bj_time": "03:00",
+  "day": "2026-10-21",
+  "model": {
+   "H": 0.4632,
+   "D": 0.231,
+   "A": 0.3057,
+   "O25": 0.5747
+  },
+  "market": {
+   "H": 0.4791,
+   "D": 0.2321,
+   "A": 0.2889,
+   "O25": 0.6577,
+   "U25": 0.3423
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "U25",
+    "odds": 2.75,
+    "edge": 0.1697,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-22|Betis|Feyenoord",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-21",
+  "home": "Betis",
+  "away": "Feyenoord",
+  "bj_date": "2026-10-22",
+  "bj_time": "03:00",
+  "day": "2026-10-21",
+  "model": {
+   "H": 0.524,
+   "D": 0.2203,
+   "A": 0.2557,
+   "O25": 0.5833
+  },
+  "market": {
+   "H": 0.6307,
+   "D": 0.1913,
+   "A": 0.1779,
+   "O25": 0.7134,
+   "U25": 0.2866
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.92,
+    "edge": 0.0838,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 4.92,
+    "edge": 0.0838,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-22|Inter|Shakhtar",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-21",
+  "home": "Inter",
+  "away": "Shakhtar",
+  "bj_date": "2026-10-22",
+  "bj_time": "03:00",
+  "day": "2026-10-21",
+  "model": {
+   "H": 0.863,
+   "D": 0.0854,
+   "A": 0.0516,
+   "O25": 0.7489
+  },
+  "market": {
+   "H": 0.8303,
+   "D": 0.1124,
+   "A": 0.0573,
+   "O25": 0.774,
+   "U25": 0.226
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "H",
+    "odds": 1.24,
+    "edge": 0.0702,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-22|Sporting CP|LASK",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-21",
+  "home": "Sporting CP",
+  "away": "LASK",
+  "bj_date": "2026-10-22",
+  "bj_time": "03:00",
+  "day": "2026-10-21",
+  "model": null,
+  "market": {
+   "H": 0.8198,
+   "D": 0.1149,
+   "A": 0.0652,
+   "O25": 0.7518,
+   "U25": 0.2482
+  },
+  "call": "H",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "CL|2026-10-22|Real Madrid|RB Leipzig",
+  "league": "CL",
+  "league_name": "欧冠",
+  "date": "2026-10-21",
+  "home": "Real Madrid",
+  "away": "RB Leipzig",
+  "bj_date": "2026-10-22",
+  "bj_time": "03:00",
+  "day": "2026-10-21",
+  "model": {
+   "H": 0.717,
+   "D": 0.1571,
+   "A": 0.1258,
+   "O25": 0.6452
+  },
+  "market": {
+   "H": 0.7977,
+   "D": 0.1212,
+   "A": 0.081,
+   "O25": 0.8117,
+   "U25": 0.1883
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 7.75,
+    "edge": 0.2177,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-24|Torino|Monza",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-23",
+  "home": "Torino",
+  "away": "Monza",
+  "bj_date": "2026-10-24",
+  "bj_time": "02:45",
+  "day": "2026-10-23",
+  "model": {
+   "H": 0.5675,
+   "D": 0.2353,
+   "A": 0.1972,
+   "O25": 0.5402
+  },
+  "market": {
+   "H": 0.4575,
+   "D": 0.2735,
+   "A": 0.269,
+   "O25": 0.4656,
+   "U25": 0.5344
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "H",
+    "odds": 2.19,
+    "edge": 0.2429,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "O25",
+    "odds": 2.11,
+    "edge": 0.1399,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "E0|2026-10-24|Ipswich|Nott'm Forest",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-10-23",
+  "home": "Ipswich",
+  "away": "Nott'm Forest",
+  "bj_date": "2026-10-24",
+  "bj_time": "03:00",
+  "day": "2026-10-23",
+  "model": {
+   "H": 0.2358,
+   "D": 0.2641,
+   "A": 0.5001,
+   "O25": 0.5674
+  },
+  "market": {
+   "H": 0.3092,
+   "D": 0.2679,
+   "A": 0.4229,
+   "O25": 0.5479,
+   "U25": 0.4521
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "A",
+    "odds": 2.39,
+    "edge": 0.1952,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "SP1|2026-10-24|Alaves|Malaga",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-10-23",
+  "home": "Alaves",
+  "away": "Malaga",
+  "bj_date": "2026-10-24",
+  "bj_time": "03:00",
+  "day": "2026-10-23",
+  "model": null,
+  "market": {
+   "H": 0.5515,
+   "D": 0.2575,
+   "A": 0.191,
+   "O25": 0.4656,
+   "U25": 0.5344
+  },
+  "call": "H",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "E0|2026-10-24|Aston Villa|Man City",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-10-24",
+  "home": "Aston Villa",
+  "away": "Man City",
+  "bj_date": "2026-10-24",
+  "bj_time": "19:30",
+  "day": "2026-10-24",
+  "model": {
+   "H": 0.2056,
+   "D": 0.251,
+   "A": 0.5434,
+   "O25": 0.5764
+  },
+  "market": {
+   "H": 0.2055,
+   "D": 0.2197,
+   "A": 0.5748,
+   "O25": 0.6323,
+   "U25": 0.3677
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.4,
+    "edge": 0.1045,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 2.52,
+    "edge": 0.0674,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 4.4,
+    "edge": 0.1045,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "SP1|2026-10-24|Vallecano|Elche",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-10-24",
+  "home": "Vallecano",
+  "away": "Elche",
+  "bj_date": "2026-10-24",
+  "bj_time": "20:00",
+  "day": "2026-10-24",
+  "model": {
+   "H": 0.4775,
+   "D": 0.2678,
+   "A": 0.2547,
+   "O25": 0.4655
+  },
+  "market": {
+   "H": 0.5564,
+   "D": 0.2426,
+   "A": 0.201,
+   "O25": 0.5275,
+   "U25": 0.4725
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 3.94,
+    "edge": 0.055,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 4.78,
+    "edge": 0.2176,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 2.07,
+    "edge": 0.1064,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 3.94,
+    "edge": 0.055,
+    "tags": [
+     "高赔"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 4.78,
+    "edge": 0.2176,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-24|Cagliari|Bologna",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-24",
+  "home": "Cagliari",
+  "away": "Bologna",
+  "bj_date": "2026-10-24",
+  "bj_time": "21:00",
+  "day": "2026-10-24",
+  "model": {
+   "H": 0.3186,
+   "D": 0.2891,
+   "A": 0.3923,
+   "O25": 0.4257
+  },
+  "market": {
+   "H": 0.3001,
+   "D": 0.3066,
+   "A": 0.3933,
+   "O25": 0.4286,
+   "U25": 0.5714
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "H",
+    "odds": 3.35,
+    "edge": 0.0672,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "H",
+    "odds": 3.35,
+    "edge": 0.0672,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-24|Como|Sassuolo",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-24",
+  "home": "Como",
+  "away": "Sassuolo",
+  "bj_date": "2026-10-24",
+  "bj_time": "21:00",
+  "day": "2026-10-24",
+  "model": {
+   "H": 0.622,
+   "D": 0.2191,
+   "A": 0.1588,
+   "O25": 0.5485
+  },
+  "market": {
+   "H": 0.6771,
+   "D": 0.1903,
+   "A": 0.1326,
+   "O25": 0.6649,
+   "U25": 0.3351
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 5.0,
+    "edge": 0.0957,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 2.76,
+    "edge": 0.2461,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 5.0,
+    "edge": 0.0957,
+    "tags": [
+     "高赔"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 7.1,
+    "edge": 0.1277,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "E0|2026-10-24|Arsenal|Everton",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-10-24",
+  "home": "Arsenal",
+  "away": "Everton",
+  "bj_date": "2026-10-24",
+  "bj_time": "22:00",
+  "day": "2026-10-24",
+  "model": {
+   "H": 0.6487,
+   "D": 0.2383,
+   "A": 0.1131,
+   "O25": 0.3996
+  },
+  "market": {
+   "H": 0.7078,
+   "D": 0.1946,
+   "A": 0.0975,
+   "O25": 0.533,
+   "U25": 0.467
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 5.0,
+    "edge": 0.1914,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 5.0,
+    "edge": 0.1914,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "E0|2026-10-24|Coventry|Fulham",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-10-24",
+  "home": "Coventry",
+  "away": "Fulham",
+  "bj_date": "2026-10-24",
+  "bj_time": "22:00",
+  "day": "2026-10-24",
+  "model": null,
+  "market": {
+   "H": 0.3229,
+   "D": 0.2667,
+   "A": 0.4104,
+   "O25": 0.5497,
+   "U25": 0.4503
+  },
+  "call": "A",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "SP1|2026-10-24|Real Racing Club de Santander|Espanol",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-10-24",
+  "home": "Real Racing Club de Santander",
+  "away": "Espanol",
+  "bj_date": "2026-10-24",
+  "bj_time": "22:15",
+  "day": "2026-10-24",
+  "model": null,
+  "market": {
+   "H": 0.3963,
+   "D": 0.2579,
+   "A": 0.3458,
+   "O25": 0.5695,
+   "U25": 0.4305
+  },
+  "call": "H",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-25|Napoli|Roma",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-24",
+  "home": "Napoli",
+  "away": "Roma",
+  "bj_date": "2026-10-25",
+  "bj_time": "00:00",
+  "day": "2026-10-24",
+  "model": {
+   "H": 0.3389,
+   "D": 0.3006,
+   "A": 0.3605,
+   "O25": 0.3771
+  },
+  "market": {
+   "H": 0.3375,
+   "D": 0.2739,
+   "A": 0.3885,
+   "O25": 0.5121,
+   "U25": 0.4879
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 3.54,
+    "edge": 0.0643,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 2.0,
+    "edge": 0.2458,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 3.54,
+    "edge": 0.0643,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "E0|2026-10-25|Chelsea|Tottenham",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-10-24",
+  "home": "Chelsea",
+  "away": "Tottenham",
+  "bj_date": "2026-10-25",
+  "bj_time": "00:30",
+  "day": "2026-10-24",
+  "model": {
+   "H": 0.5746,
+   "D": 0.2309,
+   "A": 0.1946,
+   "O25": 0.6538
+  },
+  "market": {
+   "H": 0.5758,
+   "D": 0.2175,
+   "A": 0.2066,
+   "O25": 0.6258,
+   "U25": 0.3742
+  },
+  "call": "H",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "SP1|2026-10-25|Valencia|Villarreal",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-10-24",
+  "home": "Valencia",
+  "away": "Villarreal",
+  "bj_date": "2026-10-25",
+  "bj_time": "00:30",
+  "day": "2026-10-24",
+  "model": {
+   "H": 0.2937,
+   "D": 0.2595,
+   "A": 0.4468,
+   "O25": 0.5641
+  },
+  "market": {
+   "H": 0.2937,
+   "D": 0.2559,
+   "A": 0.4504,
+   "O25": 0.5576,
+   "U25": 0.4424
+  },
+  "call": "A",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-25|Lazio|Parma",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-24",
+  "home": "Lazio",
+  "away": "Parma",
+  "bj_date": "2026-10-25",
+  "bj_time": "02:45",
+  "day": "2026-10-24",
+  "model": {
+   "H": 0.5608,
+   "D": 0.268,
+   "A": 0.1711,
+   "O25": 0.3515
+  },
+  "market": {
+   "H": 0.6756,
+   "D": 0.2068,
+   "A": 0.1176,
+   "O25": 0.5061,
+   "U25": 0.4939
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.6,
+    "edge": 0.233,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 4.6,
+    "edge": 0.233,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 7.8,
+    "edge": 0.3348,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "SP1|2026-10-25|Ath Madrid|Deportivo La Coruña",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-10-24",
+  "home": "Ath Madrid",
+  "away": "Deportivo La Coruña",
+  "bj_date": "2026-10-25",
+  "bj_time": "03:00",
+  "day": "2026-10-24",
+  "model": null,
+  "market": {
+   "H": 0.7872,
+   "D": 0.1413,
+   "A": 0.0714,
+   "O25": 0.6436,
+   "U25": 0.3564
+  },
+  "call": "H",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-25|Inter|Fiorentina",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-25",
+  "home": "Inter",
+  "away": "Fiorentina",
+  "bj_date": "2026-10-25",
+  "bj_time": "19:30",
+  "day": "2026-10-25",
+  "model": {
+   "H": 0.748,
+   "D": 0.1539,
+   "A": 0.0981,
+   "O25": 0.6877
+  },
+  "market": {
+   "H": 0.7246,
+   "D": 0.1641,
+   "A": 0.1113,
+   "O25": 0.6865,
+   "U25": 0.3135
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "H",
+    "odds": 1.41,
+    "edge": 0.0547,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "SP1|2026-10-25|Ath Bilbao|Getafe",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-10-25",
+  "home": "Ath Bilbao",
+  "away": "Getafe",
+  "bj_date": "2026-10-25",
+  "bj_time": "21:00",
+  "day": "2026-10-25",
+  "model": {
+   "H": 0.4776,
+   "D": 0.3172,
+   "A": 0.2052,
+   "O25": 0.247
+  },
+  "market": {
+   "H": 0.5966,
+   "D": 0.2428,
+   "A": 0.1606,
+   "O25": 0.4174,
+   "U25": 0.5826
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "A",
+    "odds": 5.9,
+    "edge": 0.2109,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 4.11,
+    "edge": 0.3035,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 5.9,
+    "edge": 0.2109,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "E0|2026-10-25|Man United|Bournemouth",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-10-25",
+  "home": "Man United",
+  "away": "Bournemouth",
+  "bj_date": "2026-10-25",
+  "bj_time": "22:00",
+  "day": "2026-10-25",
+  "model": {
+   "H": 0.4615,
+   "D": 0.2675,
+   "A": 0.271,
+   "O25": 0.5815
+  },
+  "market": {
+   "H": 0.5225,
+   "D": 0.2378,
+   "A": 0.2397,
+   "O25": 0.612,
+   "U25": 0.388
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.05,
+    "edge": 0.0832,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 4.07,
+    "edge": 0.103,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 4.05,
+    "edge": 0.0832,
+    "tags": [
+     "高赔"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 4.07,
+    "edge": 0.103,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "E0|2026-10-25|Hull|Brentford",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-10-25",
+  "home": "Hull",
+  "away": "Brentford",
+  "bj_date": "2026-10-25",
+  "bj_time": "22:00",
+  "day": "2026-10-25",
+  "model": null,
+  "market": {
+   "H": 0.2068,
+   "D": 0.2355,
+   "A": 0.5576,
+   "O25": 0.565,
+   "U25": 0.435
+  },
+  "call": "A",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "E0|2026-10-25|Liverpool|Brighton",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-10-25",
+  "home": "Liverpool",
+  "away": "Brighton",
+  "bj_date": "2026-10-25",
+  "bj_time": "22:00",
+  "day": "2026-10-25",
+  "model": {
+   "H": 0.4563,
+   "D": 0.2668,
+   "A": 0.277,
+   "O25": 0.5969
+  },
+  "market": {
+   "H": 0.4566,
+   "D": 0.2421,
+   "A": 0.3013,
+   "O25": 0.6104,
+   "U25": 0.3896
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 3.98,
+    "edge": 0.0617,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 3.98,
+    "edge": 0.0617,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "E0|2026-10-25|Crystal Palace|Newcastle",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-10-25",
+  "home": "Crystal Palace",
+  "away": "Newcastle",
+  "bj_date": "2026-10-25",
+  "bj_time": "22:00",
+  "day": "2026-10-25",
+  "model": {
+   "H": 0.3632,
+   "D": 0.2754,
+   "A": 0.3615,
+   "O25": 0.5853
+  },
+  "market": {
+   "H": 0.3319,
+   "D": 0.2591,
+   "A": 0.409,
+   "O25": 0.5931,
+   "U25": 0.4069
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "H",
+    "odds": 3.02,
+    "edge": 0.0967,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "H",
+    "odds": 3.02,
+    "edge": 0.0967,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-25|Atalanta|Frosinone",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-25",
+  "home": "Atalanta",
+  "away": "Frosinone",
+  "bj_date": "2026-10-25",
+  "bj_time": "22:00",
+  "day": "2026-10-25",
+  "model": {
+   "H": 0.6007,
+   "D": 0.2244,
+   "A": 0.1748,
+   "O25": 0.5692
+  },
+  "market": {
+   "H": 0.5582,
+   "D": 0.219,
+   "A": 0.2228,
+   "O25": 0.6892,
+   "U25": 0.3108
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "H",
+    "odds": 1.81,
+    "edge": 0.0874,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-25|Genoa|Venezia",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-25",
+  "home": "Genoa",
+  "away": "Venezia",
+  "bj_date": "2026-10-25",
+  "bj_time": "22:00",
+  "day": "2026-10-25",
+  "model": {
+   "H": 0.5543,
+   "D": 0.2554,
+   "A": 0.1903,
+   "O25": 0.4426
+  },
+  "market": {
+   "H": 0.4637,
+   "D": 0.2782,
+   "A": 0.2581,
+   "O25": 0.4997,
+   "U25": 0.5003
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "H",
+    "odds": 2.16,
+    "edge": 0.1973,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 1.98,
+    "edge": 0.1037,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "SP1|2026-10-25|Celta|Betis",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-10-25",
+  "home": "Celta",
+  "away": "Betis",
+  "bj_date": "2026-10-25",
+  "bj_time": "23:15",
+  "day": "2026-10-25",
+  "model": {
+   "H": 0.377,
+   "D": 0.2728,
+   "A": 0.3502,
+   "O25": 0.5041
+  },
+  "market": {
+   "H": 0.3464,
+   "D": 0.2701,
+   "A": 0.3835,
+   "O25": 0.5167,
+   "U25": 0.4833
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "H",
+    "odds": 2.81,
+    "edge": 0.0594,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "E0|2026-10-26|Sunderland|Leeds",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-10-25",
+  "home": "Sunderland",
+  "away": "Leeds",
+  "bj_date": "2026-10-26",
+  "bj_time": "00:30",
+  "day": "2026-10-25",
+  "model": {
+   "H": 0.3398,
+   "D": 0.3113,
+   "A": 0.3489,
+   "O25": 0.3988
+  },
+  "market": {
+   "H": 0.3288,
+   "D": 0.2881,
+   "A": 0.383,
+   "O25": 0.454,
+   "U25": 0.546
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 3.44,
+    "edge": 0.0709,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 1.83,
+    "edge": 0.1002,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 3.44,
+    "edge": 0.0709,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-26|Lecce|Juventus",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-25",
+  "home": "Lecce",
+  "away": "Juventus",
+  "bj_date": "2026-10-26",
+  "bj_time": "01:00",
+  "day": "2026-10-25",
+  "model": {
+   "H": 0.136,
+   "D": 0.2468,
+   "A": 0.6172,
+   "O25": 0.3792
+  },
+  "market": {
+   "H": 0.1086,
+   "D": 0.2082,
+   "A": 0.6832,
+   "O25": 0.5148,
+   "U25": 0.4852
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.6,
+    "edge": 0.1354,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "H",
+    "odds": 8.5,
+    "edge": 0.1556,
+    "tags": [
+     "高赔"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 4.6,
+    "edge": 0.1354,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "SP1|2026-10-26|Sociedad|Levante",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-10-25",
+  "home": "Sociedad",
+  "away": "Levante",
+  "bj_date": "2026-10-26",
+  "bj_time": "01:30",
+  "day": "2026-10-25",
+  "model": {
+   "H": 0.5158,
+   "D": 0.2398,
+   "A": 0.2444,
+   "O25": 0.6273
+  },
+  "market": {
+   "H": 0.5704,
+   "D": 0.2248,
+   "A": 0.2048,
+   "O25": 0.6025,
+   "U25": 0.3975
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "A",
+    "odds": 4.72,
+    "edge": 0.1535,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "O25",
+    "odds": 1.71,
+    "edge": 0.0728,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 4.72,
+    "edge": 0.1535,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-26|Udinese|Milan",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-25",
+  "home": "Udinese",
+  "away": "Milan",
+  "bj_date": "2026-10-26",
+  "bj_time": "03:45",
+  "day": "2026-10-25",
+  "model": {
+   "H": 0.2435,
+   "D": 0.2642,
+   "A": 0.4924,
+   "O25": 0.4953
+  },
+  "market": {
+   "H": 0.1744,
+   "D": 0.236,
+   "A": 0.5895,
+   "O25": 0.5086,
+   "U25": 0.4914
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.17,
+    "edge": 0.1015,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "H",
+    "odds": 5.7,
+    "edge": 0.3877,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 4.17,
+    "edge": 0.1015,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "SP1|2026-10-26|Barcelona|Real Madrid",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-10-25",
+  "home": "Barcelona",
+  "away": "Real Madrid",
+  "bj_date": "2026-10-26",
+  "bj_time": "04:00",
+  "day": "2026-10-25",
+  "model": {
+   "H": 0.5504,
+   "D": 0.2244,
+   "A": 0.2252,
+   "O25": 0.6815
+  },
+  "market": {
+   "H": 0.6281,
+   "D": 0.1693,
+   "A": 0.2026,
+   "O25": 0.8085,
+   "U25": 0.1915
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "A",
+    "odds": 4.99,
+    "edge": 0.1235,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 5.8,
+    "edge": 0.3015,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 4.99,
+    "edge": 0.1235,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "SP1|2026-10-27|Sevilla|Osasuna",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-10-26",
+  "home": "Sevilla",
+  "away": "Osasuna",
+  "bj_date": "2026-10-27",
+  "bj_time": "04:00",
+  "day": "2026-10-26",
+  "model": {
+   "H": 0.4792,
+   "D": 0.2623,
+   "A": 0.2584,
+   "O25": 0.5122
+  },
+  "market": {
+   "H": 0.5033,
+   "D": 0.271,
+   "A": 0.2256,
+   "O25": 0.4437,
+   "U25": 0.5563
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "A",
+    "odds": 4.2,
+    "edge": 0.0854,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "O25",
+    "odds": 2.19,
+    "edge": 0.1218,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 4.2,
+    "edge": 0.0854,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-28|Sassuolo|Lazio",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-27",
+  "home": "Sassuolo",
+  "away": "Lazio",
+  "bj_date": "2026-10-28",
+  "bj_time": "01:30",
+  "day": "2026-10-27",
+  "model": {
+   "H": 0.2901,
+   "D": 0.2767,
+   "A": 0.4332,
+   "O25": 0.4739
+  },
+  "market": {
+   "H": 0.3355,
+   "D": 0.2721,
+   "A": 0.3924,
+   "O25": 0.5513,
+   "U25": 0.4487
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "A",
+    "odds": 2.53,
+    "edge": 0.0961,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 2.15,
+    "edge": 0.1311,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-28|Roma|Cagliari",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-27",
+  "home": "Roma",
+  "away": "Cagliari",
+  "bj_date": "2026-10-28",
+  "bj_time": "03:45",
+  "day": "2026-10-27",
+  "model": {
+   "H": 0.6614,
+   "D": 0.2152,
+   "A": 0.1234,
+   "O25": 0.461
+  },
+  "market": {
+   "H": 0.7323,
+   "D": 0.1776,
+   "A": 0.0901,
+   "O25": 0.5583,
+   "U25": 0.4417
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 5.2,
+    "edge": 0.1191,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 2.21,
+    "edge": 0.1912,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 5.2,
+    "edge": 0.1191,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 10.0,
+    "edge": 0.2343,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-28|Torino|Como",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-27",
+  "home": "Torino",
+  "away": "Como",
+  "bj_date": "2026-10-28",
+  "bj_time": "03:45",
+  "day": "2026-10-27",
+  "model": {
+   "H": 0.2059,
+   "D": 0.2575,
+   "A": 0.5366,
+   "O25": 0.4758
+  },
+  "market": {
+   "H": 0.2053,
+   "D": 0.2474,
+   "A": 0.5474,
+   "O25": 0.552,
+   "U25": 0.448
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "U25",
+    "odds": 2.15,
+    "edge": 0.127,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-29|Milan|Bologna",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-28",
+  "home": "Milan",
+  "away": "Bologna",
+  "bj_date": "2026-10-29",
+  "bj_time": "01:30",
+  "day": "2026-10-28",
+  "model": {
+   "H": 0.4998,
+   "D": 0.263,
+   "A": 0.2371,
+   "O25": 0.4725
+  },
+  "market": {
+   "H": 0.6121,
+   "D": 0.2238,
+   "A": 0.1642,
+   "O25": 0.5286,
+   "U25": 0.4714
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.28,
+    "edge": 0.1258,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 2.07,
+    "edge": 0.0919,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 4.28,
+    "edge": 0.1258,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 5.71,
+    "edge": 0.354,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-29|Venezia|Inter",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-28",
+  "home": "Venezia",
+  "away": "Inter",
+  "bj_date": "2026-10-29",
+  "bj_time": "01:30",
+  "day": "2026-10-28",
+  "model": {
+   "H": 0.0499,
+   "D": 0.1046,
+   "A": 0.8455,
+   "O25": 0.7385
+  },
+  "market": {
+   "H": 0.101,
+   "D": 0.1487,
+   "A": 0.7502,
+   "O25": 0.7428,
+   "U25": 0.2572
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "A",
+    "odds": 1.35,
+    "edge": 0.1414,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-29|Parma|Udinese",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-28",
+  "home": "Parma",
+  "away": "Udinese",
+  "bj_date": "2026-10-29",
+  "bj_time": "01:30",
+  "day": "2026-10-28",
+  "model": {
+   "H": 0.3253,
+   "D": 0.3021,
+   "A": 0.3726,
+   "O25": 0.3679
+  },
+  "market": {
+   "H": 0.3158,
+   "D": 0.2891,
+   "A": 0.3951,
+   "O25": 0.4406,
+   "U25": 0.5594
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "U25",
+    "odds": 1.77,
+    "edge": 0.1188,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-29|Genoa|Juventus",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-28",
+  "home": "Genoa",
+  "away": "Juventus",
+  "bj_date": "2026-10-29",
+  "bj_time": "03:45",
+  "day": "2026-10-28",
+  "model": {
+   "H": 0.192,
+   "D": 0.2666,
+   "A": 0.5414,
+   "O25": 0.4042
+  },
+  "market": {
+   "H": 0.1616,
+   "D": 0.242,
+   "A": 0.5964,
+   "O25": 0.464,
+   "U25": 0.536
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.01,
+    "edge": 0.0689,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 1.85,
+    "edge": 0.1023,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "H",
+    "odds": 5.8,
+    "edge": 0.1137,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 4.01,
+    "edge": 0.0689,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-29|Monza|Napoli",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-28",
+  "home": "Monza",
+  "away": "Napoli",
+  "bj_date": "2026-10-29",
+  "bj_time": "03:45",
+  "day": "2026-10-28",
+  "model": {
+   "H": 0.1119,
+   "D": 0.1884,
+   "A": 0.6997,
+   "O25": 0.5587
+  },
+  "market": {
+   "H": 0.2236,
+   "D": 0.2456,
+   "A": 0.5309,
+   "O25": 0.549,
+   "U25": 0.451
+  },
+  "call": "A",
+  "picks": [],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-30|Frosinone|Lecce",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-29",
+  "home": "Frosinone",
+  "away": "Lecce",
+  "bj_date": "2026-10-30",
+  "bj_time": "01:30",
+  "day": "2026-10-29",
+  "model": {
+   "H": 0.5208,
+   "D": 0.2678,
+   "A": 0.2114,
+   "O25": 0.4351
+  },
+  "market": {
+   "H": 0.5083,
+   "D": 0.2444,
+   "A": 0.2473,
+   "O25": 0.5994,
+   "U25": 0.4006
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 3.95,
+    "edge": 0.058,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 3.95,
+    "edge": 0.058,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "I1|2026-10-30|Fiorentina|Atalanta",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-10-29",
+  "home": "Fiorentina",
+  "away": "Atalanta",
+  "bj_date": "2026-10-30",
+  "bj_time": "03:45",
+  "day": "2026-10-29",
+  "model": {
+   "H": 0.263,
+   "D": 0.2675,
+   "A": 0.4696,
+   "O25": 0.5031
+  },
+  "market": {
+   "H": 0.4248,
+   "D": 0.2603,
+   "A": 0.3149,
+   "O25": 0.561,
+   "U25": 0.439
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "U25",
+    "odds": 2.21,
+    "edge": 0.0982,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "result": null
+ },
+ {
+  "id": "SP1|2026-10-31|Villarreal|Espanol",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-10-30",
+  "home": "Villarreal",
+  "away": "Espanol",
+  "bj_date": "2026-10-31",
+  "bj_time": "04:00",
+  "day": "2026-10-30",
+  "model": {
+   "H": 0.6431,
+   "D": 0.2049,
+   "A": 0.152,
+   "O25": 0.6153
+  },
+  "market": {
+   "H": 0.6335,
+   "D": 0.2062,
+   "A": 0.1603,
+   "O25": 0.6017,
+   "U25": 0.3983
+  },
+  "call": "H",
+  "picks": [],
+  "result": null
+ }
+]
