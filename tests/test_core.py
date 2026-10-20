@@ -121,6 +121,7 @@ def test_parse_odds_api_event():
                 {"key": "totals", "outcomes": [{"name": "Over", "price": 1.6, "point": 2.5}, {"name": "Under", "price": 2.4, "point": 2.5},
                                                 {"name": "Over", "price": 3.0, "point": 3.5}]},
             ]},
+            {"key": "betfair_ex_eu", "markets": [{"key": "h2h", "outcomes": [{"name": "Manchester City", "price": 1.6}]}]},
             {"markets": [{"key": "h2h", "outcomes": [{"name": "Manchester City", "price": 1.45}, {"name": "Brighton and Hove Albion", "price": 7.0}, {"name": "Draw", "price": 5.2}]}]},
         ],
     }

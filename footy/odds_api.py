@@ -21,6 +21,9 @@ from .teams import canonical
 log = logging.getLogger(__name__)
 
 API_URL = "https://api.the-odds-api.com/v4/sports/{sport}/odds"
+# Exchanges quote prices before commission, so their "best" odds are not really available.
+EXCHANGES = {"betfair_ex_eu", "betfair_ex_uk", "matchbook", "smarkets", "betdaq"}
+
 SPORT_KEYS = {"E0": "soccer_epl", "I1": "soccer_italy_serie_a", "SP1": "soccer_spain_la_liga"}
 
 
@@ -51,6 +54,8 @@ def parse(events: list[tuple[str, dict]], known_teams: set[str]) -> pd.DataFrame
         home, away = ev.get("home_team"), ev.get("away_team")
         prices = {k: [] for k in ("h", "d", "a", "over", "under")}
         for bm in ev.get("bookmakers", []):
+            if bm.get("key") in EXCHANGES:
+                continue
             for m in bm.get("markets", []):
                 for o in m.get("outcomes", []):
                     p = o.get("price")

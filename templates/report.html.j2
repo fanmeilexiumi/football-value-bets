@@ -82,7 +82,7 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
 
 {% set A = bt.bets.avg.all if bt.bets else None %}
 {% set M = bt.bets.max.all if bt.bets else None %}
-<section class="verdict {{ 'good' if M and M.roi and M.roi > 0 and A.roi and A.roi > 0 else '' }}">
+<section class="verdict {{ 'good' if M and (M.roi or 0) > 0 and (A.roi or 0) > 0 else '' }}">
   <h2>回测结论</h2>
   {% if bt.n_matches %}
   <div class="kpis">
@@ -91,10 +91,10 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
     <div class="kpi"><div class="v {{ 'neg' if M.roi and M.roi < 0 else 'pos' }}">{{ M.roi | signed_pct }}</div><div class="k">ROI · 按最优价（{{ M.n }} 注）</div></div>
     <div class="kpi"><div class="v">{{ bt.logloss_1x2.blend | num(3) }} / {{ bt.logloss_1x2.mkt | num(3) }}</div><div class="k">胜平负对数损失 模型 / 市场（越低越好）</div></div>
   </div>
-  {% if M.roi is not none and M.roi < 0 %}
-  <p><b>模型目前没有跑赢市场。</b>即使每注都拿到各家公司中的最高赔率，回测仍是亏损；市场赔率去水后的概率比模型更准。下面的“价值投注”只是模型与市场的分歧，请当作研究线索，不要当作下注建议。</p>
+  {% if (A.roi or 0) < 0 or (M.roi or 0) < 0 %}
+  <p><b>模型目前没有稳定跑赢市场。</b>按市场均价下注 ROI 为 {{ A.roi|signed_pct }}{% if (M.roi or 0) > 0 %}，只有每注都拿到各家最高赔率时才是 {{ M.roi|signed_pct }}，这个幅度在随机波动范围内{% else %}，即使拿到最高赔率也是 {{ M.roi|signed_pct }}{% endif %}。市场赔率去水后的概率比模型更准（对数损失更低）。下面的“价值投注”只是模型与市场的分歧，请当作研究线索，不要当作下注建议。</p>
   {% else %}
-  <p>回测期内模型在最优价下为正收益，但样本有限且各赛季波动大，仍需持续观察。</p>
+  <p>回测期内模型在两种价格下都为正收益，但样本有限且各赛季波动大，仍需持续观察。</p>
   {% endif %}
   {% endif %}
 </section>
