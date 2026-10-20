@@ -13,7 +13,7 @@ from datetime import date
 import numpy as np
 import pandas as pd
 
-from . import config
+from . import config, zucai
 from .model import DixonColes, EloOutcome, OUTCOMES, add_pre_match_elo, blend, result_code
 from .value import find_longshots, find_value, market_probs
 
@@ -66,6 +66,7 @@ def run(history: pd.DataFrame, today: date | None = None) -> dict:
     out = summarise(preds, bets, start)
     if preds:
         out["long"] = summarise_long(longs)
+        out["zucai"] = zucai.simulate(preds)
     return out
 
 

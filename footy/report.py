@@ -64,7 +64,7 @@ def bankroll_svg(curve: list[list], width: int = 720, height: int = 220) -> str:
 
 
 def render(predictions: list[dict], backtest: dict, status: dict, site_dir: Path | None = None,
-           cl_predictions: list[dict] | None = None) -> Path:
+           cl_predictions: list[dict] | None = None, lottery: list[dict] | None = None) -> Path:
     site_dir = site_dir or config.SITE_DIR
     site_dir.mkdir(parents=True, exist_ok=True)
     env = Environment(
@@ -91,7 +91,7 @@ def render(predictions: list[dict], backtest: dict, status: dict, site_dir: Path
     html = env.get_template("report.html.j2").render(
         updated=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         days=days, picks=picks, comps=comps, n_games=len(games), bt=backtest, status=status,
-        cfg=config, bt_rows=bt_rows, long_bt=long_bt,
+        cfg=config, bt_rows=bt_rows, long_bt=long_bt, lottery=lottery or [], zc_sim=backtest.get("zucai", {}),
         svg_long=bankroll_svg(long_bt.get("avg", {}).get("bankroll", [])),
         svg_avg=bankroll_svg(backtest.get("bets", {}).get("avg", {}).get("bankroll", [])),
         svg_max=bankroll_svg(backtest.get("bets", {}).get("max", {}).get("bankroll", [])),
@@ -99,6 +99,7 @@ def render(predictions: list[dict], backtest: dict, status: dict, site_dir: Path
     out = site_dir / "index.html"
     out.write_text(html, encoding="utf-8")
     (site_dir / "predictions.json").write_text(json.dumps(predictions + cl_predictions, ensure_ascii=False, indent=1), encoding="utf-8")
+    (site_dir / "lottery.json").write_text(json.dumps(lottery or [], ensure_ascii=False, indent=1), encoding="utf-8")
     (site_dir / "backtest.json").write_text(json.dumps(backtest, ensure_ascii=False, indent=1), encoding="utf-8")
     return out
 

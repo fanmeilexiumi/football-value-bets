@@ -9,7 +9,7 @@ from datetime import date
 
 import pandas as pd
 
-from . import backtest, config, data, odds, odds_api, report, ucl
+from . import backtest, config, data, odds, odds_api, report, ucl, zucai
 from .predict import predict_cl, predict_fixtures
 
 
@@ -51,6 +51,17 @@ def main() -> None:
         log.warning("Champions League clubs without a rating: %s", unknown)
     bt = {} if args.skip_backtest else backtest.run(history, today)
 
+    all_preds = sorted(predictions + cl_predictions, key=lambda p: (p["bj_date"], p.get("bj_time") or "99:99"))
+    periods = [] if args.no_live_odds else zucai.fetch_periods(today)
+    if not periods:
+        sim = zucai.simulated_period(all_preds)
+        periods = [sim] if sim else []
+    lottery = zucai.build(periods, all_preds)
+    for lp in lottery:
+        log.info("lottery %s: 14-match %s (%d yuan), pick-9 %s (%d yuan), %d/14 games priced by our model",
+                 lp["expect"], lp["t14"]["code"], lp["t14"]["cost"], lp["r9"]["code"], lp["r9"]["cost"],
+                 sum(g["model"] is not None for g in lp["games"]))
+
     status = {
         "history_matches": len(history),
         "history_source": data.LAST_HISTORY_SOURCE,
@@ -65,7 +76,7 @@ def main() -> None:
         "cl_fixtures": len(cl_fx),
         "cl_offsets": {c: round(100 * v) for c, v in sorted(cl_model.offset.items(), key=lambda kv: -kv[1])},
     }
-    out = report.render(predictions, bt, status, cl_predictions=cl_predictions)
+    out = report.render(predictions, bt, status, cl_predictions=cl_predictions, lottery=lottery)
     n_bets = sum(len(p["bets"]) for p in predictions)
     n_cl = sum(len(p["bets"]) for p in cl_predictions)
     log.info("wrote %s: %d fixtures, %d value bets; Champions League %d fixtures, %d value bets",

@@ -54,6 +54,19 @@ tr:last-child td{border-bottom:0}
 .tag{display:inline-block;font-size:12px;padding:0 6px;border-radius:4px;margin-right:3px}
 .tag.v{background:var(--accent-soft);color:var(--accent)}
 .tag.u,.tag.l{background:var(--warn-soft);color:var(--warn)}
+/* lottery */
+.lot{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:12px;min-width:0}
+.lot h3{margin:0;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+.tickets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.tickets{grid-template-columns:minmax(0,1fr)}}
+.ticket{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:8px;min-width:0}
+.ticket .head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13.5px}
+.codes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.codes span{font:600 13px var(--mono);text-align:center;border-radius:4px;padding:3px 0;background:var(--bg)}
+.codes span i{display:block;font:10.5px var(--sans);color:var(--muted);font-style:normal}
+.codes span.d{background:var(--warn-soft);color:var(--warn)}
+.codes span.x{color:var(--muted);opacity:.55}
+.copy{font:12.5px var(--mono);color:var(--muted);word-break:break-all}
 /* filters */
 .filters{position:sticky;top:0;z-index:2;background:var(--bg);padding:8px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:1px solid var(--line)}
 .filters button{font:inherit;font-size:13.5px;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:3px 12px;cursor:pointer;min-height:32px}
@@ -141,6 +154,57 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
     </tbody></table></div>
   {% else %}
   <p class="empty" style="margin-top:10px">这一期没有满足条件的选项。</p>
+  {% endif %}
+</section>
+
+
+<section id="lottery">
+  <h2>传统足彩 · 14 场与任九</h2>
+  <p class="muted">对阵取自 500 彩票网的官方期次，顺序与彩票一致。三大联赛和欧冠的场次用模型与市场概率各半，其他场次用市场平均概率并略向冷门修正。14 场最多 2 场双选（4 注 8 元），任九选 9 场最稳的、最多 1 场双选（2 注 4 元）；双选给最不确定的比赛，模型认为冷门被低估时优先补冷门。“3 / 1 / 0”为主胜 / 平 / 客胜。</p>
+  {% for lp in lottery %}
+  <div class="lot" style="margin-top:12px">
+    <h3>{% if lp.simulated %}模拟期次 <span class="tag u">无法购买</span>{% else %}第 {{ lp.expect }} 期{% endif %}{% if lp.deadline %} <span class="muted" style="font-size:13px;font-weight:400">官方截止 {{ lp.deadline }}</span>{% endif %}</h3>
+    <div class="tickets">
+      {% for key, title in [('t14','胜负彩 14 场'),('r9','任选九')] %}{% set t = lp[key] %}
+      <div class="ticket">
+        <div class="head"><b>{{ title }}</b><span class="num">{{ t.bets }} 注 · {{ t.cost }} 元</span></div>
+        <div class="codes">
+          {% for g in lp.games %}{% set pk = g[key] %}
+          <span class="{{ 'x' if not pk else ('d' if pk.double else '') }}"><i>{{ g.no }}</i>{{ pk.code if pk else '-' }}</span>
+          {% endfor %}
+        </div>
+        <div class="muted" style="font-size:12.5px">全中概率 {{ t.p_all|pct(2) }} · 预计命中 {{ t.exp_hits|num(1) }} / {{ 14 if key == 't14' else 9 }} 场</div>
+        <div class="copy">{{ t.code }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>场次</th><th>赛事</th><th>北京时间</th><th>对阵</th><th class="n">主胜</th><th class="n">平</th><th class="n">客胜</th><th>概率来源</th><th class="n">14 场</th><th class="n">任九</th><th>说明</th></tr></thead>
+      <tbody>
+      {% for g in lp.games %}
+        <tr><td class="n">{{ g.no }}</td><td>{{ g.comp }}</td><td class="num">{{ g.kickoff[5:] if g.kickoff else '' }}</td><td>{{ g.home_cn }} vs {{ g.away_cn }}</td>
+        {% for k in ['3','1','0'] %}<td class="n">{{ g.p[k]|pct(0) }}{% if g.model %}<br><small class="muted">模 {{ g.model[k]|pct(0) }} 市 {{ g.market[k]|pct(0) if g.market else '–' }}</small>{% endif %}</td>{% endfor %}
+        <td class="muted">{{ g.source }}</td>
+        <td class="n"><b>{{ g.t14.code }}</b></td><td class="n">{{ g.r9.code if g.r9 else '–' }}</td>
+        <td>{% if g.t14.double or (g.r9 and g.r9.double) %}<span class="tag {{ 'u' if g.t14.upset or (g.r9 and g.r9.upset) else 'l' }}">{{ '双选搏冷' if g.t14.upset or (g.r9 and g.r9.upset) else '双选' }}</span>{% endif %}</td></tr>
+      {% endfor %}
+      </tbody></table></div>
+  </div>
+  {% else %}
+  <p class="empty" style="margin-top:10px">暂未获取到在售期次。</p>
+  {% endfor %}
+  {% if zc_sim and zc_sim.n %}
+  <details class="fold" style="margin-top:12px">
+    <summary>历史模拟 · 这套规则能中几场</summary>
+    <p class="muted">从回测期每周的三大联赛比赛中随机抽 14 场，共 {{ zc_sim.n }} 组，用同样的规则出票，并与“每场都选市场热门、不双选”对比。实际期次常含其他联赛，结果仅供参考。</p>
+    <div class="kpis">
+      <div class="kpi"><div class="v">{{ zc_sim.hits14|num(2) }}</div><div class="k">14 场平均命中（热门单选 {{ zc_sim.base_hits14|num(2) }}）</div></div>
+      <div class="kpi"><div class="v">{{ zc_sim.ge13|pct(2) }}</div><div class="k">中 13 场及以上（热门单选 {{ zc_sim.base_ge13|pct(2) }}）</div></div>
+      <div class="kpi"><div class="v">{{ zc_sim.all14|pct(2) }}</div><div class="k">14 场全中</div></div>
+      <div class="kpi"><div class="v">{{ zc_sim.r9|pct(2) }}</div><div class="k">任九全中（9 场最稳热门单选 {{ zc_sim.base_r9|pct(2) }}）</div></div>
+    </div>
+    <p class="muted">足彩奖池按中奖人数分配，冷门越多、中奖人越少、单注奖金越高；但命中率本身很低，请只用小额娱乐。</p>
+  </details>
   {% endif %}
 </section>
 
