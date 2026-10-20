@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>三大联赛价值投注看板</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column; verdict first, then today's bets, fixtures per league, backtest evidence */
+:root{
+  --bg:#f2f4f0; --surface:#fff; --fg:#16201a; --muted:#5b685f; --line:#d8ded6;
+  --accent:#1d6b45; --accent-soft:#e0eee5; --bad:#a63a2b; --bad-soft:#f6e1dc; --warn:#8a5a00; --warn-soft:#faefd8;
+  --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#101512; --surface:#171f1a; --fg:#e3eae4; --muted:#97a59b; --line:#2a352e;
+  --accent:#5ec08b; --accent-soft:#1c3226; --bad:#ee8a76; --bad-soft:#3a201b; --warn:#e2a948; --warn-soft:#352812; color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 var(--sans)}
+.wrap{max-width:1080px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right)) 64px max(16px,env(safe-area-inset-left));display:grid;gap:32px}
+h1{font-size:clamp(24px,4vw,34px);font-weight:900;margin:0;line-height:1.25;text-wrap:balance}
+h2{font-size:19px;margin:0 0 10px}
+h3{font-size:15px;margin:18px 0 8px}
+p{margin:0;max-width:72ch}
+.muted{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{font-size:12.5px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:2px 10px;color:var(--muted)}
+.chip.ok{border-color:var(--accent);color:var(--accent)}
+.chip.fail{border-color:var(--bad);color:var(--bad)}
+.verdict{border:1px solid var(--line);border-left:4px solid var(--bad);background:var(--surface);border-radius:8px;padding:16px 18px;display:grid;gap:10px}
+.verdict.good{border-left-color:var(--accent)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi .v{font:600 22px var(--mono);font-variant-numeric:tabular-nums}
+.kpi .k{font-size:12.5px;color:var(--muted)}
+.neg{color:var(--bad)} .pos{color:var(--accent)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-weight:500;color:var(--muted);font-size:12.5px}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+th.n{text-align:right}
+tr:last-child td{border-bottom:0}
+.pill{font-size:12px;padding:1px 8px;border-radius:4px;background:var(--accent-soft);color:var(--accent)}
+.edge{background:var(--warn-soft);color:var(--warn);border-radius:4px;padding:0 6px}
+.chart svg{width:100%;height:auto;display:block}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .base{stroke:var(--muted);stroke-dasharray:4 4;stroke-width:1}
+.chart .line{fill:none;stroke:var(--bad);stroke-width:2}
+.chart .area{fill:var(--bad-soft);opacity:.7}
+.chart .dot{fill:var(--bad)}
+.chart .axis{fill:var(--muted);font:11px var(--mono)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;min-width:0}
+details summary{cursor:pointer;color:var(--accent)}
+ul{margin:6px 0 0;padding-left:20px}
+footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>三大联赛价值投注看板</h1>
+  <p class="muted">英超、意甲、西甲。每天自动更新：抓数据，拟合 Dixon-Coles 与 Elo 模型，把模型概率与去水后的市场概率对比，找出赔率偏高的选项。</p>
+  <div class="chips">
+    <span class="chip">更新于 {{ updated }}</span>
+    <span class="chip">历史比赛 {{ status.history_matches }} 场 · 来源 {{ status.history_source }}</span>
+    <span class="chip {{ 'ok' if status.live_odds_ok else 'fail' }}">实时赔率 OddsPortal：{{ '已获取 %d 场' % status.live_odds_matches if status.live_odds_ok else '本次未获取，使用 football-data 赔率' }}</span>
+    <span class="chip">未来 {{ status.days_ahead }} 天比赛 {{ status.fixtures }} 场</span>
+  </div>
+</header>
+
+{% set A = bt.bets.avg.all if bt.bets else None %}
+{% set M = bt.bets.max.all if bt.bets else None %}
+<section class="verdict {{ 'good' if M and M.roi and M.roi > 0 and A.roi and A.roi > 0 else '' }}">
+  <h2>回测结论</h2>
+  {% if bt.n_matches %}
+  <div class="kpis">
+    <div class="kpi"><div class="v">{{ bt.n_matches }}</div><div class="k">回测比赛（{{ bt.start }} 起）</div></div>
+    <div class="kpi"><div class="v {{ 'neg' if A.roi and A.roi < 0 else 'pos' }}">{{ A.roi | signed_pct }}</div><div class="k">ROI · 按市场均价（{{ A.n }} 注）</div></div>
+    <div class="kpi"><div class="v {{ 'neg' if M.roi and M.roi < 0 else 'pos' }}">{{ M.roi | signed_pct }}</div><div class="k">ROI · 按最优价（{{ M.n }} 注）</div></div>
+    <div class="kpi"><div class="v">{{ bt.logloss_1x2.blend | num(3) }} / {{ bt.logloss_1x2.mkt | num(3) }}</div><div class="k">胜平负对数损失 模型 / 市场（越低越好）</div></div>
+  </div>
+  {% if M.roi is not none and M.roi < 0 %}
+  <p><b>模型目前没有跑赢市场。</b>即使每注都拿到各家公司中的最高赔率，回测仍是亏损；市场赔率去水后的概率比模型更准。下面的“价值投注”只是模型与市场的分歧，请当作研究线索，不要当作下注建议。</p>
+  {% else %}
+  <p>回测期内模型在最优价下为正收益，但样本有限且各赛季波动大，仍需持续观察。</p>
+  {% endif %}
+  {% endif %}
+</section>
+
+<section>
+  <h2>本期价值投注</h2>
+  <p class="muted">条件：模型概率 × 最优赔率 − 1 ≥ {{ (cfg.MIN_EDGE*100)|round|int }}%，模型概率 ≥ {{ (cfg.MIN_PROB*100)|round|int }}%，赔率 ≤ {{ cfg.MAX_ODDS }}。仓位为 {{ cfg.KELLY_FRACTION }} 倍凯利，单注上限 {{ (cfg.MAX_STAKE*100)|round|int }}% 资金。</p>
+  {% if bets %}
+  <div class="tbl" style="margin-top:10px"><table>
+    <thead><tr><th>日期</th><th>联赛</th><th>比赛</th><th>选项</th><th class="n">模型</th><th class="n">市场</th><th class="n">最优赔率</th><th class="n">优势</th><th class="n">仓位</th></tr></thead>
+    <tbody>
+    {% for b in bets %}
+      <tr><td>{{ b.date }}</td><td>{{ b.league_name }}</td><td>{{ b.home }} vs {{ b.away }}</td><td><span class="pill">{{ b.label }}</span></td>
+        <td class="n">{{ b.prob|pct }}</td><td class="n">{{ b.market_prob|pct }}</td><td class="n">{{ b.odds|num }}</td><td class="n"><span class="edge">{{ b.edge|signed_pct }}</span></td><td class="n">{{ b.stake|pct }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% else %}
+  <p class="muted" style="margin-top:10px">这一期没有满足条件的选项。</p>
+  {% endif %}
+</section>
+
+<section>
+  <h2>未来比赛概率</h2>
+  <p class="muted">每格为“模型 / 市场”，市场概率由平均赔率经 goto_conversion 去水得到。</p>
+  {% for code, games in by_league.items() %}
+  <h3>{{ leagues[code].name }} · {{ games|length }} 场</h3>
+  {% if games %}
+  <div class="tbl"><table>
+    <thead><tr><th>日期</th><th>比赛</th><th class="n">主胜</th><th class="n">平</th><th class="n">客胜</th><th class="n">大 2.5</th><th class="n">Elo</th><th>赔率来源</th></tr></thead>
+    <tbody>
+    {% for g in games %}
+      <tr><td>{{ g.date }}</td><td>{{ g.home }} vs {{ g.away }}</td>
+      {% for k in ['H','D','A','O25'] %}
+        <td class="n">{{ (g.model[k] if g.model else none)|pct(0) }} / {{ g.market.get(k)|pct(0) }}</td>
+      {% endfor %}
+        <td class="n">{{ g.elo_home }}–{{ g.elo_away }}</td><td class="muted">{{ g.odds_source }}{% if not g.model %}（升班马数据不足，未建模）{% endif %}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% else %}<p class="muted">未来 {{ status.days_ahead }} 天暂无赛程或赔率。</p>{% endif %}
+  {% endfor %}
+</section>
+
+{% if bt.n_matches %}
+<section>
+  <h2>回测详情</h2>
+  <p class="muted">每周一用之前的比赛重新拟合模型，只预测当周比赛，结果不会泄漏到自己的预测里。{{ bt.start }} 至 {{ bt.end }}，共 {{ bt.n_matches }} 场。</p>
+
+  <div class="two" style="margin-top:12px">
+    <div class="card"><b>资金曲线 · 市场均价</b><div class="chart">{{ svg_avg|safe }}</div><span class="muted">起始 100，0.25 倍凯利</span></div>
+    <div class="card"><b>资金曲线 · 最优价</b><div class="chart">{{ svg_max|safe }}</div><span class="muted">起始 100，0.25 倍凯利</span></div>
+  </div>
+
+  <h3>概率准确度（对数损失，越低越好）</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>盘口</th><th class="n">Dixon-Coles</th><th class="n">Elo</th><th class="n">融合模型</th><th class="n">市场</th></tr></thead>
+    <tbody>
+      <tr><td>胜平负</td><td class="n">{{ bt.logloss_1x2.dc|num(4) }}</td><td class="n">{{ bt.logloss_1x2.elo|num(4) }}</td><td class="n">{{ bt.logloss_1x2.blend|num(4) }}</td><td class="n">{{ bt.logloss_1x2.mkt|num(4) }}</td></tr>
+      <tr><td>大小球 2.5</td><td class="n">{{ bt.logloss_ou.dc|num(4) }}</td><td class="n">–</td><td class="n">{{ bt.logloss_ou.dc|num(4) }}</td><td class="n">{{ bt.logloss_ou.mkt|num(4) }}</td></tr>
+    </tbody></table></div>
+
+  {% for price, title in [('avg','按市场均价下注'),('max','按最优价下注')] %}
+  <h3>{{ title }}</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>分组</th><th class="n">注数</th><th class="n">命中率</th><th class="n">平均赔率</th><th class="n">平均优势</th><th class="n">ROI（每注 1 单位）</th></tr></thead>
+    <tbody>
+      {% for label, s in bt_rows[price] %}
+      <tr><td>{{ label }}</td><td class="n">{{ s.n }}</td><td class="n">{{ s.hit|pct }}</td><td class="n">{{ s.avg_odds|num }}</td><td class="n">{{ s.avg_edge|signed_pct }}</td>
+        <td class="n {{ 'neg' if s.roi is not none and s.roi < 0 else 'pos' }}">{{ s.roi|signed_pct }}</td></tr>
+      {% endfor %}
+    </tbody></table></div>
+  {% endfor %}
+</section>
+{% endif %}
+
+<section class="card">
+  <h2>方法</h2>
+  <ul>
+    <li><b>数据采集</b>：football-data.co.uk 近 {{ cfg.HISTORY_SEASONS }} 季加本季的赛果与约 40 家公司的平均/最高赔率（不可用时改用 xgabora 在 GitHub 上的镜像）；OddsHarvester 从 OddsPortal 抓未开赛的胜平负和大小球 2.5 赔率。</li>
+    <li><b>预测建模</b>：penaltyblog 的 Dixon-Coles 模型，按天数指数衰减加权（ξ = {{ cfg.DC_XI }}），每个联赛单独拟合近 3 年比赛；Elo 按净胜球加权，用有序 logit 转成胜平负概率；胜平负取 {{ ((1-cfg.ELO_BLEND)*100)|round|int }}% Dixon-Coles + {{ (cfg.ELO_BLEND*100)|round|int }}% Elo。</li>
+    <li><b>赔率分析</b>：goto_conversion 去除庄家抽水得到市场公平概率；优势 = 模型概率 × 赔率 − 1；仓位用分数凯利。</li>
+  </ul>
+</section>
+
+<footer>
+  <p>本页只做概率研究，不构成投注建议。博彩有风险，请遵守所在地法律，量力而行。</p>
+  <p>原始数据：<a href="predictions.json">predictions.json</a> · <a href="backtest.json">backtest.json</a></p>
+</footer>
+</div>
+</body>
+</html>
