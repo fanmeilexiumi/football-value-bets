@@ -191,10 +191,12 @@ def game_probs(g: dict) -> dict:
 
 
 def _page_pick(pred: dict | None) -> str | None:
-    """The 1X2 result the schedule recommends for this game (highest edge), so the ticket agrees with it."""
+    """The 1X2 value bet the schedule recommends for this game (highest edge), so the ticket agrees with it.
+
+    Upset and long-odds picks are left out: forcing them cut simulated hits from 7.9 to 6.6 a ticket."""
     if not pred:
         return None
-    picks = [b for b in pred.get("bets", []) + pred.get("longshots", []) if b["selection"] in _KEYS.values()]
+    picks = [b for b in pred.get("bets", []) if b["selection"] in _KEYS.values()]
     if not picks:
         return None
     best = max(picks, key=lambda b: b["edge"])

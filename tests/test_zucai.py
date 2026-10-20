@@ -34,14 +34,15 @@ def test_attach_and_plan_respect_budget():
     preds = [
         {"league": "CL", "bj_date": "2026-10-21", "bj_time": "03:00", "home": "Liverpool", "away": "Villarreal",
          "model": {"H": 0.6, "D": 0.2, "A": 0.2}, "market": {},
-         "longshots": [{"selection": "A", "edge": 0.3}], "bets": [{"selection": "O25", "edge": 0.1}]},
+         "longshots": [{"selection": "D", "edge": 0.3}],
+         "bets": [{"selection": "A", "edge": 0.2}, {"selection": "O25", "edge": 0.1}]},
         {"league": "CL", "bj_date": "2026-10-21", "bj_time": "03:00", "home": "Paris SG", "away": "Barcelona",
          "model": {"H": 0.3, "D": 0.35, "A": 0.35}, "market": {}},
     ]
     out = zucai.build([p], preds)[0]
     assert out["games"][0]["home"] == "Liverpool" and out["games"][1]["home"] == "Paris SG"
     assert out["games"][2]["model"] is None and out["games"][2]["source"] == "市场"
-    # the schedule recommends the away upset at Liverpool: the 14-match ticket must include it
+    # the schedule has an away value bet at Liverpool: the 14-match ticket must include it
     liv = out["games"][0]["t14"]
     assert liv["fixed"] and "0" in liv["picks"]
     assert out["games"][0]["r9"] is None or "0" in out["games"][0]["r9"]["picks"]
@@ -50,3 +51,9 @@ def test_attach_and_plan_respect_budget():
     assert sum(g["t14"]["double"] for g in out["games"]) <= 2
     # a game the schedule has no 1X2 pick for follows the model favourite
     assert out["games"][1]["t14"]["picks"][0] in ("1", "0") and not out["games"][1]["t14"]["fixed"]
+
+
+def test_upset_picks_are_not_forced():
+    pred = {"model": {"H": 0.6, "D": 0.2, "A": 0.2}, "market": {},
+            "longshots": [{"selection": "A", "edge": 0.3}], "bets": []}
+    assert zucai._page_pick(pred) is None
