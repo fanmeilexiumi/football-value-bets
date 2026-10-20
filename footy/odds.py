@@ -113,7 +113,7 @@ def parse_oddsharvester(records: list[dict], known_teams: set[str]) -> pd.DataFr
         avg_ou, best_ou = _summarise(ou, ("odds_over", "odds_under"))
         out.append({
             "league": league,
-            "date": when.tz_convert(None).normalize(),
+            "date": when.tz_convert(None).normalize(), "kickoff": when.tz_convert(None),
             "home": canonical(rec.get("home_team", ""), known_teams),
             "away": canonical(rec.get("away_team", ""), known_teams),
             "hg": math.nan, "ag": math.nan,

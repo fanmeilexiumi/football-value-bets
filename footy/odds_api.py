@@ -76,7 +76,7 @@ def parse(events: list[tuple[str, dict]], known_teams: set[str]) -> pd.DataFrame
         if pd.isna(when):
             continue
         row = {
-            "league": league, "date": when.tz_convert(None).normalize(),
+            "league": league, "date": when.tz_convert(None).normalize(), "kickoff": when.tz_convert(None),
             "home": name(home, known_teams), "away": name(away, known_teams),
             "hg": math.nan, "ag": math.nan,
         }

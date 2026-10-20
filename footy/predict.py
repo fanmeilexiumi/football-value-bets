@@ -20,7 +20,7 @@ def predict_fixtures(history: pd.DataFrame, fixtures: pd.DataFrame, as_of: pd.Ti
         p_dc = dc.predict(r["league"], r["home"], r["away"])
         row = {
             "league": r["league"], "league_name": config.LEAGUES[r["league"]]["name"],
-            "date": r["date"].strftime("%Y-%m-%d"), "home": r["home"], "away": r["away"],
+            "date": r["date"].strftime("%Y-%m-%d"), "home": r["home"], "away": r["away"], **_beijing(r),
             "odds_source": r.get("odds_source", "football-data"),
             "elo_home": round(elo.get(r["league"], r["home"])), "elo_away": round(elo.get(r["league"], r["away"])),
             "odds": {k: _f(r.get(k)) for k in ("avg_h", "avg_d", "avg_a", "max_h", "max_d", "max_a",
@@ -51,7 +51,7 @@ def predict_cl(cl_model, fixtures: pd.DataFrame) -> list[dict]:
         rh, ra = cl_model.rating(r["home"]), cl_model.rating(r["away"])
         row = {
             "league": "CL", "league_name": config.CL["name"],
-            "date": r["date"].strftime("%Y-%m-%d"), "home": r["home"], "away": r["away"],
+            "date": r["date"].strftime("%Y-%m-%d"), "home": r["home"], "away": r["away"], **_beijing(r),
             "odds_source": r.get("odds_source", "The Odds API"),
             "elo_home": None if rh is None else round(rh), "elo_away": None if ra is None else round(ra),
             "odds": {k: _f(r.get(k)) for k in ("avg_h", "avg_d", "avg_a", "max_h", "max_d", "max_a",
@@ -65,3 +65,12 @@ def predict_cl(cl_model, fixtures: pd.DataFrame) -> list[dict]:
             row["longshots"] = find_longshots(r, p, price="max")
         out.append(row)
     return out
+
+
+def _beijing(r) -> dict:
+    """Kick-off in Beijing time; falls back to the fixture date when the source gives no time."""
+    k = pd.to_datetime(r.get("kickoff"), errors="coerce")
+    if pd.isna(k):
+        return {"bj_date": r["date"].strftime("%Y-%m-%d"), "bj_time": None}
+    bj = k + pd.Timedelta(hours=8)
+    return {"bj_date": bj.strftime("%Y-%m-%d"), "bj_time": bj.strftime("%H:%M")}

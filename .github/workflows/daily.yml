@@ -2,7 +2,7 @@ name: daily-report
 
 on:
   schedule:
-    - cron: "0 6 * * *"   # 06:00 UTC = 14:00 Beijing, before the evening kick-offs
+    - cron: "0 4 * * *"   # 04:00 UTC = 12:00 Beijing; GitHub may start late, so this leaves room to finish before 16:00
   workflow_dispatch:
   push:
     branches: [main]

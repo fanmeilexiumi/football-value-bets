@@ -29,7 +29,9 @@ COLUMNS = [
     "league", "date", "home", "away", "hg", "ag",
     "avg_h", "avg_d", "avg_a", "max_h", "max_d", "max_a",
     "avg_over", "avg_under", "max_over", "max_under",
+    "kickoff",  # UTC, naive; missing when the source has no time
 ]
+_NUMERIC = COLUMNS[4:-1]
 
 _FD_MAP = {
     "Div": "league", "HomeTeam": "home", "AwayTeam": "away", "FTHG": "hg", "FTAG": "ag",
@@ -64,6 +66,10 @@ def _read_fd_csv(raw: bytes) -> pd.DataFrame:
     df = pd.read_csv(io.StringIO(text), on_bad_lines="skip")
     df = df.rename(columns=_FD_MAP).copy()
     df["date"] = pd.to_datetime(df["Date"], dayfirst=True, errors="coerce")
+    if "Time" in df.columns:  # UK local time
+        local = pd.to_datetime(df["Date"] + " " + df["Time"].astype(str), dayfirst=True, errors="coerce")
+        df["kickoff"] = (local.dt.tz_localize("Europe/London", ambiguous="NaT", nonexistent="NaT")
+                         .dt.tz_convert("UTC").dt.tz_localize(None))
     return _tidy(df)
 
 
@@ -75,8 +81,9 @@ def _tidy(df: pd.DataFrame) -> pd.DataFrame:
     df = df.dropna(subset=["date", "home", "away"])
     df["home"] = df["home"].map(canonical)
     df["away"] = df["away"].map(canonical)
-    for c in COLUMNS[4:]:
+    for c in _NUMERIC:
         df[c] = pd.to_numeric(df[c], errors="coerce")
+    df["kickoff"] = pd.to_datetime(df["kickoff"], errors="coerce")
     return df.sort_values("date").reset_index(drop=True)
 
 

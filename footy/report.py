@@ -72,15 +72,14 @@ def render(predictions: list[dict], backtest: dict, status: dict, site_dir: Path
         autoescape=select_autoescape(["html", "j2"]),
     )
     env.filters.update(pct=pct, signed_pct=signed_pct, num=num)
-    by_league = {code: [p for p in predictions if p["league"] == code] for code in config.LEAGUES}
     cl_predictions = cl_predictions or []
-    bets, cl_bets = _bets(predictions), _bets(cl_predictions)
-    longs = sorted(
-        ({**b, **{k: p[k] for k in ("league", "league_name", "date", "home", "away")},
-          "score": (p["model"] or {}).get("scores", {}).get(b["selection"])}
-         for p in predictions + cl_predictions for b in p.get("longshots", [])),
-        key=lambda b: (b["date"], -b["edge"]),
-    )
+    games = sorted(predictions + cl_predictions, key=_game_key)
+    for g in games:
+        g["picks"] = _picks(g)
+    picks = [{**pk, "game": g} for g in games for pk in g["picks"]]
+    days = [{"date": d, "label": _day_label(d), "games": [g for g in games if g["bj_date"] == d]}
+            for d in sorted({g["bj_date"] for g in games})]
+    comps = [(code, v["name"]) for code, v in config.LEAGUES.items()] + [(config.CL["code"], config.CL["name"])]
     long_bt = backtest.get("long", {})
     bt_rows = {}
     for price, block in backtest.get("bets", {}).items():
@@ -91,8 +90,8 @@ def render(predictions: list[dict], backtest: dict, status: dict, site_dir: Path
         bt_rows[price] = rows
     html = env.get_template("report.html.j2").render(
         updated=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-        leagues=config.LEAGUES, by_league=by_league, bets=bets, bt=backtest, status=status,
-        cfg=config, bt_rows=bt_rows, cl_games=cl_predictions, cl_bets=cl_bets, longs=longs, long_bt=long_bt,
+        days=days, picks=picks, comps=comps, n_games=len(games), bt=backtest, status=status,
+        cfg=config, bt_rows=bt_rows, long_bt=long_bt,
         svg_long=bankroll_svg(long_bt.get("avg", {}).get("bankroll", [])),
         svg_avg=bankroll_svg(backtest.get("bets", {}).get("avg", {}).get("bankroll", [])),
         svg_max=bankroll_svg(backtest.get("bets", {}).get("max", {}).get("bankroll", [])),
@@ -104,8 +103,28 @@ def render(predictions: list[dict], backtest: dict, status: dict, site_dir: Path
     return out
 
 
-def _bets(predictions: list[dict]) -> list[dict]:
-    return sorted(
-        ({**b, **{k: p[k] for k in ("league_name", "date", "home", "away")}} for p in predictions for b in p["bets"]),
-        key=lambda b: (b["date"], -b["edge"]),
-    )
+WEEKDAYS = "一二三四五六日"
+_ORDER = {code: i for i, code in enumerate(list(config.LEAGUES) + [config.CL["code"]])}
+
+
+def _game_key(g: dict) -> tuple:
+    return g["bj_date"], g["bj_time"] or "99:99", _ORDER.get(g["league"], 9), g["home"]
+
+
+def _day_label(d: str) -> str:
+    t = datetime.strptime(d, "%Y-%m-%d")
+    return f"{t.month}月{t.day}日 周{WEEKDAYS[t.weekday()]}"
+
+
+def _picks(g: dict) -> list[dict]:
+    """Value bets and long-odds picks of one game, merged per selection."""
+    scores = (g.get("model") or {}).get("scores", {})
+    out: dict[str, dict] = {}
+    for b in g.get("bets", []):
+        out[b["selection"]] = {**b, "tags": ["价值"], "score": scores.get(b["selection"])}
+    for b in g.get("longshots", []):
+        if b["selection"] in out:
+            out[b["selection"]]["tags"] += b["tags"]
+        else:
+            out[b["selection"]] = {**b, "tags": list(b["tags"]), "score": scores.get(b["selection"])}
+    return sorted(out.values(), key=lambda b: -b["edge"])
