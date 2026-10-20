@@ -21,7 +21,7 @@ from scipy.optimize import minimize
 from scipy.stats import poisson
 
 from . import config
-from .model import _sig, result_code
+from .model import _sig, likely_scores, result_code
 from .teams import cl_canonical
 
 log = logging.getLogger(__name__)
@@ -220,5 +220,5 @@ class CLModel:
         under = sum(grid[i, j] for i in range(3) for j in range(3 - i))
         w = config.CL_POISSON_SHARE
         out = {k: float(w * po[k] / sum(po.values()) + (1 - w) * lo[k]) for k in ("H", "D", "A")}
-        out.update(O25=float(1 - under), U25=float(under), xg_h=lh, xg_a=la)
+        out.update(O25=float(1 - under), U25=float(under), xg_h=lh, xg_a=la, scores=likely_scores(grid[:7, :7]))
         return out

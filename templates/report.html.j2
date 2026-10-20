@@ -117,20 +117,77 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
   {% endif %}
 </section>
 
+
+<section id="longshots">
+  <h2>高赔与冷门</h2>
+  <p class="muted">只看胜平负。<b>冷门</b>：市场热门一方胜率 ≥ {{ (cfg.UPSET_FAV_PROB*100)|round|int }}%，但模型给平局或弱队胜的概率比市场至少高 {{ (cfg.UPSET_MIN_GAP*100)|round|int }} 个百分点。<b>高赔</b>：赔率 {{ cfg.LONG_MIN_ODDS }}–{{ cfg.LONG_MAX_ODDS|int }}，且模型优势 ≥ {{ (cfg.LONG_MIN_EDGE*100)|round|int }}%。仓位用 {{ cfg.LONG_KELLY_FRACTION }} 倍凯利，单注上限 {{ (cfg.LONG_MAX_STAKE*100)|round|int }}%。“对应比分”是模型认为该结果下最可能的比分，没有比分赔率，仅作参考。</p>
+  {% set LA = long_bt.avg.all if long_bt and long_bt.avg else None %}
+  {% set LM = long_bt.max.all if long_bt and long_bt.max else None %}
+  {% if LA and LA.n %}
+  <div class="verdict" style="margin-top:12px">
+    <div class="kpis">
+      <div class="kpi"><div class="v">{{ LA.n }}</div><div class="k">回测注数（三大联赛，均价）</div></div>
+      <div class="kpi"><div class="v">{{ LA.hit|pct }}</div><div class="k">命中率 · 平均赔率 {{ LA.avg_odds|num }}</div></div>
+      <div class="kpi"><div class="v {{ 'neg' if (LA.roi or 0) < 0 else 'pos' }}">{{ LA.roi|signed_pct }}</div><div class="k">ROI · 按市场均价</div></div>
+      <div class="kpi"><div class="v {{ 'neg' if (LM.roi or 0) < 0 else 'pos' }}">{{ LM.roi|signed_pct }}</div><div class="k">ROI · 按最优价（{{ LM.n }} 注）</div></div>
+    </div>
+    {% if (LA.roi or 0) < 0 %}
+    <p><b>回测里高赔和冷门选项整体是亏的</b>，亏损幅度比价值投注更大。高赔选项命中率只有约 {{ LA.hit|pct(0) }}，连续不中十几次很常见。这张表适合用来了解“哪些比赛有爆冷可能”，不适合照着下注。欧冠部分未经回测。</p>
+    {% else %}
+    <p>回测期内为正收益，但命中率低、波动大，样本仍有限。欧冠部分未经回测。</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <h3>本期高赔与冷门 · {{ longs|length }} 项</h3>
+  {% if longs %}
+  <div class="tbl"><table>
+    <thead><tr><th>日期</th><th>赛事</th><th>比赛</th><th>选项</th><th>标签</th><th class="n">模型</th><th class="n">市场</th><th class="n">最优赔率</th><th class="n">优势</th><th class="n">对应比分</th><th class="n">仓位</th></tr></thead>
+    <tbody>
+    {% for b in longs %}
+      <tr><td>{{ b.date }}</td><td>{{ b.league_name }}</td><td>{{ b.home }} vs {{ b.away }}</td><td><span class="pill">{{ b.label }}</span></td>
+        <td>{% for t in b.tags %}<span class="edge">{{ t }}</span> {% endfor %}</td>
+        <td class="n">{{ b.prob|pct }}</td><td class="n">{{ b.market_prob|pct }}</td><td class="n">{{ b.odds|num }}</td><td class="n">{{ b.edge|signed_pct }}</td>
+        <td class="n">{% if b.score %}{{ b.score[0] }}-{{ b.score[1] }}（{{ b.score[2]|pct(0) }}）{% else %}–{% endif %}</td><td class="n">{{ b.stake|pct }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% else %}
+  <p class="muted">这一期没有满足条件的高赔或冷门选项。</p>
+  {% endif %}
+
+  {% if LA and LA.n %}
+  <details style="margin-top:12px"><summary>高赔与冷门回测明细</summary>
+    <div class="card" style="margin-top:10px"><b>资金曲线 · 市场均价</b><div class="chart">{{ svg_long|safe }}</div><span class="muted">起始 100，{{ cfg.LONG_KELLY_FRACTION }} 倍凯利</span></div>
+    {% for price, title in [('avg','按市场均价'),('max','按最优价')] %}
+    <h3>{{ title }}</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>分组</th><th class="n">注数</th><th class="n">命中率</th><th class="n">平均赔率</th><th class="n">ROI</th></tr></thead>
+      <tbody>
+        <tr><td>全部</td><td class="n">{{ long_bt[price].all.n }}</td><td class="n">{{ long_bt[price].all.hit|pct }}</td><td class="n">{{ long_bt[price].all.avg_odds|num }}</td><td class="n {{ 'neg' if (long_bt[price].all.roi or 0) < 0 else 'pos' }}">{{ long_bt[price].all.roi|signed_pct }}</td></tr>
+        {% for label, st in long_bt[price].rows %}
+        <tr><td>{{ label }}</td><td class="n">{{ st.n }}</td><td class="n">{{ st.hit|pct }}</td><td class="n">{{ st.avg_odds|num }}</td><td class="n {{ 'neg' if (st.roi or 0) < 0 else 'pos' }}">{{ st.roi|signed_pct }}</td></tr>
+        {% endfor %}
+      </tbody></table></div>
+    {% endfor %}
+  </details>
+  {% endif %}
+</section>
+
 <section>
   <h2>未来比赛概率</h2>
-  <p class="muted">每格为“模型 / 市场”，市场概率由平均赔率经 goto_conversion 去水得到。</p>
+  <p class="muted">每格为“模型 / 市场”，市场概率由平均赔率经 goto_conversion 去水得到。“最可能比分”为模型给出的前三个比分。</p>
   {% for code, games in by_league.items() %}
   <h3>{{ leagues[code].name }} · {{ games|length }} 场</h3>
   {% if games %}
   <div class="tbl"><table>
-    <thead><tr><th>日期</th><th>比赛</th><th class="n">主胜</th><th class="n">平</th><th class="n">客胜</th><th class="n">大 2.5</th><th class="n">Elo</th><th>赔率来源</th></tr></thead>
+    <thead><tr><th>日期</th><th>比赛</th><th class="n">主胜</th><th class="n">平</th><th class="n">客胜</th><th class="n">大 2.5</th><th class="n">最可能比分</th><th class="n">Elo</th><th>赔率来源</th></tr></thead>
     <tbody>
     {% for g in games %}
       <tr><td>{{ g.date }}</td><td>{{ g.home }} vs {{ g.away }}</td>
       {% for k in ['H','D','A','O25'] %}
         <td class="n">{{ (g.model[k] if g.model else none)|pct(0) }} / {{ g.market.get(k)|pct(0) }}</td>
       {% endfor %}
+        <td class="n">{% if g.model and g.model.scores %}{% for sc in g.model.scores.top %}{{ sc[0] }}-{{ sc[1] }}{{ '' if loop.last else ' / ' }}{% endfor %}{% else %}–{% endif %}</td>
         <td class="n">{{ g.elo_home }}–{{ g.elo_away }}</td><td class="muted">{{ g.odds_source }}{% if not g.model %}（升班马数据不足，未建模）{% endif %}</td></tr>
     {% endfor %}
     </tbody></table></div>
@@ -163,13 +220,14 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
   <h3>欧冠比赛概率 · {{ cl_games|length }} 场</h3>
   {% if cl_games %}
   <div class="tbl"><table>
-    <thead><tr><th>日期</th><th>比赛</th><th class="n">主胜</th><th class="n">平</th><th class="n">客胜</th><th class="n">大 2.5</th><th class="n">跨联赛评分</th><th>说明</th></tr></thead>
+    <thead><tr><th>日期</th><th>比赛</th><th class="n">主胜</th><th class="n">平</th><th class="n">客胜</th><th class="n">大 2.5</th><th class="n">最可能比分</th><th class="n">跨联赛评分</th><th>说明</th></tr></thead>
     <tbody>
     {% for g in cl_games %}
       <tr><td>{{ g.date }}</td><td>{{ g.home }} vs {{ g.away }}</td>
       {% for k in ['H','D','A','O25'] %}
         <td class="n">{{ (g.model[k] if g.model else none)|pct(0) }} / {{ g.market.get(k)|pct(0) }}</td>
       {% endfor %}
+        <td class="n">{% if g.model and g.model.scores %}{% for sc in g.model.scores.top %}{{ sc[0] }}-{{ sc[1] }}{{ '' if loop.last else ' / ' }}{% endfor %}{% else %}–{% endif %}</td>
         <td class="n">{{ g.elo_home if g.elo_home is not none else '?' }}–{{ g.elo_away if g.elo_away is not none else '?' }}</td>
         <td class="muted">{% if not g.model %}比赛数据不足，未建模{% else %}{{ g.odds_source }}{% endif %}</td></tr>
     {% endfor %}
@@ -222,6 +280,7 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
     <li><b>数据采集</b>：football-data.co.uk 近 {{ cfg.HISTORY_SEASONS }} 季加本季的赛果与约 40 家公司的平均/最高赔率（不可用时改用 xgabora 在 GitHub 上的镜像）；OddsHarvester 从 OddsPortal 抓未开赛的胜平负和大小球 2.5 赔率。</li>
     <li><b>预测建模</b>：penaltyblog 的 Dixon-Coles 模型，按天数指数衰减加权（ξ = {{ cfg.DC_XI }}），每个联赛单独拟合近 3 年比赛；Elo 按净胜球加权，用有序 logit 转成胜平负概率；胜平负取 {{ ((1-cfg.ELO_BLEND)*100)|round|int }}% Dixon-Coles + {{ (cfg.ELO_BLEND*100)|round|int }}% Elo。</li>
     <li><b>欧冠</b>：赛果来自 openfootball/champions-league，赔率来自 The Odds API；跨联赛 Elo（欧冠场次 K = {{ cfg.CL_ELO_K|int }}，联赛场次 K = {{ cfg.ELO_K|int }}）加各国强度修正，球队需至少 {{ cfg.CL_MIN_MATCHES }} 场评分比赛才建模；价值投注门槛与三大联赛相同。</li>
+    <li><b>高赔与冷门</b>：同一套模型概率，只换筛选规则（见上文），仓位减半为 {{ cfg.LONG_KELLY_FRACTION }} 倍凯利；比分概率来自 Dixon-Coles（欧冠为 Elo-泊松）的比分矩阵。</li>
     <li><b>赔率分析</b>：goto_conversion 去除庄家抽水得到市场公平概率；优势 = 模型概率 × 赔率 − 1；仓位用分数凯利。</li>
   </ul>
 </section>

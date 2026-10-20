@@ -29,12 +29,12 @@ def market_probs(row) -> dict:
     return out
 
 
-def kelly_stake(p: float, odds: float) -> float:
+def kelly_stake(p: float, odds: float, fraction: float = config.KELLY_FRACTION, cap: float = config.MAX_STAKE) -> float:
     """Fractional Kelly share of bankroll, capped."""
     if odds <= 1:
         return 0.0
     f = (p * odds - 1) / (odds - 1)
-    return max(0.0, min(config.MAX_STAKE, config.KELLY_FRACTION * f))
+    return max(0.0, min(cap, fraction * f))
 
 
 def find_value(row, probs: dict, price: str = "max") -> list[dict]:
@@ -57,6 +57,43 @@ def find_value(row, probs: dict, price: str = "max") -> list[dict]:
                 "market_prob": mkt.get(sel), "edge": edge, "stake": kelly_stake(p, odds),
             })
     return bets
+
+
+def find_longshots(row, probs: dict, price: str = "max") -> list[dict]:
+    """1X2 picks at long odds: upsets against a clear favourite, and any long price the model rates higher.
+
+    Tags: "冷门" when the market favourite is at least UPSET_FAV_PROB and the
+    model gives the draw or the outsider UPSET_MIN_GAP more than the market;
+    "高赔" when the price is in [LONG_MIN_ODDS, LONG_MAX_ODDS] with an edge of
+    at least LONG_MIN_EDGE. Stakes are smaller than for value bets.
+    """
+    mkt = market_probs(row)
+    if not all(k in mkt for k in ("H", "D", "A")):
+        return []
+    fav = "H" if mkt["H"] >= mkt["A"] else "A"
+    has_fav = mkt[fav] >= config.UPSET_FAV_PROB
+    picks = []
+    for sel in ("H", "D", "A"):
+        pk, avg_col, max_col, label = SELECTIONS[sel]
+        p = probs.get(pk)
+        odds = (_price(row, max_col) if price == "max" else None) or _price(row, avg_col)
+        if p is None or odds is None or odds > config.LONG_MAX_ODDS:
+            continue
+        edge = p * odds - 1
+        if edge > config.LONG_MAX_EDGE:
+            continue
+        tags = []
+        if has_fav and sel != fav and p - mkt[sel] >= config.UPSET_MIN_GAP and edge > 0:
+            tags.append("冷门")
+        if odds >= config.LONG_MIN_ODDS and edge >= config.LONG_MIN_EDGE:
+            tags.append("高赔")
+        if tags:
+            picks.append({
+                "selection": sel, "label": label, "prob": p, "odds": odds, "market_prob": mkt[sel],
+                "edge": edge, "tags": tags, "favourite": SELECTIONS[fav][3] if has_fav else None,
+                "stake": kelly_stake(p, odds, config.LONG_KELLY_FRACTION, config.LONG_MAX_STAKE),
+            })
+    return picks
 
 
 def _price(row, col: str) -> float | None:

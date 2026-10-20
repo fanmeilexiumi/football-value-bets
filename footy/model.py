@@ -44,10 +44,12 @@ class DixonColes:
             g = m.predict(home, away)
         except ValueError:  # promoted side with no matches in the window
             return None
+        grid = np.array([[g.exact_score(h, a) for a in range(7)] for h in range(7)])
         return {
             "H": g.home_win, "D": g.draw, "A": g.away_win,
             "O25": g.total_goals("over", 2.5), "U25": g.total_goals("under", 2.5),
             "xg_h": float(g.home_goal_expectation), "xg_a": float(g.away_goal_expectation),
+            "scores": likely_scores(grid),
         }
 
 
@@ -111,6 +113,16 @@ class EloOutcome:
         pa = _sig(self.c1 - self.b * x)
         pna = _sig(self.c2 - self.b * x)
         return {"H": 1 - pna, "D": pna - pa, "A": pa}
+
+
+def likely_scores(grid: np.ndarray) -> dict:
+    """Top three scores overall and the likeliest score for each 1X2 outcome, as [home, away, prob]."""
+    cells = [(int(h), int(a), float(grid[h, a])) for h in range(grid.shape[0]) for a in range(grid.shape[1])]
+    cells.sort(key=lambda c: -c[2])
+    best = {}
+    for h, a, p in cells:
+        best.setdefault("H" if h > a else "D" if h == a else "A", [h, a, p])
+    return {"top": [list(c) for c in cells[:3]], **best}
 
 
 def _sig(z):

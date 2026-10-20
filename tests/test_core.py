@@ -130,3 +130,24 @@ def test_parse_odds_api_event():
     assert (r["home"], r["away"]) == ("Man City", "Brighton")
     assert r["max_h"] == 1.45 and r["max_a"] == 7.5 and abs(r["avg_d"] - 5.1) < 1e-9
     assert r["max_over"] == 1.6  # the 3.5 line is ignored
+
+
+def test_find_longshots_tags_upsets_and_long_prices():
+    from footy.value import find_longshots
+    # market: strong home favourite; model rates the draw and away side higher
+    row = pd.Series(dict(avg_h=1.40, avg_d=4.6, avg_a=8.0, max_h=1.45, max_d=4.8, max_a=8.5,
+                         avg_over=1.9, avg_under=1.9, max_over=1.95, max_under=1.95))
+    picks = {b["selection"]: b for b in find_longshots(row, {"H": 0.60, "D": 0.25, "A": 0.15})}
+    assert set(picks) == {"D", "A"}
+    assert "冷门" in picks["A"]["tags"] and "高赔" in picks["A"]["tags"]
+    assert all(0 < b["stake"] <= config.LONG_MAX_STAKE for b in picks.values())
+    # model agrees with the market: nothing
+    assert find_longshots(row, {"H": 0.68, "D": 0.20, "A": 0.12}) == []
+
+
+def test_likely_scores():
+    from footy.model import likely_scores
+    grid = np.zeros((7, 7))
+    grid[1, 0], grid[1, 1], grid[0, 2], grid[2, 1] = 0.3, 0.25, 0.1, 0.2
+    s = likely_scores(grid)
+    assert s["top"][0][:2] == [1, 0] and s["D"][:2] == [1, 1] and s["A"][:2] == [0, 2]

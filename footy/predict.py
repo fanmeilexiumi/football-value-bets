@@ -6,7 +6,7 @@ import pandas as pd
 
 from . import config
 from .model import DixonColes, EloOutcome, add_pre_match_elo, blend, result_code
-from .value import find_value, market_probs
+from .value import find_longshots, find_value, market_probs
 
 
 def predict_fixtures(history: pd.DataFrame, fixtures: pd.DataFrame, as_of: pd.Timestamp) -> list[dict]:
@@ -25,12 +25,13 @@ def predict_fixtures(history: pd.DataFrame, fixtures: pd.DataFrame, as_of: pd.Ti
             "elo_home": round(elo.get(r["league"], r["home"])), "elo_away": round(elo.get(r["league"], r["away"])),
             "odds": {k: _f(r.get(k)) for k in ("avg_h", "avg_d", "avg_a", "max_h", "max_d", "max_a",
                                                 "avg_over", "avg_under", "max_over", "max_under")},
-            "market": market_probs(r), "model": None, "bets": [],
+            "market": market_probs(r), "model": None, "bets": [], "longshots": [],
         }
         if p_dc is not None:
             p = blend(p_dc, eo.predict(elo.diff(r["league"], r["home"], r["away"])))
-            row["model"] = {k: float(v) for k, v in p.items()}
+            row["model"] = {k: (v if k == "scores" else float(v)) for k, v in p.items()}
             row["bets"] = find_value(r, p, price="max")
+            row["longshots"] = find_longshots(r, p, price="max")
         out.append(row)
     return out
 
@@ -55,11 +56,12 @@ def predict_cl(cl_model, fixtures: pd.DataFrame) -> list[dict]:
             "elo_home": None if rh is None else round(rh), "elo_away": None if ra is None else round(ra),
             "odds": {k: _f(r.get(k)) for k in ("avg_h", "avg_d", "avg_a", "max_h", "max_d", "max_a",
                                                 "avg_over", "avg_under", "max_over", "max_under")},
-            "market": market_probs(r), "model": None, "bets": [],
+            "market": market_probs(r), "model": None, "bets": [], "longshots": [],
         }
         p = cl_model.predict(r["home"], r["away"])
         if p is not None:
-            row["model"] = {k: float(v) for k, v in p.items()}
+            row["model"] = {k: (v if k == "scores" else float(v)) for k, v in p.items()}
             row["bets"] = find_value(r, p, price="max")
+            row["longshots"] = find_longshots(r, p, price="max")
         out.append(row)
     return out

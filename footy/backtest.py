@@ -15,7 +15,7 @@ import pandas as pd
 
 from . import config
 from .model import DixonColes, EloOutcome, OUTCOMES, add_pre_match_elo, blend, result_code
-from .value import find_value, market_probs
+from .value import find_longshots, find_value, market_probs
 
 log = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ def run(history: pd.DataFrame, today: date | None = None) -> dict:
     hist, _ = add_pre_match_elo(history)
     test = hist[hist["date"] >= start]
 
-    preds, bets = [], {"avg": [], "max": []}
+    preds, bets, longs = [], {"avg": [], "max": []}, {"avg": [], "max": []}
     for week in pd.date_range(start, pd.Timestamp(today), freq="W-MON"):
         games = test[(test["date"] >= week) & (test["date"] < week + pd.Timedelta(days=7))]
         if games.empty:
@@ -60,7 +60,13 @@ def run(history: pd.DataFrame, today: date | None = None) -> dict:
                 for b in find_value(r, p, price=price):
                     b.update(date=r["date"], league=r["league"], won=_won(b["selection"], r["hg"], r["ag"]))
                     bets[price].append(b)
-    return summarise(preds, bets, start)
+                for b in find_longshots(r, p, price=price):
+                    b.update(date=r["date"], league=r["league"], won=_won(b["selection"], r["hg"], r["ag"]))
+                    longs[price].append(b)
+    out = summarise(preds, bets, start)
+    if preds:
+        out["long"] = summarise_long(longs)
+    return out
 
 
 def _logloss(probs: list[list[float]], res: list[int]) -> float:
@@ -125,4 +131,25 @@ def summarise(preds: list[dict], bets: dict[str, list[dict]], start: pd.Timestam
                 block["by_season"][s] = _bet_stats(g.to_dict("records"))
             block["bankroll"] = _bankroll(bl)
         out["bets"][price] = block
+    return out
+
+
+def summarise_long(longs: dict[str, list[dict]]) -> dict:
+    """Long-odds and upset picks, split by tag, league and season."""
+    out = {}
+    for price, bl in longs.items():
+        block = {"all": _bet_stats(bl), "rows": []}
+        if bl:
+            df = pd.DataFrame(bl)
+            for tag in ("冷门", "高赔"):
+                block["rows"].append((f"{tag}标签", _bet_stats([b for b in bl if tag in b["tags"]])))
+            for sel, g in df.groupby("label"):
+                block["rows"].append((sel, _bet_stats(g.to_dict("records"))))
+            for lg, g in df.groupby("league"):
+                block["rows"].append((config.LEAGUES[lg]["name"], _bet_stats(g.to_dict("records"))))
+            df["season"] = df["date"].map(lambda d: f"{d.year if d.month >= 7 else d.year - 1}/{(d.year + 1 if d.month >= 7 else d.year) % 100:02d}")
+            for se, g in df.groupby("season"):
+                block["rows"].append((f"{se} 赛季", _bet_stats(g.to_dict("records"))))
+            block["bankroll"] = _bankroll(bl)
+        out[price] = block
     return out

@@ -48,6 +48,16 @@ MAX_EDGE = 0.25  # larger gaps to the market are almost always model error, not 
 KELLY_FRACTION = 0.25
 MAX_STAKE = 0.02  # share of bankroll per bet
 
+# Long odds and upsets (1X2 only): a separate, smaller-staked list
+LONG_MIN_ODDS = 3.0
+LONG_MAX_ODDS = 10.0
+LONG_MIN_EDGE = 0.05
+LONG_MAX_EDGE = 0.40  # long prices swing more, so allow a wider gap before calling it model error
+UPSET_FAV_PROB = 0.60  # market favourite at least this likely to win
+UPSET_MIN_GAP = 0.03  # model gives the upset at least 3 points more than the market
+LONG_KELLY_FRACTION = 0.125
+LONG_MAX_STAKE = 0.01
+
 # Backtest
 BACKTEST_SEASONS = 2  # completed seasons replayed, plus the current one so far
 
