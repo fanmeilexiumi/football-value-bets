@@ -132,12 +132,19 @@ def parse_period(html: str, today: date) -> dict:
             "comp": grab(r'td-evt"><a[^>]*>([^<]*)') or "",
             "kickoff": kick.strftime("%Y-%m-%d %H:%M") if kick else None,
             "home_cn": grab(r'class="team-l">([^<]*)</a>') or "", "away_cn": grab(r'class="team-r">([^<]*)</a>') or "",
-            "market": mkt,
+            "market": mkt, "score": _score(row),
         })
     now_bj = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=8)
     closed = bool(deadline and deadline < now_bj)
     return {"expect": expect.group(1) if expect else "", "deadline": deadline.strftime("%m-%d %H:%M") if deadline else None,
             "closed": closed, "games": games}
+
+
+def _score(row: str) -> tuple[int, int] | None:
+    """Full-time score shown between the teams once a game is over ("VS" before kick-off)."""
+    team = row[row.find("td-team"):]
+    m = re.search(r'team-vs[^>]*>\s*(\d+)\s*[:：]\s*(\d+)\s*<', team) or re.search(r'>\s*(\d+)\s*[:：]\s*(\d+)\s*<', team)
+    return (int(m.group(1)), int(m.group(2))) if m else None
 
 
 def _md_time(today: date, mm, dd, hh, mi) -> datetime:
@@ -147,6 +154,11 @@ def _md_time(today: date, mm, dd, hh, mi) -> datetime:
 
 
 # ----------------------------------------------------------------- match
+
+def pred_id(p: dict) -> str:
+    """Stable key of one predicted game, shared with the journal."""
+    return f'{p["league"]}|{p["bj_date"]}|{p["home"]}|{p["away"]}'
+
 
 def _zh_match(cn: str, en: str) -> bool:
     return any(len(v) >= 2 and (cn.startswith(v) or v.startswith(cn)) for v in ZH_NAMES.get(en, ())) if cn else False
@@ -180,7 +192,8 @@ def game_probs(g: dict) -> dict:
     if mkt is None and pred and all(k in pred.get("market", {}) for k in ("H", "D", "A")):
         mkt = [pred["market"][k] for k in ("H", "D", "A")]
     if model:
-        p, src = model, "模型"
+        m = config.ZC_MARKET_SHARE if mkt else 0.0
+        p, src = [(1 - m) * a + m * (b if mkt else 0.0) for a, b in zip(model, mkt or model)], "模型"
     elif mkt:
         s = config.ZC_UPSET_SHRINK
         p, src = [(1 - s) * a + s * b for a, b in zip(mkt, config.ZC_BASE_RATES)], "市场"
@@ -282,6 +295,7 @@ def build(periods: list[dict], predictions: list[dict]) -> list[dict]:
             games.append({
                 **{k: g[k] for k in ("no", "comp", "kickoff", "home_cn", "away_cn")},
                 "home": pred["home"] if pred else None, "away": pred["away"] if pred else None,
+                "pred_id": pred_id(pred) if pred else None,
                 **info, "t14": tk["t14"]["picks"][j], "r9": tk["r9"]["picks"][j],
             })
         out.append({**{k: period[k] for k in ("expect", "deadline")}, "simulated": period.get("simulated", False),
@@ -319,7 +333,8 @@ def simulate(preds: list[dict], draws: int = 30, seed: int = 0) -> dict:
             continue
         for _ in range(draws):
             sample = [games[i] for i in rng.choice(len(games), 14, replace=False)]
-            probs = [{"p": dict(zip(PICKS, g["blend"])), "model": dict(zip(PICKS, g["blend"])),
+            m = config.ZC_MARKET_SHARE
+            probs = [{"p": dict(zip(PICKS, [(1 - m) * a + m * b for a, b in zip(g["blend"], g["mkt"])])), "model": dict(zip(PICKS, g["blend"])),
                       "market": dict(zip(PICKS, g["mkt"])), "fixed": _page_pick({"bets": g.get("page_bets", [])})}
                      for g in sample]
             tk = plan(probs)

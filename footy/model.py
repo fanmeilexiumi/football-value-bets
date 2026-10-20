@@ -133,7 +133,8 @@ def result_code(hg: int, ag: int) -> int:
     return 2 if hg > ag else 1 if hg == ag else 0
 
 
-def blend(dc: dict, elo: dict, w: float = config.ELO_BLEND) -> dict:
+def blend(dc: dict, elo: dict, w: float | None = None) -> dict:
+    w = config.ELO_BLEND if w is None else w  # read at call time: the weekly tuning may change it
     out = dict(dc)
     for k in OUTCOMES:
         out[k] = (1 - w) * dc[k] + w * elo[k]

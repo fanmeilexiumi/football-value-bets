@@ -18,6 +18,7 @@ from .model import DixonColes, EloOutcome, OUTCOMES, add_pre_match_elo, blend, r
 from .value import find_longshots, find_value, market_probs
 
 log = logging.getLogger(__name__)
+ODDS_COLS = ("avg_h", "avg_d", "avg_a", "max_h", "max_d", "max_a", "avg_over", "avg_under", "max_over", "max_under")
 
 
 def _won(sel: str, hg: int, ag: int) -> bool:
@@ -56,6 +57,7 @@ def run(history: pd.DataFrame, today: date | None = None) -> dict:
                 "blend": [p[k] for k in OUTCOMES], "mkt": [market_probs(r).get(k) for k in OUTCOMES],
                 "dc_over": p_dc["O25"], "mkt_over": market_probs(r).get("O25"),
                 "page_bets": [b for b in find_value(r, p) if b["selection"] in OUTCOMES],
+                "odds": {k: r[k] for k in ODDS_COLS},
             })
             for price in ("avg", "max"):
                 for b in find_value(r, p, price=price):
@@ -68,6 +70,7 @@ def run(history: pd.DataFrame, today: date | None = None) -> dict:
     if preds:
         out["long"] = summarise_long(longs)
         out["zucai"] = zucai.simulate(preds)
+    out["preds"] = preds  # for the weekly tuning; popped before the JSON is written
     return out
 
 

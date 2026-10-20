@@ -68,6 +68,19 @@ ZC_MAX_DOUBLES_14 = 2  # 4 bets = 8 yuan
 ZC_MAX_DOUBLES_R9 = 1  # 2 bets = 4 yuan
 ZC_UPSET_BONUS = 0.10  # log-score bonus for doubling on an outcome the model rates above the market
 
+ZC_MARKET_SHARE = 0.0  # games we model: pull the model this far towards the market (tuned weekly)
+
+# Journal and daily review (复盘)
+JOURNAL_DIR = Path(os.environ.get("FOOTY_JOURNAL_DIR", ROOT / "journal"))  # committed back by the workflow
+JOURNAL_KEEP_DAYS = 400
+JOURNAL_VOID_DAYS = 6  # no result this long after kick-off: postponed or abandoned
+REVIEW_UPSET_PROB = 0.30  # an upset: not the market favourite, and the market gave it less than this
+
+# Weekly self-tuning (learn.py): a change must win on the held-out recent months
+TUNE_WEEKDAY = 0  # Monday, Beijing time
+TUNE_VALID_DAYS = 365
+TUNE_MIN_GAIN = {"logloss": 0.001, "roi": 0.02, "hits": 0.03}
+
 # Backtest
 BACKTEST_SEASONS = 2  # completed seasons replayed, plus the current one so far
 

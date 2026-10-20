@@ -120,7 +120,7 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
 {% set LA = long_bt.avg.all if long_bt and long_bt.avg else None %}
 <header>
   <h1>三大联赛与欧冠赛程推荐</h1>
-  <p class="muted">英超、意甲、西甲、欧冠，按北京时间排列。每天北京时间 12:00 开始更新，16:00 前完成：拉取赔率、拟合模型，把模型概率与去水后的市场概率对比，标出价值、冷门和高赔选项。</p>
+  <p class="muted">英超、意甲、西甲、欧冠，按北京时间排列。每天北京时间 11:00 开始，先复盘前一天的赛果，再更新当天推荐（16:00 前完成）：拉取赔率、拟合模型，把模型概率与去水后的市场概率对比，标出价值、冷门和高赔选项。</p>
   <div class="chips">
     <span class="chip">更新于 {{ updated }}</span>
     <span class="chip">未来 {{ status.days_ahead }} 天 {{ n_games }} 场</span>
@@ -206,6 +206,95 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
     <p class="muted">足彩奖池按中奖人数分配，冷门越多、中奖人越少、单注奖金越高；但命中率本身很低，请只用小额娱乐。</p>
   </details>
   {% endif %}
+</section>
+
+<section id="review">
+  <h2>复盘 · 自我学习</h2>
+  <p class="muted">每天北京时间 11:00 先复盘前一天的比赛（凌晨开球的算前一晚），再出当天推荐。“我们的判断”是模型概率{% if cfg.ZC_MARKET_SHARE %}按 {{ (cfg.ZC_MARKET_SHARE*100)|round|int }}% 向市场靠拢后{% endif %}最可能的结果；推荐按当时的最优赔率、每注 1 单位结算。爆冷指赛果不是市场热门、且市场给它的概率低于 {{ (cfg.REVIEW_UPSET_PROB*100)|round|int }}%。存档从 {{ review.since or '今天' }} 开始。</p>
+  {% set L = review.latest %}
+  {% if L %}{% set S = L.summary %}
+  <h3 style="margin-top:12px">{{ L.day }} 复盘 <span class="muted" style="font-size:13px;font-weight:400">{{ S.n }} 场已结束{% if review.pending %}，另有 {{ review.pending }} 场等待赛果{% endif %}</span></h3>
+  <div class="kpis">
+    <div class="kpi"><div class="v">{{ S.call_hit }}/{{ S.n_call }}</div><div class="k">我们的判断命中（市场热门 {{ S.fav_hit }}/{{ S.n_fav }}）</div></div>
+    <div class="kpi"><div class="v">{{ S.value.n }} 中 {{ ((S.value.hit or 0) * S.value.n)|round|int }}</div><div class="k">价值推荐，盈亏 {{ '%+.2f'|format(S.value.profit) }} 单位</div></div>
+    <div class="kpi"><div class="v">{{ S.long_any.n }} 注</div><div class="k">冷门 / 高赔推荐，盈亏 {{ '%+.2f'|format(S.long_any.profit) }} 单位</div></div>
+    <div class="kpi"><div class="v">{{ S.upsets }} 场</div><div class="k">爆冷，其中提前提示 {{ S.upsets_flagged }} 场</div></div>
+  </div>
+  <div class="tbl" style="margin-top:10px"><table>
+    <thead><tr><th>北京时间</th><th>赛事</th><th>比赛</th><th class="n">比分</th><th>赛果</th><th>我们的判断</th><th>推荐结算</th><th>爆冷复盘</th></tr></thead>
+    <tbody>
+    {% for g in L.games %}
+      <tr><td class="num">{{ g.bj_date[5:] }} {{ g.bj_time or '' }}</td><td>{{ g.league_name }}</td><td>{{ g.home }} vs {{ g.away }}</td><td class="n"><b>{{ g.score }}</b></td>
+        <td>{{ g.res_label }}</td>
+        <td>{% if g.call %}<span class="tag {{ 'v' if g.call_hit else 'u' }}">{{ g.call_label }} {{ '✓' if g.call_hit else '✗' }}</span>{% else %}–{% endif %}</td>
+        <td>{% for pk in g.picks %}<span class="tag {{ 'v' if pk.won else 'u' }}">{{ pk.label }} @{{ pk.odds|num }} {{ '%+.2f'|format(pk.profit) }}</span>{% else %}<span class="muted">无</span>{% endfor %}</td>
+        <td>{% if g.upset %}<b>冷门</b> 市场 {{ g.upset.market|pct(0) }} / 模型 {{ g.upset.model|pct(0) }}：{{ g.upset.cause }}{% if g.upset.lottery %}<br><small class="muted">足彩 {{ g.upset.lottery }}</small>{% endif %}{% endif %}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% else %}
+  <p class="empty" style="margin-top:10px">还没有已结束的比赛。存档从 {{ review.since or '今天' }} 开始，比赛结束后的第二天 11:00 出第一份复盘。</p>
+  {% endif %}
+
+  {% if review.lottery %}
+  <details class="fold" style="margin-top:12px" open>
+    <summary>足彩开奖复盘</summary>
+    <div class="tbl"><table>
+      <thead><tr><th>期号</th><th>开奖结果</th><th class="n">14 场命中</th><th class="n">热门单选命中</th><th class="n">任九</th><th>冷门场次</th></tr></thead>
+      <tbody>
+      {% for p in review.lottery %}
+        <tr><td>{{ p.expect }}</td><td class="num">{{ p.result }}</td><td class="n">{{ p.t14_hits }}/{{ p.n_done }}</td><td class="n">{{ p.fav_hits }}/{{ p.n_done }}</td>
+          <td class="n">{{ p.r9_hits }}/{{ p.r9_n }}{% if p.r9_all %} <span class="tag v">全中</span>{% endif %}</td>
+          <td>{% for g in p.games if g.upset %}<span class="tag {{ 'v' if g.hit else 'u' }}">{{ g.no }} {{ g.home_cn }} {{ g.score or g.result }}{{ ' 已覆盖' if g.hit else '' }}</span>{% else %}<span class="muted">无</span>{% endfor %}</td></tr>
+      {% endfor %}
+      </tbody></table></div>
+  </details>
+  {% endif %}
+
+  {% set T = review.total %}
+  {% if T.n %}
+  <details class="fold" style="margin-top:12px">
+    <summary>累计战绩 · {{ T.n }} 场</summary>
+    <div class="tbl"><table>
+      <thead><tr><th>范围</th><th class="n">场次</th><th class="n">我们的判断</th><th class="n">市场热门</th><th class="n">价值推荐</th><th class="n">冷门推荐</th><th class="n">高赔推荐</th><th class="n">爆冷 / 提示</th></tr></thead>
+      <tbody>
+      {% for name, s in [('全部', T)] + review.by_comp %}
+        <tr><td>{{ name }}</td><td class="n">{{ s.n }}</td>
+          <td class="n">{{ (s.call_hit / s.n_call)|pct(0) if s.n_call else '–' }}</td><td class="n">{{ (s.fav_hit / s.n_fav)|pct(0) if s.n_fav else '–' }}</td>
+          {% for st in [s.value, s.upset_picks, s.long_picks] %}<td class="n">{% if st.n %}{{ st.n }} 注 · 命中 {{ st.hit|pct(0) }} · ROI {{ st.roi|signed_pct(0) }}{% else %}–{% endif %}</td>{% endfor %}
+          <td class="n">{{ s.upsets }} / {{ s.upsets_flagged }}</td></tr>
+      {% endfor %}
+      </tbody></table></div>
+    {% if review.recent %}
+    <p class="muted" style="margin-top:8px">近期每日：{% for d in review.recent %}{{ d.day[5:] }} 判断 {{ d.summary.call_hit }}/{{ d.summary.n_call }}{{ '；' if not loop.last }}{% endfor %}</p>
+    {% endif %}
+  </details>
+  {% endif %}
+
+  <details class="fold" style="margin-top:12px">
+    <summary>自我学习记录{% if learned.state.updated %} · 最近一次 {{ learned.state.updated }}{% endif %}</summary>
+    <p class="muted">每周一在复盘后重新挑选下面的参数：用更早的比赛挑出最好的取值，只有在最近 {{ cfg.TUNE_VALID_DAYS }} 天的比赛上也明显更好（对数损失低 {{ cfg.TUNE_MIN_GAIN.logloss }}、回报率高 {{ (cfg.TUNE_MIN_GAIN.roi*100)|round|int }} 个百分点，或足彩平均多中 {{ cfg.TUNE_MIN_GAIN.hits }} 场）才采用，避免越调越差。数据来自三大联赛逐周回测（每周新增真实赛果）和存档里已结束的欧冠比赛。模型只看比分和赔率，伤病、首发等信息不在其中。</p>
+    <div class="tbl"><table>
+      <thead><tr><th>参数</th><th>作用</th><th class="n">初始值</th><th class="n">当前值</th></tr></thead>
+      <tbody>
+      {% for p in learned.params %}
+        <tr><td class="num">{{ p.name }}</td><td>{{ p.label }}</td><td class="n">{{ p.default }}</td><td class="n">{% if p.current != p.default %}<b>{{ p.current }}</b>{% else %}{{ p.current }}{% endif %}</td></tr>
+      {% endfor %}
+      </tbody></table></div>
+    {% for e in learned.state.log[:4] %}
+    <p style="margin:12px 0 4px"><b>{{ e.date }}</b> <span class="muted">训练 {{ e.train_rows }} 场 · 验证 {{ e.valid_rows }} 场 · 欧冠 {{ e.cl_rows }} 场</span></p>
+    <div class="tbl"><table>
+      <thead><tr><th>参数</th><th class="n">当前 → 候选</th><th class="n">验证：当前</th><th class="n">验证：候选</th><th>结论</th></tr></thead>
+      <tbody>
+      {% for c in e.checks %}
+        <tr><td class="num">{{ c.param }}</td><td class="n">{{ c.current }} → {{ c.candidate if c.candidate is not none else '–' }}</td>
+          <td class="n">{{ c.valid_current|num(3) if c.valid_current is not none else '–' }}</td><td class="n">{{ c.valid_candidate|num(3) if c.valid_candidate is not none else '–' }}</td>
+          <td>{% if c.adopted %}<span class="tag v">已采用</span>{% elif c.note %}{{ c.note }}{% elif c.candidate == c.current %}保持不变{% else %}未通过验证，保持{% endif %}</td></tr>
+      {% endfor %}
+      </tbody></table></div>
+    {% else %}
+    <p class="empty">还没有调参记录。</p>
+    {% endfor %}
+  </details>
 </section>
 
 <section id="schedule">
