@@ -2,7 +2,8 @@
 
 The official fixture list comes from 500.com (the lottery's own site refuses
 requests from outside China). Games in our leagues or the Champions League use
-a blend of model and market probabilities; other games use the market
+the same model probabilities and the same recommended result as the schedule
+on the page, even when that result is an upset; other games use the market
 probabilities 500.com publishes, pulled slightly towards base rates.
 
 One ticket per game: 14-match picks every game with at most two doubles
@@ -178,36 +179,51 @@ def game_probs(g: dict) -> dict:
     model = [pred["model"][k] for k in ("H", "D", "A")] if pred and pred.get("model") else None
     if mkt is None and pred and all(k in pred.get("market", {}) for k in ("H", "D", "A")):
         mkt = [pred["market"][k] for k in ("H", "D", "A")]
-    if model and mkt:
-        w = config.ZC_MODEL_WEIGHT
-        p, src = [w * a + (1 - w) * b for a, b in zip(model, mkt)], "模型+市场"
+    if model:
+        p, src = model, "模型"
     elif mkt:
         s = config.ZC_UPSET_SHRINK
         p, src = [(1 - s) * a + s * b for a, b in zip(mkt, config.ZC_BASE_RATES)], "市场"
-    elif model:
-        p, src = model, "模型"
     else:
         p, src = list(config.ZC_BASE_RATES), "无数据"
     return {"p": dict(zip(PICKS, p)), "model": dict(zip(PICKS, model)) if model else None,
-            "market": dict(zip(PICKS, mkt)) if mkt else None, "source": src}
+            "market": dict(zip(PICKS, mkt)) if mkt else None, "source": src, "fixed": _page_pick(pred)}
+
+
+def _page_pick(pred: dict | None) -> str | None:
+    """The 1X2 result the schedule recommends for this game (highest edge), so the ticket agrees with it."""
+    if not pred:
+        return None
+    picks = [b for b in pred.get("bets", []) + pred.get("longshots", []) if b["selection"] in _KEYS.values()]
+    if not picks:
+        return None
+    best = max(picks, key=lambda b: b["edge"])
+    return {v: k for k, v in _KEYS.items()}[best["selection"]]
 
 
 def _double_option(info: dict) -> tuple[str, float, bool]:
     """Second outcome to add, its log-gain score, and whether it is an upset the market underprices."""
     p = info["p"]
-    first = max(p, key=p.get)
+    first = _single(info)
     rest = [k for k in PICKS if k != first]
     upset = []
     if info["model"] and info["market"]:
         upset = [k for k in rest if info["model"][k] - info["market"][k] >= config.UPSET_MIN_GAP]
-    second = max(upset, key=p.get) if upset else max(rest, key=p.get)
+    if first != max(p, key=p.get):  # the page recommends an upset: the double covers the favourite
+        second, upset = max(p, key=p.get), [first]
+    else:
+        second = max(upset, key=p.get) if upset else max(rest, key=p.get)
     score = math.log((p[first] + p[second]) / p[first]) + (config.ZC_UPSET_BONUS if upset else 0.0)
     return second, score, bool(upset)
 
 
+def _single(info: dict) -> str:
+    return info.get("fixed") or max(info["p"], key=info["p"].get)
+
+
 def plan(probs: list[dict]) -> dict:
     """14-match and pick-9 tickets for one period, from per-game probability dicts."""
-    singles = [max(i["p"], key=i["p"].get) for i in probs]
+    singles = [_single(i) for i in probs]
     options = [_double_option(i) for i in probs]
     top = [i["p"][s] for i, s in zip(probs, singles)]
 
@@ -238,7 +254,7 @@ def _pick(info: dict, single: str, double) -> dict:
     picks = [single] + ([double[0]] if double else [])
     picks.sort(key=PICKS.index)
     return {"picks": picks, "code": "".join(picks), "hit": sum(info["p"][k] for k in picks),
-            "double": bool(double), "upset": bool(double and double[2])}
+            "double": bool(double), "upset": bool(double and double[2]), "fixed": bool(info.get("fixed"))}
 
 
 def _ticket(picks: list[dict | None]) -> dict:
@@ -301,9 +317,9 @@ def simulate(preds: list[dict], draws: int = 30, seed: int = 0) -> dict:
             continue
         for _ in range(draws):
             sample = [games[i] for i in rng.choice(len(games), 14, replace=False)]
-            probs = [{"p": dict(zip(PICKS, [config.ZC_MODEL_WEIGHT * a + (1 - config.ZC_MODEL_WEIGHT) * b
-                                            for a, b in zip(g["blend"], g["mkt"])])),
-                      "model": dict(zip(PICKS, g["blend"])), "market": dict(zip(PICKS, g["mkt"]))} for g in sample]
+            probs = [{"p": dict(zip(PICKS, g["blend"])), "model": dict(zip(PICKS, g["blend"])),
+                      "market": dict(zip(PICKS, g["mkt"])), "fixed": _page_pick({"bets": g.get("page_bets", [])})}
+                     for g in sample]
             tk = plan(probs)
             res = [PICKS[g["res"]] for g in sample]
             h = sum(r in p["picks"] for r, p in zip(res, tk["t14"]["picks"]))

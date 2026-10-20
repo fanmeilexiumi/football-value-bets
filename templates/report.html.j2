@@ -160,7 +160,7 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
 
 <section id="lottery">
   <h2>传统足彩 · 14 场与任九</h2>
-  <p class="muted">对阵取自 500 彩票网的官方期次，顺序与彩票一致。三大联赛和欧冠的场次用模型与市场概率各半，其他场次用市场平均概率并略向冷门修正。14 场最多 2 场双选（4 注 8 元），任九选 9 场最稳的、最多 1 场双选（2 注 4 元）；双选给最不确定的比赛，模型认为冷门被低估时优先补冷门。“3 / 1 / 0”为主胜 / 平 / 客胜。</p>
+  <p class="muted">对阵取自 500 彩票网的官方期次，顺序与彩票一致。三大联赛和欧冠的场次与上面赛程完全一致：用同一套模型概率，赛程卡片上推荐了胜平负结果的（包括冷门），足彩也选这个结果；其他场次用市场平均概率并略向冷门修正。14 场最多 2 场双选（4 注 8 元），任九选 9 场最稳的、最多 1 场双选（2 注 4 元）；双选给最不确定的比赛，模型认为冷门被低估时优先补冷门。“3 / 1 / 0”为主胜 / 平 / 客胜。</p>
   {% for lp in lottery %}
   <div class="lot" style="margin-top:12px">
     <h3>{% if lp.simulated %}模拟期次 <span class="tag u">无法购买</span>{% else %}第 {{ lp.expect }} 期{% endif %}{% if lp.deadline %} <span class="muted" style="font-size:13px;font-weight:400">官方截止 {{ lp.deadline }}</span>{% endif %}</h3>
@@ -186,7 +186,7 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
         {% for k in ['3','1','0'] %}<td class="n">{{ g.p[k]|pct(0) }}{% if g.model %}<br><small class="muted">模 {{ g.model[k]|pct(0) }} 市 {{ g.market[k]|pct(0) if g.market else '–' }}</small>{% endif %}</td>{% endfor %}
         <td class="muted">{{ g.source }}</td>
         <td class="n"><b>{{ g.t14.code }}</b></td><td class="n">{{ g.r9.code if g.r9 else '–' }}</td>
-        <td>{% if g.t14.double or (g.r9 and g.r9.double) %}<span class="tag {{ 'u' if g.t14.upset or (g.r9 and g.r9.upset) else 'l' }}">{{ '双选搏冷' if g.t14.upset or (g.r9 and g.r9.upset) else '双选' }}</span>{% endif %}</td></tr>
+        <td>{% if g.t14.fixed %}<span class="tag v">同赛程推荐</span>{% endif %}{% if g.t14.double or (g.r9 and g.r9.double) %}<span class="tag {{ 'u' if g.t14.upset or (g.r9 and g.r9.upset) else 'l' }}">{{ '双选搏冷' if g.t14.upset or (g.r9 and g.r9.upset) else '双选' }}</span>{% endif %}</td></tr>
       {% endfor %}
       </tbody></table></div>
   </div>

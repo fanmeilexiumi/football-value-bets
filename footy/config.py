@@ -61,7 +61,6 @@ LONG_MAX_STAKE = 0.01
 # 传统足彩 (China Sports Lottery 14-match and pick-9)
 ZC_SOURCE_URL = "https://trade.500.com/sfc/"
 ZC_COMPETITIONS = {"英超": "E0", "意甲": "I1", "西甲": "SP1", "欧冠": "CL"}
-ZC_MODEL_WEIGHT = 0.5  # model share where we price the game; the market is better calibrated, so only half
 ZC_UPSET_SHRINK = 0.10  # games we do not model: pull market probabilities this far towards base rates
 ZC_BASE_RATES = (0.45, 0.27, 0.28)  # home, draw, away in the three leagues
 ZC_DOUBLE_MAX_P = 0.60  # only double a game whose top pick is below this

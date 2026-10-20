@@ -55,6 +55,7 @@ def run(history: pd.DataFrame, today: date | None = None) -> dict:
                 "dc": [p_dc[k] for k in OUTCOMES], "elo": [p_elo[k] for k in OUTCOMES],
                 "blend": [p[k] for k in OUTCOMES], "mkt": [market_probs(r).get(k) for k in OUTCOMES],
                 "dc_over": p_dc["O25"], "mkt_over": market_probs(r).get("O25"),
+                "page_bets": [b for b in find_value(r, p) + find_longshots(r, p) if b["selection"] in OUTCOMES],
             })
             for price in ("avg", "max"):
                 for b in find_value(r, p, price=price):
