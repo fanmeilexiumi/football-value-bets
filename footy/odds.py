@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import contextlib
+import io
 import json
 import logging
 import math
@@ -32,7 +34,8 @@ def fair_probs(odds: list[float]) -> list[float] | None:
     if any(o is None or not np.isfinite(o) or o <= 1.0 for o in odds):
         return None
     try:
-        return [float(p) for p in goto_conversion.goto_conversion(list(odds))]
+        with contextlib.redirect_stdout(io.StringIO()):  # the library prints on imprudent odds
+            return [float(p) for p in goto_conversion.goto_conversion(list(odds))]
     except Exception:
         total = sum(1 / o for o in odds)
         return [(1 / o) / total for o in odds]
@@ -122,14 +125,15 @@ def parse_oddsharvester(records: list[dict], known_teams: set[str]) -> pd.DataFr
     return pd.DataFrame(out, columns=COLUMNS)
 
 
-def merge_fixtures(fd: pd.DataFrame, op: pd.DataFrame) -> pd.DataFrame:
-    """Combine both sources; OddsPortal prices win where both have a match."""
-    if op.empty:
-        return fd.assign(odds_source="football-data")
-    if fd.empty:
-        return op.assign(odds_source="OddsPortal")
+def merge_fixtures(*sources: tuple[str, pd.DataFrame]) -> pd.DataFrame:
+    """Combine (label, frame) sources; earlier sources win where several have a match."""
     key = ["league", "home", "away"]
-    op = op.assign(odds_source="OddsPortal")
-    fd = fd.assign(odds_source="football-data")
-    merged = op.set_index(key).combine_first(fd.set_index(key)).reset_index()
-    return merged[COLUMNS + ["odds_source"]].sort_values(["date", "league"]).reset_index(drop=True)
+    merged = None
+    for label, df in sources:
+        if df is None or df.empty:
+            continue
+        df = df.assign(odds_source=label).drop_duplicates(subset=key).set_index(key)
+        merged = df if merged is None else merged.combine_first(df)
+    if merged is None:
+        return pd.DataFrame(columns=COLUMNS + ["odds_source"])
+    return merged.reset_index()[COLUMNS + ["odds_source"]].sort_values(["date", "league"]).reset_index(drop=True)

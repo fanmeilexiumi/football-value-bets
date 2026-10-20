@@ -32,6 +32,10 @@ jobs:
       - run: python -m pytest -q
       - name: Build report
         run: python -m footy
+        env:
+          # optional repository secrets, see README
+          THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
+          OH_PROXY_URL: ${{ secrets.ODDSPORTAL_PROXY_URL }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

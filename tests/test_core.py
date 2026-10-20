@@ -107,5 +107,25 @@ def test_merge_prefers_live_odds():
     op = pd.DataFrame([["E0", pd.Timestamp("2026-10-24"), "A", "B", 2.1]], columns=cols)
     from footy.data import COLUMNS
     fd, op = fd.reindex(columns=COLUMNS), op.reindex(columns=COLUMNS)
-    m = merge_fixtures(fd, op)
+    m = merge_fixtures(("OddsPortal", op), ("football-data", fd))
     assert len(m) == 1 and m.iloc[0]["avg_h"] == 2.1 and m.iloc[0]["odds_source"] == "OddsPortal"
+
+
+def test_parse_odds_api_event():
+    from footy.odds_api import parse
+    ev = {
+        "commence_time": "2026-10-24T14:00:00Z", "home_team": "Manchester City", "away_team": "Brighton and Hove Albion",
+        "bookmakers": [
+            {"markets": [
+                {"key": "h2h", "outcomes": [{"name": "Manchester City", "price": 1.4}, {"name": "Brighton and Hove Albion", "price": 7.5}, {"name": "Draw", "price": 5.0}]},
+                {"key": "totals", "outcomes": [{"name": "Over", "price": 1.6, "point": 2.5}, {"name": "Under", "price": 2.4, "point": 2.5},
+                                                {"name": "Over", "price": 3.0, "point": 3.5}]},
+            ]},
+            {"markets": [{"key": "h2h", "outcomes": [{"name": "Manchester City", "price": 1.45}, {"name": "Brighton and Hove Albion", "price": 7.0}, {"name": "Draw", "price": 5.2}]}]},
+        ],
+    }
+    df = parse([("E0", ev)], {"Man City", "Brighton"})
+    r = df.iloc[0]
+    assert (r["home"], r["away"]) == ("Man City", "Brighton")
+    assert r["max_h"] == 1.45 and r["max_a"] == 7.5 and abs(r["avg_d"] - 5.1) < 1e-9
+    assert r["max_over"] == 1.6  # the 3.5 line is ignored

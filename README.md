@@ -19,7 +19,8 @@
 footy/
   config.py     联赛、模型和下注规则参数（改这里）
   data.py       历史赛果与 football-data 赛程赔率
-  odds.py       OddsHarvester 抓取、解析、去水
+  odds.py       OddsHarvester 抓取、解析、去水、多来源合并
+  odds_api.py   The Odds API 赔率
   teams.py      两个数据源之间的队名统一
   model.py      Dixon-Coles、Elo、融合
   value.py      价值投注筛选与凯利仓位
@@ -46,6 +47,16 @@ python -m pytest -q
 1. 仓库 Settings → Pages → Build and deployment → Source 选 **GitHub Actions**
 2. Actions 页面手动运行一次 `daily-report`，之后每天自动更新
 
+## 实时赔率来源（按优先级）
+
+| 来源 | 配置 | 说明 |
+| --- | --- | --- |
+| OddsPortal（OddsHarvester） | 可选 Secret `ODDSPORTAL_PROXY_URL` | OddsPortal 会拒绝 GitHub 机房 IP，不配代理基本抓不到 |
+| The Odds API | Secret `THE_ODDS_API_KEY` | 在 the-odds-api.com 免费注册，每月 500 次额度，每天运行约用 6 次 |
+| football-data.co.uk | 无需配置 | 每轮比赛前几天才发布赛程和赔率 |
+
+Secret 在仓库 Settings → Secrets and variables → Actions → New repository secret 里添加。
+
 ## 回测结果（2024-07 至 2026-09，2261 场）
 
 - 胜平负对数损失：融合模型 0.982，市场 0.967。市场更准。
@@ -55,5 +66,5 @@ python -m pytest -q
 ## 已知限制
 
 - 升班马在本联赛不足 10 场时不建模。
-- OddsPortal 可能改版或限制访问，抓取失败时自动退回 football-data 赔率，页面上会标明。
+- OddsPortal 会拒绝 GitHub Actions 的 IP（实测返回 HTTP 错误），需要代理或改用 The Odds API。
 - football-data 的赛程赔率文件每周更新几次，周中可能为空。

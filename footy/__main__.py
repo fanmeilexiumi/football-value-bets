@@ -4,17 +4,18 @@ from __future__ import annotations
 
 import argparse
 import logging
+import os
 from datetime import date
 
 import pandas as pd
 
-from . import backtest, config, data, odds, report
+from . import backtest, config, data, odds, odds_api, report
 from .predict import predict_fixtures
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Premier League / Serie A / La Liga value-bet report")
-    ap.add_argument("--no-live-odds", action="store_true", help="skip the OddsPortal scrape")
+    ap.add_argument("--no-live-odds", action="store_true", help="skip OddsPortal and The Odds API")
     ap.add_argument("--days-ahead", type=int, default=10)
     ap.add_argument("--skip-backtest", action="store_true")
     args = ap.parse_args()
@@ -27,12 +28,13 @@ def main() -> None:
     known = set(history["home"]) | set(history["away"])
 
     fd = data.load_fixtures(today, args.days_ahead)
+    api = pd.DataFrame(columns=data.COLUMNS) if args.no_live_odds else odds_api.fetch(known)
     op = pd.DataFrame(columns=data.COLUMNS) if args.no_live_odds else odds.fetch_oddsportal(known)
-    if not op.empty:
-        hi = pd.Timestamp(today) + pd.Timedelta(days=args.days_ahead)
-        op = op[(op["date"] >= pd.Timestamp(today)) & (op["date"] <= hi)]
-    fixtures = odds.merge_fixtures(fd, op)
-    log.info("fixtures: %d (football-data %d, OddsPortal %d)", len(fixtures), len(fd), len(op))
+    lo, hi = pd.Timestamp(today), pd.Timestamp(today) + pd.Timedelta(days=args.days_ahead)
+    api = api[(api["date"] >= lo) & (api["date"] <= hi)]
+    op = op[(op["date"] >= lo) & (op["date"] <= hi)]
+    fixtures = odds.merge_fixtures(("OddsPortal", op), ("The Odds API", api), ("football-data", fd))
+    log.info("fixtures: %d (OddsPortal %d, The Odds API %d, football-data %d)", len(fixtures), len(op), len(api), len(fd))
 
     predictions = predict_fixtures(history, fixtures, pd.Timestamp(today))
     bt = {} if args.skip_backtest else backtest.run(history, today)
@@ -40,8 +42,8 @@ def main() -> None:
     status = {
         "history_matches": len(history),
         "history_source": data.LAST_HISTORY_SOURCE,
-        "live_odds_ok": not op.empty,
-        "live_odds_matches": len(op),
+        "live_sources": {"OddsPortal": len(op), "The Odds API": len(api), "football-data": len(fd)},
+        "odds_api_enabled": bool(os.environ.get("THE_ODDS_API_KEY")),
         "fixtures": len(fixtures),
         "days_ahead": args.days_ahead,
     }
