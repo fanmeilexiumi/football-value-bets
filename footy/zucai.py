@@ -17,6 +17,7 @@ from __future__ import annotations
 import logging
 import math
 import re
+import time
 from datetime import date, datetime, timedelta, timezone
 
 import numpy as np
@@ -104,10 +105,17 @@ def fetch_periods(today: date | None = None) -> list[dict]:
     return periods
 
 
-def _get(url: str) -> str:
-    r = requests.get(url, timeout=30, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/126"})
-    r.raise_for_status()
-    return r.content.decode("gb18030", errors="replace")
+def _get(url: str, tries: int = 3) -> str:
+    """500.com is slow from abroad now and then: retry before falling back to a simulated period."""
+    for i in range(tries):
+        try:
+            r = requests.get(url, timeout=45, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/126"})
+            r.raise_for_status()
+            return r.content.decode("gb18030", errors="replace")
+        except requests.RequestException:
+            if i == tries - 1:
+                raise
+            time.sleep(5 * (i + 1))
 
 
 def parse_period(html: str, today: date) -> dict:
