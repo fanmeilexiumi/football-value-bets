@@ -41,3 +41,25 @@ def _f(v):
         return f if f == f else None
     except (TypeError, ValueError):
         return None
+
+
+def predict_cl(cl_model, fixtures: pd.DataFrame) -> list[dict]:
+    """Champions League fixtures priced by the cross-league model (see ucl.py)."""
+    out = []
+    for _, r in fixtures.iterrows():
+        rh, ra = cl_model.rating(r["home"]), cl_model.rating(r["away"])
+        row = {
+            "league": "CL", "league_name": config.CL["name"],
+            "date": r["date"].strftime("%Y-%m-%d"), "home": r["home"], "away": r["away"],
+            "odds_source": r.get("odds_source", "The Odds API"),
+            "elo_home": None if rh is None else round(rh), "elo_away": None if ra is None else round(ra),
+            "odds": {k: _f(r.get(k)) for k in ("avg_h", "avg_d", "avg_a", "max_h", "max_d", "max_a",
+                                                "avg_over", "avg_under", "max_over", "max_under")},
+            "market": market_probs(r), "model": None, "bets": [],
+        }
+        p = cl_model.predict(r["home"], r["away"])
+        if p is not None:
+            row["model"] = {k: float(v) for k, v in p.items()}
+            row["bets"] = find_value(r, p, price="max")
+        out.append(row)
+    return out

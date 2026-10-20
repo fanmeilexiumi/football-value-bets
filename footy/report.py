@@ -63,7 +63,8 @@ def bankroll_svg(curve: list[list], width: int = 720, height: int = 220) -> str:
     )
 
 
-def render(predictions: list[dict], backtest: dict, status: dict, site_dir: Path | None = None) -> Path:
+def render(predictions: list[dict], backtest: dict, status: dict, site_dir: Path | None = None,
+           cl_predictions: list[dict] | None = None) -> Path:
     site_dir = site_dir or config.SITE_DIR
     site_dir.mkdir(parents=True, exist_ok=True)
     env = Environment(
@@ -72,10 +73,8 @@ def render(predictions: list[dict], backtest: dict, status: dict, site_dir: Path
     )
     env.filters.update(pct=pct, signed_pct=signed_pct, num=num)
     by_league = {code: [p for p in predictions if p["league"] == code] for code in config.LEAGUES}
-    bets = sorted(
-        ({**b, **{k: p[k] for k in ("league_name", "date", "home", "away")}} for p in predictions for b in p["bets"]),
-        key=lambda b: (b["date"], -b["edge"]),
-    )
+    cl_predictions = cl_predictions or []
+    bets, cl_bets = _bets(predictions), _bets(cl_predictions)
     bt_rows = {}
     for price, block in backtest.get("bets", {}).items():
         rows = [("全部", block["all"])]
@@ -86,12 +85,19 @@ def render(predictions: list[dict], backtest: dict, status: dict, site_dir: Path
     html = env.get_template("report.html.j2").render(
         updated=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         leagues=config.LEAGUES, by_league=by_league, bets=bets, bt=backtest, status=status,
-        cfg=config, bt_rows=bt_rows,
+        cfg=config, bt_rows=bt_rows, cl_games=cl_predictions, cl_bets=cl_bets,
         svg_avg=bankroll_svg(backtest.get("bets", {}).get("avg", {}).get("bankroll", [])),
         svg_max=bankroll_svg(backtest.get("bets", {}).get("max", {}).get("bankroll", [])),
     )
     out = site_dir / "index.html"
     out.write_text(html, encoding="utf-8")
-    (site_dir / "predictions.json").write_text(json.dumps(predictions, ensure_ascii=False, indent=1), encoding="utf-8")
+    (site_dir / "predictions.json").write_text(json.dumps(predictions + cl_predictions, ensure_ascii=False, indent=1), encoding="utf-8")
     (site_dir / "backtest.json").write_text(json.dumps(backtest, ensure_ascii=False, indent=1), encoding="utf-8")
     return out
+
+
+def _bets(predictions: list[dict]) -> list[dict]:
+    return sorted(
+        ({**b, **{k: p[k] for k in ("league_name", "date", "home", "away")}} for p in predictions for b in p["bets"]),
+        key=lambda b: (b["date"], -b["edge"]),
+    )

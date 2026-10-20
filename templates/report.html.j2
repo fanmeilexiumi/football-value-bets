@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>三大联赛价值投注看板</title>
+<title>三大联赛与欧冠价值投注看板</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
@@ -23,7 +23,7 @@
   --accent:#5ec08b; --accent-soft:#1c3226; --bad:#ee8a76; --bad-soft:#3a201b; --warn:#e2a948; --warn-soft:#352812; color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 var(--sans)}
-.wrap{max-width:1080px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right)) 64px max(16px,env(safe-area-inset-left));display:grid;gap:32px}
+.wrap{max-width:1080px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right)) 64px max(16px,env(safe-area-inset-left));display:grid;grid-template-columns:minmax(0,1fr);gap:32px}
 h1{font-size:clamp(24px,4vw,34px);font-weight:900;margin:0;line-height:1.25;text-wrap:balance}
 h2{font-size:19px;margin:0 0 10px}
 h3{font-size:15px;margin:18px 0 8px}
@@ -68,8 +68,8 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
 <div class="wrap">
 
 <header>
-  <h1>三大联赛价值投注看板</h1>
-  <p class="muted">英超、意甲、西甲。每天自动更新：抓数据，拟合 Dixon-Coles 与 Elo 模型，把模型概率与去水后的市场概率对比，找出赔率偏高的选项。</p>
+  <h1>三大联赛与欧冠价值投注看板</h1>
+  <p class="muted">英超、意甲、西甲，另设欧冠板块。每天自动更新：抓数据，拟合 Dixon-Coles 与 Elo 模型，把模型概率与去水后的市场概率对比，找出赔率偏高的选项。</p>
   <div class="chips">
     <span class="chip">更新于 {{ updated }}</span>
     <span class="chip">历史比赛 {{ status.history_matches }} 场 · 来源 {{ status.history_source }}</span>
@@ -77,13 +77,14 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
     <span class="chip {{ 'ok' if n else 'fail' }}">{{ name }}：{{ '%d 场' % n if n else ('未配置 API Key' if name == 'The Odds API' and not status.odds_api_enabled else '本次未获取') }}</span>
     {% endfor %}
     <span class="chip">未来 {{ status.days_ahead }} 天比赛 {{ status.fixtures }} 场</span>
+    <span class="chip {{ 'ok' if status.cl_fixtures else '' }}">欧冠：{{ status.cl_fixtures or 0 }} 场</span>
   </div>
 </header>
 
 {% set A = bt.bets.avg.all if bt.bets else None %}
 {% set M = bt.bets.max.all if bt.bets else None %}
 <section class="verdict {{ 'good' if M and (M.roi or 0) > 0 and (A.roi or 0) > 0 else '' }}">
-  <h2>回测结论</h2>
+  <h2>回测结论 · 三大联赛</h2>
   {% if bt.n_matches %}
   <div class="kpis">
     <div class="kpi"><div class="v">{{ bt.n_matches }}</div><div class="k">回测比赛（{{ bt.start }} 起）</div></div>
@@ -100,7 +101,7 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
 </section>
 
 <section>
-  <h2>本期价值投注</h2>
+  <h2>本期价值投注 · 三大联赛</h2>
   <p class="muted">条件：模型概率 × 最优赔率 − 1 ≥ {{ (cfg.MIN_EDGE*100)|round|int }}%，模型概率 ≥ {{ (cfg.MIN_PROB*100)|round|int }}%，赔率 ≤ {{ cfg.MAX_ODDS }}。仓位为 {{ cfg.KELLY_FRACTION }} 倍凯利，单注上限 {{ (cfg.MAX_STAKE*100)|round|int }}% 资金。</p>
   {% if bets %}
   <div class="tbl" style="margin-top:10px"><table>
@@ -137,9 +138,55 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
   {% endfor %}
 </section>
 
+
+<section id="ucl">
+  <h2>欧冠</h2>
+  <p class="muted">欧冠球队来自不同联赛，按联赛单独拟合的 Dixon-Coles 无法直接比较，所以这里改用跨联赛 Elo：三大联赛和近几季欧冠比赛放在同一套评分里滚动更新，再用欧冠交手结果拟合各国联赛强度修正。胜平负取有序 logit 与 Elo-泊松各半，大小球来自 Elo-泊松。</p>
+  <div class="verdict" style="margin-top:12px">
+    <p><b>欧冠板块未经回测。</b>免费数据里没有可用的历史欧冠赔率，无法验证这些“价值投注”在真实价格下是否赚钱；只用来与市场对照、找分歧。欧冠赛果来自 openfootball（{{ status.cl_seasons|join('、') if status.cl_seasons else '未获取' }}，共 {{ status.cl_results }} 场，最新一场 {{ status.cl_last_result or '–' }}）{% if status.cl_current_missing %}；本季欧冠赛果尚未发布，三大联赛球队仍按本季联赛结果更新，其他联赛球队的评分停留在上季末{% endif %}。</p>
+  </div>
+
+  <h3>欧冠价值投注</h3>
+  {% if cl_bets %}
+  <div class="tbl"><table>
+    <thead><tr><th>日期</th><th>比赛</th><th>选项</th><th class="n">模型</th><th class="n">市场</th><th class="n">最优赔率</th><th class="n">优势</th><th class="n">仓位</th></tr></thead>
+    <tbody>
+    {% for b in cl_bets %}
+      <tr><td>{{ b.date }}</td><td>{{ b.home }} vs {{ b.away }}</td><td><span class="pill">{{ b.label }}</span></td>
+        <td class="n">{{ b.prob|pct }}</td><td class="n">{{ b.market_prob|pct }}</td><td class="n">{{ b.odds|num }}</td><td class="n"><span class="edge">{{ b.edge|signed_pct }}</span></td><td class="n">{{ b.stake|pct }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% else %}
+  <p class="muted">这一期没有满足条件的欧冠选项。</p>
+  {% endif %}
+
+  <h3>欧冠比赛概率 · {{ cl_games|length }} 场</h3>
+  {% if cl_games %}
+  <div class="tbl"><table>
+    <thead><tr><th>日期</th><th>比赛</th><th class="n">主胜</th><th class="n">平</th><th class="n">客胜</th><th class="n">大 2.5</th><th class="n">跨联赛评分</th><th>说明</th></tr></thead>
+    <tbody>
+    {% for g in cl_games %}
+      <tr><td>{{ g.date }}</td><td>{{ g.home }} vs {{ g.away }}</td>
+      {% for k in ['H','D','A','O25'] %}
+        <td class="n">{{ (g.model[k] if g.model else none)|pct(0) }} / {{ g.market.get(k)|pct(0) }}</td>
+      {% endfor %}
+        <td class="n">{{ g.elo_home if g.elo_home is not none else '?' }}–{{ g.elo_away if g.elo_away is not none else '?' }}</td>
+        <td class="muted">{% if not g.model %}比赛数据不足，未建模{% else %}{{ g.odds_source }}{% endif %}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% else %}<p class="muted">未来 {{ status.days_ahead }} 天暂无欧冠赛程或赔率{% if not status.odds_api_enabled %}（欧冠赔率需要 The Odds API Key）{% endif %}。</p>{% endif %}
+
+  {% if status.cl_offsets %}
+  <details style="margin-top:12px"><summary>各国联赛强度修正（Elo 分）</summary>
+    <p class="muted" style="margin-top:6px">由欧冠交手结果拟合并向 0 收缩，加在俱乐部 Elo 上得到“跨联赛评分”。场次少的国家修正不可靠。</p>
+    <div class="chips">{% for c, v in status.cl_offsets.items() %}<span class="chip">{{ c }} {{ '%+d' % v }}</span>{% endfor %}</div>
+  </details>
+  {% endif %}
+</section>
+
 {% if bt.n_matches %}
 <section>
-  <h2>回测详情</h2>
+  <h2>回测详情 · 三大联赛</h2>
   <p class="muted">每周一用之前的比赛重新拟合模型，只预测当周比赛，结果不会泄漏到自己的预测里。{{ bt.start }} 至 {{ bt.end }}，共 {{ bt.n_matches }} 场。</p>
 
   <div class="two" style="margin-top:12px">
@@ -174,6 +221,7 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
   <ul>
     <li><b>数据采集</b>：football-data.co.uk 近 {{ cfg.HISTORY_SEASONS }} 季加本季的赛果与约 40 家公司的平均/最高赔率（不可用时改用 xgabora 在 GitHub 上的镜像）；OddsHarvester 从 OddsPortal 抓未开赛的胜平负和大小球 2.5 赔率。</li>
     <li><b>预测建模</b>：penaltyblog 的 Dixon-Coles 模型，按天数指数衰减加权（ξ = {{ cfg.DC_XI }}），每个联赛单独拟合近 3 年比赛；Elo 按净胜球加权，用有序 logit 转成胜平负概率；胜平负取 {{ ((1-cfg.ELO_BLEND)*100)|round|int }}% Dixon-Coles + {{ (cfg.ELO_BLEND*100)|round|int }}% Elo。</li>
+    <li><b>欧冠</b>：赛果来自 openfootball/champions-league，赔率来自 The Odds API；跨联赛 Elo（欧冠场次 K = {{ cfg.CL_ELO_K|int }}，联赛场次 K = {{ cfg.ELO_K|int }}）加各国强度修正，球队需至少 {{ cfg.CL_MIN_MATCHES }} 场评分比赛才建模；价值投注门槛与三大联赛相同。</li>
     <li><b>赔率分析</b>：goto_conversion 去除庄家抽水得到市场公平概率；优势 = 模型概率 × 赔率 − 1；仓位用分数凯利。</li>
   </ul>
 </section>

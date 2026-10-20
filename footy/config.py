@@ -17,6 +17,16 @@ LEAGUES: dict[str, dict[str, str]] = {
     "SP1": {"name": "西甲", "en": "La Liga", "oddsportal": "spain-laliga"},
 }
 
+# Champions League: priced with one cross-league Elo, not per-league Dixon-Coles
+CL = {"code": "CL", "name": "欧冠", "en": "Champions League"}
+COUNTRY = {"E0": "ENG", "I1": "ITA", "SP1": "ESP"}  # league -> country tag used in the CL results
+CL_RESULTS_URL = "https://raw.githubusercontent.com/openfootball/champions-league/master/{season}/cl.txt"
+CL_ELO_K = 30.0  # European games move ratings more: they are the only link between leagues
+CL_ELO_START = 1450.0  # clubs outside the three leagues; their country offset is fitted on top
+CL_OFFSET_RIDGE = 1.0  # shrinks country offsets towards zero (units: 100 Elo points)
+CL_MIN_MATCHES = 6  # rated games a club needs before we price it
+CL_POISSON_SHARE = 0.5  # 1X2 = this share Elo-Poisson + the rest ordered logit
+
 HISTORY_SEASONS = 5  # completed seasons kept, plus the current one
 
 # Dixon-Coles
