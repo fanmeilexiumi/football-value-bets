@@ -62,7 +62,7 @@ def _get(url: str, timeout: int = 60) -> bytes:
 def _read_fd_csv(raw: bytes) -> pd.DataFrame:
     text = raw.decode("utf-8-sig", errors="replace")
     df = pd.read_csv(io.StringIO(text), on_bad_lines="skip")
-    df = df.rename(columns=_FD_MAP)
+    df = df.rename(columns=_FD_MAP).copy()
     df["date"] = pd.to_datetime(df["Date"], dayfirst=True, errors="coerce")
     return _tidy(df)
 
@@ -127,6 +127,8 @@ def load_fixtures(today: date | None = None, days_ahead: int = 10) -> pd.DataFra
     except Exception as e:
         log.warning("football-data fixtures unavailable: %s", e)
         return pd.DataFrame(columns=COLUMNS)
+    log.info("fixtures file: %d rows, %d in our leagues, dates %s to %s", len(df),
+             df["league"].isin(config.LEAGUES).sum(), df["date"].min(), df["date"].max())
     df = df[df["league"].isin(config.LEAGUES)]
     lo, hi = pd.Timestamp(today), pd.Timestamp(today) + pd.Timedelta(days=days_ahead)
     return df[(df["date"] >= lo) & (df["date"] <= hi)].reset_index(drop=True)

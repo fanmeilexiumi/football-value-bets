@@ -58,7 +58,7 @@ def fetch_oddsportal(known_teams: set[str], timeout: int = 1500) -> pd.DataFrame
             log.warning("oddsharvester is not installed; skipping live odds")
             return pd.DataFrame(columns=COLUMNS)
         except subprocess.CalledProcessError as e:
-            log.warning("oddsharvester failed: %s", (e.stderr or "")[-800:])
+            log.warning("oddsharvester failed (exit %s):\n%s\n%s", e.returncode, (e.stdout or "")[-3000:], (e.stderr or "")[-6000:])
             return pd.DataFrame(columns=COLUMNS)
         except Exception as e:
             log.warning("oddsharvester failed: %s", e)
