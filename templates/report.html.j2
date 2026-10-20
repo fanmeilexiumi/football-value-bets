@@ -15,9 +15,12 @@
   --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
   color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root{
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#101512; --surface:#171f1a; --fg:#e3eae4; --muted:#97a59b; --line:#2a352e;
   --accent:#5ec08b; --accent-soft:#1c3226; --bad:#ee8a76; --bad-soft:#3a201b; --warn:#e2a948; --warn-soft:#352812; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101512; --surface:#171f1a; --fg:#e3eae4; --muted:#97a59b; --line:#2a352e;
+  --accent:#5ec08b; --accent-soft:#1c3226; --bad:#ee8a76; --bad-soft:#3a201b; --warn:#e2a948; --warn-soft:#352812; color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 var(--sans)}
 .wrap{max-width:1080px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right)) 64px max(16px,env(safe-area-inset-left));display:grid;gap:32px}
