@@ -239,14 +239,13 @@ class AF:
         return self.cache[k]
 
 
-def _af_season(kick: datetime) -> int:
-    return kick.year if kick.month >= 7 else kick.year - 1
-
-
 def af_context(af: AF, p: dict) -> dict:
     """Injuries, suspensions and each side's formation and starters in its last game."""
     kick = kickoff_utc(p)
-    fx = af.get("fixtures", league=AF_LEAGUES[p["league"]], season=_af_season(kick), date=kick.strftime("%Y-%m-%d"))
+    # the free plan refuses current-season queries by league and season, but date-only queries (all leagues,
+    # one request per day each) are allowed, so fixtures and injuries are fetched by date and filtered here
+    day = kick.strftime("%Y-%m-%d")
+    fx = [f for f in af.get("fixtures", date=day, timezone="UTC") if f["league"]["id"] == AF_LEAGUES[p["league"]]]
     known = {p["home"], p["away"]}
     me = next((f for f in fx if abs(f["fixture"]["timestamp"] - (kick - datetime(1970, 1, 1)).total_seconds()) <= 3600
                and (_name(p["league"], f["teams"]["home"]["name"], known) == p["home"]
@@ -254,7 +253,7 @@ def af_context(af: AF, p: dict) -> dict:
     if not me:
         return {}
     out = {}
-    inj = af.get("injuries", fixture=me["fixture"]["id"])
+    inj = [i for i in af.get("injuries", date=day) if i["fixture"]["id"] == me["fixture"]["id"]]
     for side in ("home", "away"):
         team = me["teams"][side]
         last = af.get("fixtures", team=team["id"], last=1)
