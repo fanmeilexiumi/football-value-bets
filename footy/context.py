@@ -32,6 +32,20 @@ AF_URL = "https://v3.football.api-sports.io/{path}"
 AF_LEAGUES = {"E0": 39, "I1": 135, "SP1": 140, "CL": 2}
 GEO_URL = "https://geocoding-api.open-meteo.com/v1/search"
 WX_URL = "https://api.open-meteo.com/v1/forecast"
+# fallback when Open-Meteo's geocoder is slow: cities that host our leagues and regular Champions League games
+CITY_COORDS = {
+    "London": (51.51, -0.13), "Manchester": (53.48, -2.24), "Liverpool": (53.41, -2.98), "Birmingham": (52.49, -1.89),
+    "Newcastle upon Tyne": (54.98, -1.62), "Madrid": (40.42, -3.70), "Barcelona": (41.39, 2.17), "Sevilla": (37.39, -5.98),
+    "Seville": (37.39, -5.98), "Valencia": (39.47, -0.38), "Manises": (39.49, -0.46), "Bilbao": (43.26, -2.93),
+    "Villarreal": (39.94, -0.10), "San Sebastián": (43.32, -1.98), "Girona": (41.98, 2.82), "Milano": (45.46, 9.19),
+    "Milan": (45.46, 9.19), "Torino": (45.07, 7.69), "Roma": (41.90, 12.50), "Napoli": (40.85, 14.27),
+    "Bergamo": (45.70, 9.67), "Bologna": (44.49, 11.34), "Firenze": (43.77, 11.26), "Como": (45.81, 9.09),
+    "München": (48.14, 11.58), "Munich": (48.14, 11.58), "Dortmund": (51.51, 7.47), "Leverkusen": (51.03, 6.98),
+    "Leipzig": (51.34, 12.37), "Frankfurt": (50.11, 8.68), "Stuttgart": (48.78, 9.18), "Paris": (48.86, 2.35),
+    "Marseille": (43.30, 5.37), "Lille": (50.63, 3.06), "Monaco": (43.74, 7.42), "Lisbon": (38.72, -9.14),
+    "Porto": (41.15, -8.61), "Amsterdam": (52.37, 4.90), "Eindhoven": (51.44, 5.47), "Rotterdam": (51.92, 4.48),
+    "Brugge": (51.21, 3.22), "Istanbul": (41.01, 28.98), "Glasgow": (55.86, -4.25), "Salzburg": (47.81, 13.06),
+}
 
 
 COMP_CN = [("Champions League", "欧冠"), ("Europa League", "欧联"), ("Conference League", "欧协联"),
@@ -49,7 +63,7 @@ def comp_cn(name: str | None) -> str | None:
 
 
 def _get(url: str, params: dict | None = None, headers: dict | None = None) -> dict:
-    r = requests.get(url, params=params, headers={"User-Agent": "Mozilla/5.0", **(headers or {})}, timeout=30)
+    r = requests.get(url, params=params, headers={"User-Agent": "Mozilla/5.0", **(headers or {})}, timeout=15)
     r.raise_for_status()
     return r.json()
 
@@ -167,13 +181,14 @@ def motivation(league: str, table: list[dict], team_id: str) -> dict | None:
 def weather(city: str, country: str | None, kick: datetime, cache: dict) -> dict | None:
     key = (city, country)
     if key not in cache:
-        try:
-            res = _get(GEO_URL, {"name": city, "count": 5}).get("results", [])
-            pick = next((r for r in res if country and r.get("country") == country), res[0] if res else None)
-            cache[key] = (pick["latitude"], pick["longitude"]) if pick else None
-        except Exception as e:
-            log.warning("geocoding %s failed: %s", city, e)
-            cache[key] = None
+        cache[key] = CITY_COORDS.get(city)
+        if cache[key] is None:
+            try:
+                res = _get(GEO_URL, {"name": city, "count": 5}).get("results", [])
+                pick = next((r for r in res if country and r.get("country") == country), res[0] if res else None)
+                cache[key] = (pick["latitude"], pick["longitude"]) if pick else None
+            except Exception as e:
+                log.warning("geocoding %s failed: %s", city, e)
     if not cache[key]:
         return None
     lat, lon = cache[key]
@@ -344,6 +359,7 @@ def collect(predictions: list[dict], previous: dict[str, dict], now_utc: datetim
         return {}
     af_key = os.environ.get("API_FOOTBALL_KEY")
     af = AF(af_key, config.API_FOOTBALL_BUDGET) if af_key else None
+    log.info("API-Football key %s", "found" if af else "not set: no injuries or formations")
     sb_cache, geo_cache, out = {}, {}, {}
     for league in sorted({p["league"] for p in targets}):
         mine = [p for p in targets if p["league"] == league]
