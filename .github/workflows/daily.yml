@@ -29,6 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main  # a queued run must start from the journal the previous run pushed, not from the commit it was queued at
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
@@ -53,7 +54,10 @@ jobs:
           git add journal
           git diff --cached --quiet && exit 0
           git commit -m "Update prediction journal [skip ci]"
-          for i in 1 2 3 4; do git pull --rebase origin main && git push origin HEAD:main && exit 0; sleep $((2 ** i)); done
+          for i in 1 2 3 4; do
+            if git pull --rebase origin main; then git push origin HEAD:main && exit 0; else git rebase --abort; fi
+            sleep $((2 ** i))
+          done
           exit 1
       - uses: actions/upload-pages-artifact@v3
         with:
