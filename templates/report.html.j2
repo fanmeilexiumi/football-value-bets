@@ -347,13 +347,16 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
             <li><b>{{ nm }}</b>：{% if s.form %}近况 {{ s.form }}{% endif %}{% if s.rest_days is defined %}，距上场 {{ s.rest_days|round(1) }} 天{% if s.last_comp %}（{{ s.last_comp }}）{% endif %}{% endif %}{% if s.next_days is defined %}，{{ s.next_days|round(1) }} 天后打{{ s.next_comp or '下一场' }}{% endif %}{% if s.motivation %}；{{ s.motivation.text }}{% endif %}{% if not s.form and not s.motivation %}<span class="muted">暂无数据</span>{% endif %}</li>
             {% endfor %}
             {% if c.weather %}{% set w = c.weather %}<li>天气：{{ c.venue or '' }}（{{ w.city }}）开球时 {{ w.temp|round|int }}°C，降水概率 {{ w.rain_prob if w.rain_prob is not none else '–' }}%，风速 {{ w.wind|round|int }} km/h{% if w.bad %}，<b>{{ w.bad|join('、') }}</b>{% endif %}</li>{% endif %}
-            {% if c.home.af or c.away.af %}
-            {% for side, nm in [('home', g.home), ('away', g.away)] %}{% set a = c[side].af %}{% if a %}
-            <li>{{ nm }}伤停：{% if a.key_out %}<b>主力缺阵</b> {% for m in a.key_out %}{{ m.name }}{% if m.pos %}（{{ POS[m.pos] }}）{% endif %}{{ '、' if not loop.last }}{% endfor %}{% else %}无主力缺阵{% endif %}{% if a.missing|length > a.key_out|length %}；另有 {{ a.missing|length - a.key_out|length }} 人伤停或存疑{% endif %}{% if a.formation %}；上场阵型 {{ a.formation }}{% endif %}</li>
+            {% for side, nm in [('home', g.home), ('away', g.away)] %}{% set lu = c[side].lineup %}{% if lu and lu.formation %}
+            <li>{{ nm }}上一场阵型 {{ lu.formation }}{% if c[side].last_comp %}（{{ c[side].last_comp }}）{% endif %}</li>
             {% endif %}{% endfor %}
             {% if c.matchup %}<li>阵型对位（经验判断）：{{ c.matchup }}</li>{% endif %}
+            {% if c.home.af or c.away.af %}
+            {% for side, nm in [('home', g.home), ('away', g.away)] %}{% set a = c[side].af %}{% if a %}
+            <li>{{ nm }}伤停：{% if not a.missing %}名单上无人{% elif a.key_out %}<b>上场首发缺阵</b> {% for m in a.key_out %}{{ m.name }}{% if m.pos %}（{{ POS[m.pos] }}）{% endif %}{{ '、' if not loop.last }}{% endfor %}{% if a.missing|length > a.key_out|length %}；另有 {{ a.missing|length - a.key_out|length }} 人伤停或存疑{% endif %}{% elif a.starters_known %}上场首发无人缺阵；{{ a.missing|length }} 人伤停或存疑（{% for m in a.missing[:4] %}{{ m.name }}{{ '、' if not loop.last }}{% endfor %}{% if a.missing|length > 4 %}等{% endif %}）{% else %}{{ a.missing|length }} 人伤停或存疑（{% for m in a.missing[:4] %}{{ m.name }}{{ '、' if not loop.last }}{% endfor %}{% if a.missing|length > 4 %}等{% endif %}），是否主力未能核对{% endif %}</li>
+            {% endif %}{% endfor %}
             {% else %}
-            <li class="muted">伤停与阵型：待接入 API-Football</li>
+            <li class="muted">伤停：今天没拉到 API-Football 数据</li>
             {% endif %}
             {% for sel, v in c.verdicts.items() %}
             <li><b>{{ SEL_LABEL[sel] }}：场外因素{{ v.lean }}</b>{% if v.pro %}。支持：{{ v.pro|join('；') }}{% endif %}{% if v.con %}。削弱：{{ v.con|join('；') }}{% endif %}{% if not v.pro and not v.con %}，没有明显的加分或减分项{% endif %}</li>

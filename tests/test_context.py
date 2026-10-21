@@ -41,12 +41,14 @@ def test_collect_with_mocked_sources(monkeypatch):
     sb = {"events": [{"id": "1", "competitions": [{"date": kick, "venue": {"fullName": "Allianz Arena", "address": {"city": "München", "country": "Germany"}},
                                                    "competitors": [{"homeAway": "home", "team": {"id": "132", "displayName": "Bayern Munich"}},
                                                                    {"homeAway": "away", "team": {"id": "359", "displayName": "Arsenal"}}]}]}]}
-    summary = {"lastFiveGames": [{"team": {"id": "132"}, "events": [{"gameDate": "2026-10-18T13:30Z", "gameResult": "W", "leagueName": "German Bundesliga"}]},
+    summary = {"lastFiveGames": [{"team": {"id": "132"}, "events": [{"id": "77", "gameDate": "2026-10-18T13:30Z", "gameResult": "W", "leagueName": "German Bundesliga"}]},
                                  {"team": {"id": "359"}, "events": [{"gameDate": "2026-10-19T15:00Z", "gameResult": "D", "leagueName": "English Premier League"}]}],
                "standings": {"groups": [{"standings": {"entries": [
                    {"team": "Bayern", "id": "132", "stats": [{"name": "rank", "value": 3}, {"name": "points", "value": 9}, {"name": "gamesPlayed", "value": 3}]},
-                   {"team": "Arsenal", "id": "359", "stats": [{"name": "rank", "value": 5}, {"name": "points", "value": 7}, {"name": "gamesPlayed", "value": 3}]}]}}]}}
-    sched = {"events": [{"date": "2026-10-24T14:00Z", "name": "Everton at Arsenal", "seasonType": {"name": "2026-27 English Premier League"}}]}
+                   {"team": "Arsenal", "id": "359", "stats": [{"name": "rank", "value": 5}, {"name": "points", "value": 7}, {"name": "gamesPlayed", "value": 3}]}]}}]},
+               "rosters": [{"team": {"id": "132"}, "formation": "4-2-3-1", "roster": [
+                   {"starter": True, "athlete": {"displayName": "Harry Kane"}, "position": {"abbreviation": "F"}}]}]}
+    sched = {"events": [{"date": "2026-10-24T14:00Z", "name": "Everton at Arsenal", "league": {"name": "English Premier League"}}]}
     wx = {"hourly": {"time": ["2026-10-21T19:00"], "temperature_2m": [8.0], "precipitation_probability": [80],
                      "precipitation": [2.0], "wind_speed_10m": [12.0]}}
 
@@ -69,3 +71,22 @@ def test_collect_with_mocked_sources(monkeypatch):
     assert round(c["home"]["rest_days"], 1) == 3.2 and c["away"]["next_comp"] == "英超"
     assert c["weather"]["bad"] == ["降雨"] and c["sources"] == ["ESPN", "Open-Meteo"]
     assert any("下降" in x for x in c["verdicts"]["H"]["con"])
+    assert c["home"]["lineup"]["formation"] == "4-2-3-1" and c["home"]["motivation"]["text"].startswith("欧冠")
+
+
+def test_injuries_marked_against_last_starters():
+    assert context.same_player("H. Kane", "Harry Kane") and not context.same_player("M. Kane", "Harry Kane")
+    assert context.same_player("Müller", "Thomas Muller")
+    assert [context.pos_group(x) for x in ("G", "CD-L", "DM", "AM-R", "LW", "CF")] == ["G", "D", "M", "M", "F", "F"]
+
+    class FakeAF:
+        def get(self, path, **kw):
+            if path == "fixtures":
+                return [{"league": {"id": 2}, "fixture": {"id": 9, "timestamp": 1792609200},
+                         "teams": {"home": {"id": 1, "name": "Bayern Munich"}, "away": {"id": 2, "name": "Arsenal"}}}]
+            return [{"fixture": {"id": 9}, "team": {"id": 1}, "player": {"id": 5, "name": "H. Kane", "type": "Missing Fixture"}},
+                    {"fixture": {"id": 9}, "team": {"id": 2}, "player": {"id": 6, "name": "B. Saka", "type": "Questionable"}}]
+    p = {"league": "CL", "bj_date": "2026-10-22", "bj_time": "03:00", "home": "Bayern Munich", "away": "Arsenal"}
+    out = context.af_context(FakeAF(), p, {"home": {"starters": [{"name": "Harry Kane", "pos": "F"}]}})
+    assert out["home"]["key_out"][0]["name"] == "Harry Kane" and out["home"]["key_out"][0]["pos"] == "F"
+    assert out["away"]["missing"][0]["name"] == "B. Saka" and not out["away"]["starters_known"]

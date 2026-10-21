@@ -17,6 +17,7 @@ from __future__ import annotations
 import logging
 import os
 import re
+import unicodedata
 from datetime import datetime, timedelta
 
 import requests
@@ -115,14 +116,15 @@ def _form(summary: dict, team_id: str, kick: datetime) -> dict:
             return {}
         last = games[-1]
         return {"form": "".join(e.get("gameResult", "?") for e in games[-5:]),
-                "last_date": last["gameDate"][:16], "last_comp": comp_cn(last.get("leagueName")),
+                "last_date": last["gameDate"][:16], "last_id": last.get("id"), "last_comp": comp_cn(last.get("leagueName")),
                 "rest_days": (kick - datetime.strptime(last["gameDate"][:16], "%Y-%m-%dT%H:%M")).total_seconds() / 86400}
     return {}
 
 
 def _next_game(league: str, team_id: str, kick: datetime) -> dict:
+    # the "all" slug lists fixtures in every competition; a league slug lists only that league's
     try:
-        evs = _get(ESPN.format(lg=ESPN_LEAGUES[league], path=f"teams/{team_id}/schedule"), {"fixture": "true"}).get("events", [])
+        evs = _get(ESPN.format(lg="all", path=f"teams/{team_id}/schedule"), {"fixture": "true"}).get("events", [])
     except Exception as e:
         log.warning("ESPN schedule %s failed: %s", team_id, e)
         return {}
@@ -132,9 +134,53 @@ def _next_game(league: str, team_id: str, kick: datetime) -> dict:
         return {}
     n = later[0]
     when = datetime.strptime(n["date"][:16], "%Y-%m-%dT%H:%M")
-    comp = (n.get("seasonType") or {}).get("name") or (n.get("season") or {}).get("displayName") or ""
+    comp = (n.get("league") or {}).get("name") or (n.get("season") or {}).get("displayName") or ""
     return {"next_date": n["date"][:16], "next_days": (when - kick).total_seconds() / 86400,
             "next_comp": comp_cn(re.sub(r"^\d{4}-\d{2}\s+", "", comp)), "next_name": n.get("name")}
+
+
+def _lineup(event_id: str | None, team_id: str, cache: dict) -> dict:
+    """Formation and starting XI of a finished game, from ESPN's match summary."""
+    if not event_id:
+        return {}
+    if event_id not in cache:
+        try:
+            cache[event_id] = _get(ESPN.format(lg="all", path="summary"), {"event": event_id}).get("rosters", [])
+        except Exception as e:
+            log.warning("ESPN summary %s failed: %s", event_id, e)
+            cache[event_id] = []
+    for r in cache[event_id]:
+        if (r.get("team") or {}).get("id") == team_id:
+            xi = [{"name": x["athlete"]["displayName"], "pos": pos_group((x.get("position") or {}).get("abbreviation"))}
+                  for x in r.get("roster", []) if x.get("starter")]
+            return {"formation": r.get("formation"), "starters": xi}
+    return {}
+
+
+def pos_group(abbr: str | None) -> str | None:
+    """ESPN position codes (G, CD-L, RB, DM, AM-R, LW, CF ...) to G/D/M/F."""
+    if not abbr:
+        return None
+    a = abbr.upper().split("-")[0]
+    if a in ("G", "GK"):
+        return "G"
+    if a in ("CD", "LB", "RB", "SW", "D", "LWB", "RWB", "WB", "CB"):
+        return "D"
+    if a in ("LW", "RW", "F", "CF", "ST", "FW", "SS"):
+        return "F"
+    return "M" if "M" in a else None
+
+
+def _plain(name: str) -> str:
+    return unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode().lower().replace(".", " ").replace("-", " ")
+
+
+def same_player(af_name: str, full_name: str) -> bool:
+    """API-Football writes "M. Rashford"; ESPN writes "Marcus Rashford"."""
+    a, b = _plain(af_name).split(), _plain(full_name).split()
+    if not a or not b or a[-1] != b[-1]:
+        return False
+    return len(a) == 1 or a[0][0] == b[0][0]
 
 
 def _table(summary: dict) -> list[dict]:
@@ -158,7 +204,8 @@ def motivation(league: str, table: list[dict], team_id: str) -> dict | None:
         return abs(me["points"] - pts.get(rank, me["points"]))
 
     if me["played"] < 5:
-        return {"rank": me["rank"], "points": me["points"], "level": 0, "text": f'第 {me["rank"]} 名，赛季初，排名参考有限'}
+        pre = "欧冠" if league == "CL" else ""
+        return {"rank": me["rank"], "points": me["points"], "level": 0, "text": f'{pre}第 {me["rank"]} 名，赛季初，排名参考有限'}
     if league == "CL":
         zone = "直接晋级区" if me["rank"] <= 8 else "附加赛区" if me["rank"] <= 24 else "淘汰区"
         edge = min(gap(8) if me["rank"] > 8 else gap(9), gap(24) if me["rank"] > 24 else gap(25))
@@ -239,11 +286,12 @@ class AF:
         return self.cache[k]
 
 
-def af_context(af: AF, p: dict, last_dates: dict | None = None) -> dict:
-    """Injuries, suspensions and each side's formation and starters in its last game."""
+def af_context(af: AF, p: dict, lineups: dict | None = None) -> dict:
+    """Injuries and suspensions, marked against each side's starters in its last game (from ESPN)."""
     kick = kickoff_utc(p)
-    # the free plan refuses current-season queries by league and season, but date-only queries (all leagues,
-    # one request per day each) are allowed, so fixtures and injuries are fetched by date and filtered here
+    # the free plan refuses current-season queries by league and season, the "last" parameter and dates
+    # outside about yesterday to tomorrow; date-only queries for match day still work (all leagues,
+    # one request each), so fixtures and injuries are fetched by date and filtered here
     day = kick.strftime("%Y-%m-%d")
     fx = [f for f in af.get("fixtures", date=day, timezone="UTC") if f["league"]["id"] == AF_LEAGUES[p["league"]]]
     known = {p["home"], p["away"]}
@@ -256,22 +304,15 @@ def af_context(af: AF, p: dict, last_dates: dict | None = None) -> dict:
     inj = [i for i in af.get("injuries", date=day) if i["fixture"]["id"] == me["fixture"]["id"]]
     for side in ("home", "away"):
         team = me["teams"][side]
-        # the free plan has no "last" parameter: find the previous game on the date ESPN gave for it
-        ld = (last_dates or {}).get(side)
-        last = [f for f in af.get("fixtures", date=ld[:10], timezone="UTC")
-                if team["id"] in (f["teams"]["home"]["id"], f["teams"]["away"]["id"])] if ld else []
-        starters, formation = {}, None
-        if last:
-            for lu in af.get("fixtures/lineups", fixture=last[0]["fixture"]["id"]):
-                if lu["team"]["id"] == team["id"]:
-                    formation = lu.get("formation")
-                    starters = {x["player"]["id"]: x["player"].get("pos") for x in lu.get("startXI", [])}
+        xi = ((lineups or {}).get(side) or {}).get("starters")
         seen = set()
         inj_team = [i for i in inj if i["team"]["id"] == team["id"] and not (i["player"]["id"] in seen or seen.add(i["player"]["id"]))]
-        missing = [{"name": i["player"]["name"], "type": i["player"].get("type"), "reason": i["player"].get("reason"),
-                    "starter": i["player"]["id"] in starters, "pos": starters.get(i["player"]["id"])}
-                   for i in inj_team]
-        out[side] = {"formation": formation, "missing": missing,
+        missing = []
+        for i in inj_team:
+            hit = next((x for x in xi or [] if same_player(i["player"]["name"], x["name"])), None)
+            missing.append({"name": hit["name"] if hit else i["player"]["name"], "type": i["player"].get("type"),
+                            "reason": i["player"].get("reason"), "starter": bool(hit), "pos": hit and hit["pos"]})
+        out[side] = {"missing": missing, "starters_known": bool(xi),
                      "key_out": [m for m in missing if m["starter"] and m["type"] == "Missing Fixture"]}
     return out
 
@@ -364,7 +405,7 @@ def collect(predictions: list[dict], previous: dict[str, dict], now_utc: datetim
     af_key = (os.environ.get("API_FOOTBALL_KEY") or "").strip()  # a pasted key often carries a newline
     af = AF(af_key, config.API_FOOTBALL_BUDGET) if af_key else None
     log.info("API-Football key %s", "found" if af else "not set: no injuries or formations")
-    sb_cache, geo_cache, out = {}, {}, {}
+    sb_cache, geo_cache, lu_cache, out = {}, {}, {}, {}
     for league in sorted({p["league"] for p in targets}):
         mine = [p for p in targets if p["league"] == league]
         events = _espn_match(league, mine, sb_cache)
@@ -383,6 +424,7 @@ def collect(predictions: list[dict], previous: dict[str, dict], now_utc: datetim
                 table = _table(sm)
                 for side in ("home", "away"):
                     c[side].update(_form(sm, ids[side], kick))
+                    c[side]["lineup"] = _lineup(c[side].get("last_id"), ids[side], lu_cache)
                     c[side].update(_next_game(league, ids[side], kick))
                     c[side]["motivation"] = motivation(league, table, ids[side])
                 addr = (comp.get("venue") or {}).get("address") or {}
@@ -390,11 +432,11 @@ def collect(predictions: list[dict], previous: dict[str, dict], now_utc: datetim
                     c["venue"] = (comp.get("venue") or {}).get("fullName")
                     c["weather"] = weather(addr["city"], addr.get("country"), kick, geo_cache)
             if af:
-                afc = af_context(af, p, {s: c[s].get("last_date") for s in ("home", "away")})
+                afc = af_context(af, p, {s: c[s].get("lineup") for s in ("home", "away")})
                 for side in ("home", "away"):
                     if side in afc:
                         c[side]["af"] = afc[side]
-                c["matchup"] = matchup(afc.get("home", {}).get("formation"), afc.get("away", {}).get("formation"))
+            c["matchup"] = matchup(*((c[s].get("lineup") or {}).get("formation") for s in ("home", "away")))
             prev = (previous.get(p["_id"]) or {}).get("market") or {}
             c["market_move"] = {k: p["market"][k] - prev[k] for k in p.get("market", {}) if k in prev}
             picks = {b["selection"]: b for b in p.get("bets", []) + p.get("longshots", [])}
