@@ -73,6 +73,8 @@ ZC_MARKET_SHARE = 0.0  # games we model: pull the model this far towards the mar
 # 推荐理由 (context.py): shown and journaled only, never used to move a probability
 CONTEXT_HOURS = 48  # games with a pick kicking off this soon get context
 API_FOOTBALL_BUDGET = 90  # of the free plan's 100 requests a day
+CTX_WEIGHT = 1.0  # evening run: scale of the off-pitch shifts in adjust.py (tuned weekly; 0 switches them off)
+EVENING_FROM_HOUR = 15  # runs starting at or after this Beijing hour are the evening update
 
 # Journal and daily review (复盘)
 JOURNAL_DIR = Path(os.environ.get("FOOTY_JOURNAL_DIR", ROOT / "journal"))  # committed back by the workflow

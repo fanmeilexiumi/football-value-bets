@@ -1,4 +1,8 @@
-"""Daily pipeline: python -m footy [--no-live-odds] [--days-ahead N]."""
+"""Daily pipeline: python -m footy [--no-live-odds] [--days-ahead N] [--session am|pm].
+
+Runs twice a day: 11:00 Beijing ("am": review, then picks from the model alone) and
+19:00 ("pm": the same picks re-priced with the off-pitch factors, see adjust.py).
+"""
 
 from __future__ import annotations
 
@@ -9,7 +13,7 @@ from datetime import date, timedelta
 
 import pandas as pd
 
-from . import backtest, config, context, data, journal, learn, odds, odds_api, report, ucl, zucai
+from . import adjust, backtest, config, context, data, journal, learn, odds, odds_api, report, ucl, zucai
 from .predict import predict_cl, predict_fixtures
 
 
@@ -18,12 +22,15 @@ def main() -> None:
     ap.add_argument("--no-live-odds", action="store_true", help="skip OddsPortal and The Odds API")
     ap.add_argument("--days-ahead", type=int, default=10)
     ap.add_argument("--skip-backtest", action="store_true")
+    ap.add_argument("--session", choices=("am", "pm"), help="default: pm from EVENING_FROM_HOUR Beijing time")
     args = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     log = logging.getLogger("footy")
 
     now = journal.now_bj()
     today = now.date()
+    session = args.session or ("pm" if now.hour >= config.EVENING_FROM_HOUR else "am")
+    log.info("session %s (%s Beijing)", session, now.strftime("%H:%M"))
     learned = learn.load_and_apply()
     history = data.load_history(today)
     log.info("history: %d matches, %s to %s", len(history), history["date"].min().date(), history["date"].max().date())
@@ -65,6 +72,16 @@ def main() -> None:
         log.warning("Champions League clubs without a rating: %s", unknown)
 
     all_preds = sorted(predictions + cl_predictions, key=lambda p: (p["bj_date"], p.get("bj_time") or "99:99"))
+    by_id = {r["id"]: r for r in records}
+    ctx = {} if args.no_live_odds else context.collect(all_preds, by_id, now - timedelta(hours=8))
+    for p in all_preds:
+        p["context"] = ctx.get(zucai.pred_id(p))
+    if session == "pm":
+        n_changed = adjust.evening(all_preds, ctx, by_id)
+        log.info("evening update: factors weighted %s, %d games changed their picks since 11:00", config.CTX_WEIGHT, n_changed)
+    else:
+        for p in all_preds:
+            p["ctx_adj"] = adjust.deltas(p["context"])  # stored for the weekly check, not applied
     periods = [] if args.no_live_odds else zucai.fetch_periods(today)
     if not periods:
         sim = zucai.simulated_period(all_preds)
@@ -75,10 +92,7 @@ def main() -> None:
                  lp["expect"], lp["t14"]["code"], lp["t14"]["cost"], lp["r9"]["code"], lp["r9"]["cost"],
                  sum(g["model"] is not None for g in lp["games"]))
 
-    ctx = {} if args.no_live_odds else context.collect(all_preds, {r["id"]: r for r in records}, now - timedelta(hours=8))
-    for p in all_preds:
-        p["context"] = ctx.get(zucai.pred_id(p))
-    journal.record(records, all_preds, now)
+    journal.record(records, all_preds, now, session)
     journal.record_lottery(periods_j, lottery)
     journal.save("predictions.json", records)
     journal.save("lottery.json", periods_j)
@@ -93,6 +107,8 @@ def main() -> None:
         "live_sources": {"OddsPortal": len(op), "The Odds API": len(api), "football-data": len(fd)},
         "odds_api_enabled": bool(os.environ.get("THE_ODDS_API_KEY")),
         "fixtures": len(fixtures),
+        "session": session,
+        "updated_bj": now.strftime("%Y-%m-%d %H:%M"),
         "days_ahead": args.days_ahead,
         "cl_results": len(cl_results),
         "cl_seasons": ucl.LAST_CL_SEASONS,

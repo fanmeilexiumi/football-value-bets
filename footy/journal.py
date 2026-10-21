@@ -73,14 +73,21 @@ def _r(v):
     return None if v is None else round(float(v), 4)
 
 
-def record(records: list[dict], predictions: list[dict], now: datetime) -> None:
-    """Upsert every game that has not kicked off; earlier snapshots of started games stay as they were."""
+def record(records: list[dict], predictions: list[dict], now: datetime, session: str = "am") -> None:
+    """Upsert every game that has not kicked off; earlier snapshots of started games stay as they were.
+
+    The top level is always the latest snapshot (what the review settles); versions keeps the
+    latest 11:00 ("am") and 19:00 ("pm") snapshot side by side, so the review can tell whether
+    the evening update helped.
+    """
     by_id = {r["id"]: i for i, r in enumerate(records)}
     for p in predictions:
         rec_id = zucai.pred_id(p)
         if rec_id in by_id and _kickoff(records[by_id[rec_id]]) <= now:
             continue
         model = {k: _r(p["model"][k]) for k in (*SEL, "O25") if k in p["model"]} if p.get("model") else None
+        raw = p.get("model_raw") or p.get("model")
+        raw = {k: _r(raw[k]) for k in (*SEL, "O25") if k in raw} if raw else None
         market = {k: _r(v) for k, v in (p.get("market") or {}).items()}
         fp = final_probs(model, market)
         rec = {
@@ -92,8 +99,12 @@ def record(records: list[dict], predictions: list[dict], now: datetime) -> None:
                        "tags": ["价值"] if kind == "bets" else list(b["tags"])}
                       for kind in ("bets", "longshots") for b in p.get(kind, [])],
             "context": _context_flags(p.get("context")),
+            "model_raw": raw, "ctx_adj": p.get("ctx_adj"), "session": session,
             "result": None,
         }
+        old = records[by_id[rec_id]] if rec_id in by_id else {}
+        rec["versions"] = {**(old.get("versions") or {}),
+                           session: {k: rec[k] for k in ("model", "call", "picks")}}
         if rec_id in by_id:
             records[by_id[rec_id]] = rec
         else:
@@ -305,6 +316,44 @@ def _lottery_review(per: dict) -> dict:
     }
 
 
+def _versions(done: list[dict]) -> dict | None:
+    """11:00 against 19:00 on the games that had both, settled the same way."""
+    both = [r for r in done if {"am", "pm"} <= set(r.get("versions") or {})]
+    if not both:
+        return None
+    out = {"n": len(both), "changed": 0}
+    for v in ("am", "pm"):
+        picks = []
+        for r in both:
+            for pk in r["versions"][v]["picks"]:
+                won = _won(pk["selection"], r)
+                picks.append({"won": won, "profit": (pk["odds"] - 1) if won else -1.0})
+        out[v] = {"call_hit": sum(r["versions"][v]["call"] == _res(r) for r in both), "picks": _stats(picks)}
+    out["changed"] = sum(r["versions"]["am"]["call"] != r["versions"]["pm"]["call"]
+                         or {p["selection"] for p in r["versions"]["am"]["picks"]}
+                         != {p["selection"] for p in r["versions"]["pm"]["picks"]} for r in both)
+    return out
+
+
+def _week(day: str) -> str:
+    d = datetime.strptime(day, "%Y-%m-%d")
+    return (d - timedelta(days=d.weekday())).strftime("%Y-%m-%d")
+
+
+def _weeks(done: list[dict], games: list[dict], now: datetime) -> list[dict]:
+    """Per Monday-to-Sunday week, newest first; the current week is marked unfinished."""
+    this_week = _week(now.strftime("%Y-%m-%d"))
+    out = []
+    for wk in sorted({_week(r["day"]) for r in done}, reverse=True)[:8]:
+        rs = [r for r in done if _week(r["day"]) == wk]
+        gs = [g for g, r in zip(games, done) if _week(r["day"]) == wk]
+        end = (datetime.strptime(wk, "%Y-%m-%d") + timedelta(days=6)).strftime("%Y-%m-%d")
+        out.append({"start": wk, "end": end, "done": wk < this_week, "summary": _summary(gs),
+                    "versions": _versions(rs),
+                    "upsets": [g for g in gs if g["upset"]]})
+    return out
+
+
 def build_review(records: list[dict], periods: list[dict], now: datetime) -> dict:
     """Latest finished match day in detail, recent days in brief, and running totals since the journal began."""
     cover = {}
@@ -329,5 +378,7 @@ def build_review(records: list[dict], periods: list[dict], now: datetime) -> dic
         "recent": [{"day": d, "summary": _summary(by_day[d])} for d in days[1:14]],
         "total": _summary(games),
         "by_comp": [(k, _summary(v)) for k, v in sorted(by_comp.items())],
+        "versions": _versions(done),
+        "weeks": _weeks(done, games, now),
         "lottery": [_lottery_review(p) for p in sorted(settled, key=lambda p: p["expect"], reverse=True)[:6]],
     }

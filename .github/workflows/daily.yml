@@ -2,8 +2,14 @@ name: daily-report
 
 on:
   schedule:
-    - cron: "0 3 * * *"   # 03:00 UTC = 11:00 Beijing: review yesterday, then today's picks; GitHub may start late, 16:00 is the deadline
+    - cron: "0 3 * * *"    # 03:00 UTC = 11:00 Beijing: review yesterday, then picks from the model alone
+    - cron: "0 11 * * *"   # 11:00 UTC = 19:00 Beijing: re-price with injuries, rotation, motivation, weather (adjust.py)
   workflow_dispatch:
+    inputs:
+      session:
+        description: "am = 11:00 review and picks, pm = 19:00 update; empty = by Beijing time"
+        required: false
+        default: ""
   push:
     branches: [main]
 
@@ -33,9 +39,10 @@ jobs:
         run: python -m playwright install --with-deps chromium
       - run: python -m pytest -q
       - name: Build report
-        run: python -m footy
+        run: python -m footy ${SESSION:+--session $SESSION}
         env:
           # optional repository secrets, see README
+          SESSION: ${{ github.event.inputs.session }}
           THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
           OH_PROXY_URL: ${{ secrets.ODDSPORTAL_PROXY_URL }}
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}  # optional: injuries and formations for 推荐理由

@@ -73,6 +73,7 @@ tr:last-child td{border-bottom:0}
 .filters button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .filters label{font-size:13.5px;display:flex;gap:6px;align-items:center;margin-left:auto;cursor:pointer}
 /* schedule */
+.upd{font-size:12.5px;margin:6px 0 0;padding:6px 8px;border-radius:8px;border:1px dashed var(--line)}
 .day{display:grid;gap:10px}
 .day h2{margin:18px 0 0;font-size:17px;display:flex;gap:10px;align-items:baseline}
 .day h2 .muted{font-size:13px;font-weight:400}
@@ -123,9 +124,10 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
 {% set LA = long_bt.avg.all if long_bt and long_bt.avg else None %}
 <header>
   <h1>三大联赛与欧冠赛程推荐</h1>
-  <p class="muted">英超、意甲、西甲、欧冠，按北京时间排列。每天北京时间 11:00 开始，先复盘前一天的赛果，再更新当天推荐（16:00 前完成）：拉取赔率、拟合模型，把模型概率与去水后的市场概率对比，标出价值、冷门和高赔选项。</p>
+  <p class="muted">英超、意甲、西甲、欧冠，按北京时间排列。每天北京时间更新两次：11:00 先复盘前一天的赛果，再出推荐（拉取赔率、拟合模型，把模型概率与去水后的市场概率对比，标出价值、冷门和高赔选项）；19:00 重新拉赔率和伤停，按场外因素小幅调整概率后再推荐一次，推荐可以和上午不同。每周一复盘上一周。GitHub 定时任务常晚 10–30 分钟开始。</p>
   <div class="chips">
-    <span class="chip">更新于 {{ updated }}</span>
+    <span class="chip ok">{{ '19:00 场外因素更新版' if status.session == 'pm' else '11:00 复盘推荐版' }}</span>
+    <span class="chip">更新于北京时间 {{ status.updated_bj or updated }}</span>
     <span class="chip">未来 {{ status.days_ahead }} 天 {{ n_games }} 场</span>
     {% for name, n in status.live_sources.items() %}
     <span class="chip {{ 'ok' if n else 'fail' }}">{{ name }}：{{ '%d 场' % n if n else ('未配置 API Key' if name == 'The Odds API' and not status.odds_api_enabled else '本次未获取') }}</span>
@@ -239,6 +241,43 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
   <p class="empty" style="margin-top:10px">还没有已结束的比赛。存档从 {{ review.since or '今天' }} 开始，比赛结束后的第二天 11:00 出第一份复盘。</p>
   {% endif %}
 
+  {% set W = review.weeks or [] %}
+  {% if W %}{% set LW = (W|selectattr('done')|list or W)[0] %}
+  <details class="fold" style="margin-top:12px" open>
+    <summary>本周复盘 · {{ LW.start[5:] }} 至 {{ LW.end[5:] }}{% if not LW.done %}（本周进行中）{% endif %}</summary>
+    {% set S = LW.summary %}
+    <div class="kpis">
+      <div class="kpi"><div class="v">{{ S.call_hit }}/{{ S.n_call }}</div><div class="k">我们的判断命中（市场热门 {{ S.fav_hit }}/{{ S.n_fav }}）</div></div>
+      <div class="kpi"><div class="v">{{ '%+.2f'|format(S.value.profit) }}</div><div class="k">价值推荐 {{ S.value.n }} 注，单位盈亏</div></div>
+      <div class="kpi"><div class="v">{{ '%+.2f'|format(S.long_any.profit) }}</div><div class="k">冷门 / 高赔 {{ S.long_any.n }} 注，单位盈亏</div></div>
+      <div class="kpi"><div class="v">{{ S.upsets }} 场</div><div class="k">爆冷，提前提示 {{ S.upsets_flagged }} 场</div></div>
+    </div>
+    {% set V = LW.versions %}
+    {% if V %}
+    <p style="margin-top:8px"><b>11:00 版 vs 19:00 版</b>（两版都有的 {{ V.n }} 场，{{ V.changed }} 场晚间改了判断或推荐）：判断命中 {{ V.am.call_hit }} vs {{ V.pm.call_hit }}；推荐 {{ V.am.picks.n }} 注 {{ '%+.2f'|format(V.am.picks.profit) }} vs {{ V.pm.picks.n }} 注 {{ '%+.2f'|format(V.pm.picks.profit) }} 单位。</p>
+    {% else %}
+    <p class="muted" style="margin-top:8px">11:00 与 19:00 两版对比：本周还没有两版都有的已结束比赛。</p>
+    {% endif %}
+    {% if LW.upsets %}
+    <p style="margin-top:6px"><b>爆冷</b>：{% for g in LW.upsets %}{{ g.home }} {{ g.score }} {{ g.away }}（{{ g.res_label }}，市场 {{ g.upset.market|pct(0) }}，{{ g.upset.cause }}）{{ '；' if not loop.last }}{% endfor %}</p>
+    {% endif %}
+    {% if W|length > 1 %}
+    <div class="tbl" style="margin-top:8px"><table>
+      <thead><tr><th>周</th><th class="n">场次</th><th class="n">判断命中</th><th class="n">市场热门</th><th class="n">价值推荐</th><th class="n">冷门 / 高赔</th><th class="n">爆冷 / 提示</th><th class="n">11:00 vs 19:00 推荐盈亏</th></tr></thead>
+      <tbody>
+      {% for w in W %}{% set s = w.summary %}
+        <tr><td class="num">{{ w.start[5:] }}–{{ w.end[5:] }}{% if not w.done %} 进行中{% endif %}</td><td class="n">{{ s.n }}</td>
+          <td class="n">{{ s.call_hit }}/{{ s.n_call }}</td><td class="n">{{ s.fav_hit }}/{{ s.n_fav }}</td>
+          <td class="n">{{ s.value.n }} 注 {{ '%+.2f'|format(s.value.profit) }}</td><td class="n">{{ s.long_any.n }} 注 {{ '%+.2f'|format(s.long_any.profit) }}</td>
+          <td class="n">{{ s.upsets }} / {{ s.upsets_flagged }}</td>
+          <td class="n">{% if w.versions %}{{ '%+.2f'|format(w.versions.am.picks.profit) }} vs {{ '%+.2f'|format(w.versions.pm.picks.profit) }}{% else %}–{% endif %}</td></tr>
+      {% endfor %}
+      </tbody></table></div>
+    {% endif %}
+    <p class="muted" style="margin-top:6px">每周一 11:00 复盘后，下面的自我学习会用这些结果重新校准参数，包括 19:00 调整的力度。</p>
+  </details>
+  {% endif %}
+
   {% if review.lottery %}
   <details class="fold" style="margin-top:12px" open>
     <summary>足彩开奖复盘</summary>
@@ -276,7 +315,7 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
 
   <details class="fold" style="margin-top:12px">
     <summary>自我学习记录{% if learned.state.updated %} · 最近一次 {{ learned.state.updated }}{% endif %}</summary>
-    <p class="muted">每周一在复盘后重新挑选下面的参数：用更早的比赛挑出最好的取值，只有在最近 {{ cfg.TUNE_VALID_DAYS }} 天的比赛上也明显更好（对数损失低 {{ cfg.TUNE_MIN_GAIN.logloss }}、回报率高 {{ (cfg.TUNE_MIN_GAIN.roi*100)|round|int }} 个百分点，或足彩平均多中 {{ cfg.TUNE_MIN_GAIN.hits }} 场）才采用，避免越调越差。数据来自三大联赛逐周回测（每周新增真实赛果）和存档里已结束的欧冠比赛。模型只看比分和赔率，伤病、首发等信息不在其中。</p>
+    <p class="muted">每周一在复盘后重新挑选下面的参数：用更早的比赛挑出最好的取值，只有在最近 {{ cfg.TUNE_VALID_DAYS }} 天的比赛上也明显更好（对数损失低 {{ cfg.TUNE_MIN_GAIN.logloss }}、回报率高 {{ (cfg.TUNE_MIN_GAIN.roi*100)|round|int }} 个百分点，或足彩平均多中 {{ cfg.TUNE_MIN_GAIN.hits }} 场）才采用，避免越调越差。数据来自三大联赛逐周回测（每周新增真实赛果）和存档里已结束的欧冠比赛。模型本身只看比分和赔率；伤病、轮换、战意、天气只在 19:00 版里按规则调整，调整力度 CTX_WEIGHT 用存档里已结束的比赛校准（样本内，至少 40 场才会动）。</p>
     <div class="tbl"><table>
       <thead><tr><th>参数</th><th>作用</th><th class="n">初始值</th><th class="n">当前值</th></tr></thead>
       <tbody>
@@ -328,6 +367,9 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
         {% elif not g.model %}
         <div class="empty">{{ '球队比赛数据不足' if g.league == 'CL' else '升班马数据不足' }}，未建模，只显示市场概率。</div>
         {% endif %}
+        {% if g.evening %}{% set U = g.evening %}
+        <div class="upd">{% if U.shift %}19:00 按场外因素调整：{% for k, v in U.shift.items() %}{{ SEL_LABEL[k] }} {{ '%+.1f'|format(v * 100) }}{{ '，' if not loop.last }}{% endfor %} 个百分点{% else %}19:00 复核：场外因素没有改变概率{% endif %}{% if U.changed %}；<b>推荐有变</b>，11:00 为 {% for s in U.am_picks %}{{ SEL_LABEL[s] }}{{ '、' if not loop.last }}{% else %}无推荐{% endfor %}{% endif %}</div>
+        {% endif %}
         {% if g.picks %}
         <div class="pk">
           {% for b in g.picks %}
@@ -362,7 +404,7 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
             <li><b>{{ SEL_LABEL[sel] }}：场外因素{{ v.lean }}</b>{% if v.pro %}。支持：{{ v.pro|join('；') }}{% endif %}{% if v.con %}。削弱：{{ v.con|join('；') }}{% endif %}{% if not v.pro and not v.con %}，没有明显的加分或减分项{% endif %}</li>
             {% endfor %}
           </ul>
-          <small class="muted">场外因素按经验规则判断，未经回测，只展示、不改变概率；会记入存档，样本够了再由每周学习检验。</small>
+          <small class="muted">场外因素按经验规则判断。11:00 版只展示、不改概率；19:00 版按规则小幅调整概率（力度 {{ cfg.CTX_WEIGHT }}，每周一按存档赛果重新校准，没帮助会降到 0）。</small>
         </details>
         {% endif %}
       </article>
