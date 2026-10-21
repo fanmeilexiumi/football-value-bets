@@ -357,7 +357,7 @@ def collect(predictions: list[dict], previous: dict[str, dict], now_utc: datetim
             targets.append({**p, "_id": pred_id(p)})
     if not targets:
         return {}
-    af_key = os.environ.get("API_FOOTBALL_KEY")
+    af_key = (os.environ.get("API_FOOTBALL_KEY") or "").strip()  # a pasted key often carries a newline
     af = AF(af_key, config.API_FOOTBALL_BUDGET) if af_key else None
     log.info("API-Football key %s", "found" if af else "not set: no injuries or formations")
     sb_cache, geo_cache, out = {}, {}, {}
