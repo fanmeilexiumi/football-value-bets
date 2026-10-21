@@ -1,0 +1,38 @@
+name: probe
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          python3 - <<'PY'
+          import json, urllib.request
+          def get(u):
+              with urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"}), timeout=30) as r:
+                  return json.load(r)
+          def show(tag, obj, n=3000):
+              print("=====", tag); print(json.dumps(obj, ensure_ascii=False)[:n])
+          sb = get("https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261021")
+          ev = sb["events"][0]; c = ev["competitions"][0]
+          show("sb.competition", {k: c[k] for k in ("date", "venue")} | {"competitors": [{k: x.get(k) for k in ("homeAway", "form", "team")} for x in c["competitors"]]}, 2500)
+          sm = get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event={ev['id']}")
+          print("summary keys", list(sm), "boxscore keys", list(sm.get("boxscore", {})))
+          lf = sm["boxscore"].get("form") or sm["boxscore"].get("lastFiveGames")
+          show("lastFive", lf, 2500)
+          show("gameInfo", sm.get("gameInfo") or sm["boxscore"].get("gameInfo"), 800)
+          for k in ("rosters", "injuries", "standings", "headToHeadGames"):
+              if k in sm: show(k, sm[k], 1200)
+          sb2 = get("https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261024")
+          if sb2.get("events"):
+              e2 = sb2["events"][0]; s2 = get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event={e2['id']}")
+              print("eng summary keys", list(s2))
+              for k in ("rosters", "injuries", "standings", "gameInfo"):
+                  if k in s2: show("eng." + k, s2[k], 1500)
+          st = get("https://site.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings")
+          ch = st.get("children", [st])[0]
+          ent = ch["standings"]["entries"]
+          print("CL standings entries", len(ent))
+          show("standing0", {"team": ent[0]["team"].get("displayName"), "stats": [(s.get("name"), s.get("value")) for s in ent[0]["stats"]]}, 1500)
+          show("geo", get("https://geocoding-api.open-meteo.com/v1/search?name=M%C3%BCnchen&count=1"), 600)
+          show("wx", get("https://api.open-meteo.com/v1/forecast?latitude=48.14&longitude=11.58&hourly=temperature_2m,precipitation_probability,precipitation,wind_speed_10m&timezone=UTC&start_date=2026-10-21&end_date=2026-10-21"), 900)
+          PY
