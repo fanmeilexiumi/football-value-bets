@@ -5,11 +5,11 @@ from __future__ import annotations
 import argparse
 import logging
 import os
-from datetime import date
+from datetime import date, timedelta
 
 import pandas as pd
 
-from . import backtest, config, data, journal, learn, odds, odds_api, report, ucl, zucai
+from . import backtest, config, context, data, journal, learn, odds, odds_api, report, ucl, zucai
 from .predict import predict_cl, predict_fixtures
 
 
@@ -75,6 +75,9 @@ def main() -> None:
                  lp["expect"], lp["t14"]["code"], lp["t14"]["cost"], lp["r9"]["code"], lp["r9"]["cost"],
                  sum(g["model"] is not None for g in lp["games"]))
 
+    ctx = {} if args.no_live_odds else context.collect(all_preds, {r["id"]: r for r in records}, now - timedelta(hours=8))
+    for p in all_preds:
+        p["context"] = ctx.get(zucai.pred_id(p))
     journal.record(records, all_preds, now)
     journal.record_lottery(periods_j, lottery)
     journal.save("predictions.json", records)

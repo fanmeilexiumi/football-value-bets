@@ -38,6 +38,7 @@ jobs:
           # optional repository secrets, see README
           THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
           OH_PROXY_URL: ${{ secrets.ODDSPORTAL_PROXY_URL }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}  # optional: injuries and formations for 推荐理由
       - name: Save journal
         run: |
           git config user.name "github-actions[bot]"

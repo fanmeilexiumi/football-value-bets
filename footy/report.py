@@ -92,6 +92,8 @@ def render(predictions: list[dict], backtest: dict, status: dict, site_dir: Path
     html = env.get_template("report.html.j2").render(
         updated=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         days=days, picks=picks, comps=comps, n_games=len(games), bt=backtest, status=status,
+        SEL_LABEL={"H": "主胜", "D": "平局", "A": "客胜", "O25": "大 2.5", "U25": "小 2.5"},
+        POS={"G": "门将", "D": "后卫", "M": "中场", "F": "前锋"},
         cfg=config, bt_rows=bt_rows, review=review or {"total": {"n": 0}}, learned=learned or {"state": {}, "params": []}, long_bt=long_bt, lottery=lottery or [], zc_sim=backtest.get("zucai", {}),
         svg_long=bankroll_svg(long_bt.get("avg", {}).get("bankroll", [])),
         svg_avg=bankroll_svg(backtest.get("bets", {}).get("avg", {}).get("bankroll", [])),

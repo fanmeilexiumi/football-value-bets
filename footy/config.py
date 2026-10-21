@@ -70,6 +70,10 @@ ZC_UPSET_BONUS = 0.10  # log-score bonus for doubling on an outcome the model ra
 
 ZC_MARKET_SHARE = 0.0  # games we model: pull the model this far towards the market (tuned weekly)
 
+# 推荐理由 (context.py): shown and journaled only, never used to move a probability
+CONTEXT_HOURS = 48  # games with a pick kicking off this soon get context
+API_FOOTBALL_BUDGET = 90  # of the free plan's 100 requests a day
+
 # Journal and daily review (复盘)
 JOURNAL_DIR = Path(os.environ.get("FOOTY_JOURNAL_DIR", ROOT / "journal"))  # committed back by the workflow
 JOURNAL_KEEP_DAYS = 400

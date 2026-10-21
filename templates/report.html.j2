@@ -80,6 +80,9 @@ tr:last-child td{border-bottom:0}
 @media (max-width:760px){.cards{grid-template-columns:minmax(0,1fr)}}
 .game{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:8px;min-width:0;align-content:start}
 .game.has{border-color:var(--accent)}
+.game details.why{border-top:1px dashed var(--line);padding-top:6px;font-size:13px}
+.game details.why summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.game details.why ul{margin:6px 0;padding-left:18px;display:grid;gap:3px}
 .game .top{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
 .game .teams{font-weight:700;font-size:15.5px;line-height:1.35}
 .game .teams small{font-weight:400;color:var(--muted);font-family:var(--mono);font-size:11.5px}
@@ -143,13 +146,14 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
   <span class="tag l">高赔</span>赔率 {{ cfg.LONG_MIN_ODDS }}–{{ cfg.LONG_MAX_ODDS|int }} 且优势 ≥ {{ (cfg.LONG_MIN_EDGE*100)|round|int }}%。冷门和高赔仓位 {{ cfg.LONG_KELLY_FRACTION }} 倍凯利（上限 {{ (cfg.LONG_MAX_STAKE*100)|round|int }}%）。</p>
   {% if picks %}
   <div class="tbl" style="margin-top:10px"><table>
-    <thead><tr><th>北京时间</th><th>赛事</th><th>比赛</th><th>类型</th><th>选项</th><th class="n">最优赔率</th><th class="n">模型 / 市场</th><th class="n">优势</th><th class="n">对应比分</th><th class="n">仓位</th></tr></thead>
+    <thead><tr><th>北京时间</th><th>赛事</th><th>比赛</th><th>类型</th><th>选项</th><th class="n">最优赔率</th><th class="n">模型 / 市场</th><th class="n">优势</th><th class="n">对应比分</th><th class="n">仓位</th><th>场外因素</th></tr></thead>
     <tbody>
     {% for b in picks %}{% set g = b.game %}
       <tr><td class="num">{{ g.bj_date[5:] }} {{ g.bj_time or '' }}</td><td><span class="lg {{ g.league }}">{{ g.league_name }}</span></td><td>{{ g.home }} vs {{ g.away }}</td>
         <td>{% for t in b.tags %}<span class="tag {{ 'v' if t == '价值' else 'u' if t == '冷门' else 'l' }}">{{ t }}</span>{% endfor %}</td>
         <td><b>{{ b.label }}</b></td><td class="n">{{ b.odds|num }}</td><td class="n">{{ b.prob|pct }} / {{ b.market_prob|pct }}</td><td class="n">{{ b.edge|signed_pct }}</td>
-        <td class="n">{% if b.score %}{{ b.score[0] }}-{{ b.score[1] }}{% else %}–{% endif %}</td><td class="n">{{ b.stake|pct }}</td></tr>
+        <td class="n">{% if b.score %}{{ b.score[0] }}-{{ b.score[1] }}{% else %}–{% endif %}</td><td class="n">{{ b.stake|pct }}</td>
+        <td>{% set v = g.context.verdicts.get(b.selection) if g.context else none %}{% if v %}<span class="tag {{ 'v' if v.lean == '支持' else 'u' if v.lean == '削弱' else 'l' }}">{{ v.lean }}</span> <small class="muted">+{{ v.pro|length }} / −{{ v.con|length }}</small>{% else %}<span class="muted">–</span>{% endif %}</td></tr>
     {% endfor %}
     </tbody></table></div>
   {% else %}
@@ -280,7 +284,7 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
         <tr><td class="num">{{ p.name }}</td><td>{{ p.label }}</td><td class="n">{{ p.default }}</td><td class="n">{% if p.current != p.default %}<b>{{ p.current }}</b>{% else %}{{ p.current }}{% endif %}</td></tr>
       {% endfor %}
       </tbody></table></div>
-    {% for e in learned.state.log[:4] %}
+    {% for e in (learned.state.log or [])[:4] %}
     <p style="margin:12px 0 4px"><b>{{ e.date }}</b> <span class="muted">训练 {{ e.train_rows }} 场 · 验证 {{ e.valid_rows }} 场 · 欧冠 {{ e.cl_rows }} 场</span></p>
     <div class="tbl"><table>
       <thead><tr><th>参数</th><th class="n">当前 → 候选</th><th class="n">验证：当前</th><th class="n">验证：候选</th><th>结论</th></tr></thead>
@@ -333,6 +337,30 @@ footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
             <span class="num">优势 {{ b.edge|signed_pct(0) }}</span><span class="num muted">仓位 {{ b.stake|pct }}</span></div>
           {% endfor %}
         </div>
+        {% endif %}
+        {% set c = g.context %}
+        {% if c %}
+        <details class="why">
+          <summary>推荐理由 · {% for sel, v in c.verdicts.items() %}{{ SEL_LABEL[sel] }}{{ v.lean }}{{ '' if loop.last else '，' }}{% endfor %}</summary>
+          <ul>
+            {% for side, nm in [('home', g.home), ('away', g.away)] %}{% set s = c[side] %}
+            <li><b>{{ nm }}</b>：{% if s.form %}近况 {{ s.form }}{% endif %}{% if s.rest_days is defined %}，距上场 {{ s.rest_days|round(1) }} 天{% if s.last_comp %}（{{ s.last_comp }}）{% endif %}{% endif %}{% if s.next_days is defined %}，{{ s.next_days|round(1) }} 天后打{{ s.next_comp or '下一场' }}{% endif %}{% if s.motivation %}；{{ s.motivation.text }}{% endif %}{% if not s.form and not s.motivation %}<span class="muted">暂无数据</span>{% endif %}</li>
+            {% endfor %}
+            {% if c.weather %}{% set w = c.weather %}<li>天气：{{ c.venue or '' }}（{{ w.city }}）开球时 {{ w.temp|round|int }}°C，降水概率 {{ w.rain_prob if w.rain_prob is not none else '–' }}%，风速 {{ w.wind|round|int }} km/h{% if w.bad %}，<b>{{ w.bad|join('、') }}</b>{% endif %}</li>{% endif %}
+            {% if c.home.af or c.away.af %}
+            {% for side, nm in [('home', g.home), ('away', g.away)] %}{% set a = c[side].af %}{% if a %}
+            <li>{{ nm }}伤停：{% if a.key_out %}<b>主力缺阵</b> {% for m in a.key_out %}{{ m.name }}{% if m.pos %}（{{ POS[m.pos] }}）{% endif %}{{ '、' if not loop.last }}{% endfor %}{% else %}无主力缺阵{% endif %}{% if a.missing|length > a.key_out|length %}；另有 {{ a.missing|length - a.key_out|length }} 人伤停或存疑{% endif %}{% if a.formation %}；上场阵型 {{ a.formation }}{% endif %}</li>
+            {% endif %}{% endfor %}
+            {% if c.matchup %}<li>阵型对位（经验判断）：{{ c.matchup }}</li>{% endif %}
+            {% else %}
+            <li class="muted">伤停与阵型：待接入 API-Football</li>
+            {% endif %}
+            {% for sel, v in c.verdicts.items() %}
+            <li><b>{{ SEL_LABEL[sel] }}：场外因素{{ v.lean }}</b>{% if v.pro %}。支持：{{ v.pro|join('；') }}{% endif %}{% if v.con %}。削弱：{{ v.con|join('；') }}{% endif %}{% if not v.pro and not v.con %}，没有明显的加分或减分项{% endif %}</li>
+            {% endfor %}
+          </ul>
+          <small class="muted">场外因素按经验规则判断，未经回测，只展示、不改变概率；会记入存档，样本够了再由每周学习检验。</small>
+        </details>
         {% endif %}
       </article>
     {% endfor %}

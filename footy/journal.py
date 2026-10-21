@@ -91,6 +91,7 @@ def record(records: list[dict], predictions: list[dict], now: datetime) -> None:
             "picks": [{"selection": b["selection"], "odds": _r(b["odds"]), "edge": _r(b["edge"]),
                        "tags": ["价值"] if kind == "bets" else list(b["tags"])}
                       for kind in ("bets", "longshots") for b in p.get(kind, [])],
+            "context": _context_flags(p.get("context")),
             "result": None,
         }
         if rec_id in by_id:
@@ -100,6 +101,14 @@ def record(records: list[dict], predictions: list[dict], now: datetime) -> None:
             records.append(rec)
     cutoff = (now - timedelta(days=config.JOURNAL_KEEP_DAYS)).strftime("%Y-%m-%d")
     records[:] = [r for r in records if r["bj_date"] >= cutoff]
+
+
+def _context_flags(c: dict | None) -> dict | None:
+    """What the weekly tuning may later test: per pick, the factors for and against."""
+    if not c:
+        return None
+    return {sel: {"pro": len(v["pro"]), "con": len(v["con"]), "lean": v["lean"], "why": v["pro"] + ["−" + x for x in v["con"]]}
+            for sel, v in c.get("verdicts", {}).items()}
 
 
 def record_lottery(periods: list[dict], lottery: list[dict]) -> None:
