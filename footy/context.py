@@ -239,7 +239,7 @@ class AF:
         return self.cache[k]
 
 
-def af_context(af: AF, p: dict) -> dict:
+def af_context(af: AF, p: dict, last_dates: dict | None = None) -> dict:
     """Injuries, suspensions and each side's formation and starters in its last game."""
     kick = kickoff_utc(p)
     # the free plan refuses current-season queries by league and season, but date-only queries (all leagues,
@@ -256,16 +256,21 @@ def af_context(af: AF, p: dict) -> dict:
     inj = [i for i in af.get("injuries", date=day) if i["fixture"]["id"] == me["fixture"]["id"]]
     for side in ("home", "away"):
         team = me["teams"][side]
-        last = af.get("fixtures", team=team["id"], last=1)
+        # the free plan has no "last" parameter: find the previous game on the date ESPN gave for it
+        ld = (last_dates or {}).get(side)
+        last = [f for f in af.get("fixtures", date=ld[:10], timezone="UTC")
+                if team["id"] in (f["teams"]["home"]["id"], f["teams"]["away"]["id"])] if ld else []
         starters, formation = {}, None
         if last:
             for lu in af.get("fixtures/lineups", fixture=last[0]["fixture"]["id"]):
                 if lu["team"]["id"] == team["id"]:
                     formation = lu.get("formation")
                     starters = {x["player"]["id"]: x["player"].get("pos") for x in lu.get("startXI", [])}
+        seen = set()
+        inj_team = [i for i in inj if i["team"]["id"] == team["id"] and not (i["player"]["id"] in seen or seen.add(i["player"]["id"]))]
         missing = [{"name": i["player"]["name"], "type": i["player"].get("type"), "reason": i["player"].get("reason"),
                     "starter": i["player"]["id"] in starters, "pos": starters.get(i["player"]["id"])}
-                   for i in inj if i["team"]["id"] == team["id"]]
+                   for i in inj_team]
         out[side] = {"formation": formation, "missing": missing,
                      "key_out": [m for m in missing if m["starter"] and m["type"] == "Missing Fixture"]}
     return out
@@ -385,7 +390,7 @@ def collect(predictions: list[dict], previous: dict[str, dict], now_utc: datetim
                     c["venue"] = (comp.get("venue") or {}).get("fullName")
                     c["weather"] = weather(addr["city"], addr.get("country"), kick, geo_cache)
             if af:
-                afc = af_context(af, p)
+                afc = af_context(af, p, {s: c[s].get("last_date") for s in ("home", "away")})
                 for side in ("home", "away"):
                     if side in afc:
                         c[side]["af"] = afc[side]
