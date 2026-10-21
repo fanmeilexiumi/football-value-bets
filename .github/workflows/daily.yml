@@ -43,7 +43,8 @@ jobs:
         run: python -m footy ${SESSION:+--session $SESSION}
         env:
           # optional repository secrets, see README
-          SESSION: ${{ github.event.inputs.session }}
+          # a scheduled run keeps its slot even when GitHub starts it hours late; manual runs choose, pushes go by the clock
+          SESSION: ${{ github.event.inputs.session || (github.event.schedule == '0 3 * * *' && 'am') || (github.event.schedule == '0 11 * * *' && 'pm') || '' }}
           THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
           OH_PROXY_URL: ${{ secrets.ODDSPORTAL_PROXY_URL }}
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}  # optional: injuries and formations for 推荐理由
