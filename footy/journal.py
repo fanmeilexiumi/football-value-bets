@@ -95,9 +95,9 @@ def record(records: list[dict], predictions: list[dict], now: datetime, session:
             "home": p["home"], "away": p["away"], "bj_date": p["bj_date"], "bj_time": p.get("bj_time"),
             "day": match_day(p["bj_date"], p.get("bj_time")),
             "model": model, "market": market or None, "call": max(fp, key=fp.get) if fp else None,
-            "picks": [{"selection": b["selection"], "odds": _r(b["odds"]), "edge": _r(b["edge"]),
-                       "tags": ["价值"] if kind == "bets" else list(b["tags"])}
-                      for kind in ("bets", "longshots") for b in p.get(kind, [])],
+            "picks": merge_picks([{"selection": b["selection"], "odds": _r(b["odds"]), "edge": _r(b["edge"]),
+                                   "tags": ["价值"] if kind == "bets" else list(b["tags"])}
+                                  for kind in ("bets", "longshots") for b in p.get(kind, [])]),
             "context": _context_flags(p.get("context")),
             "model_raw": raw, "ctx_adj": p.get("ctx_adj"), "session": session,
             "result": None,
@@ -112,6 +112,17 @@ def record(records: list[dict], predictions: list[dict], now: datetime, session:
             records.append(rec)
     cutoff = (now - timedelta(days=config.JOURNAL_KEEP_DAYS)).strftime("%Y-%m-%d")
     records[:] = [r for r in records if r["bj_date"] >= cutoff]
+
+
+def merge_picks(picks: list[dict]) -> list[dict]:
+    """One entry per selection: a value pick that is also a long-odds pick is one bet with both tags."""
+    out: dict[str, dict] = {}
+    for pk in picks:
+        if pk["selection"] in out:
+            out[pk["selection"]]["tags"] = list(dict.fromkeys(out[pk["selection"]]["tags"] + pk["tags"]))
+        else:
+            out[pk["selection"]] = {**pk, "tags": list(pk["tags"])}
+    return list(out.values())
 
 
 def _context_flags(c: dict | None) -> dict | None:
@@ -249,7 +260,7 @@ def review_game(rec: dict, lottery_cover: dict | None = None) -> dict:
     mkt, model = rec.get("market") or {}, rec.get("model") or {}
     fav = max(SEL, key=lambda k: mkt[k]) if all(k in mkt for k in SEL) else None
     picks = [{**pk, "label": LABEL[pk["selection"]], "won": _won(pk["selection"], rec),
-              "profit": (pk["odds"] - 1) if _won(pk["selection"], rec) else -1.0} for pk in rec["picks"]]
+              "profit": (pk["odds"] - 1) if _won(pk["selection"], rec) else -1.0} for pk in merge_picks(rec["picks"])]
     upset = None
     if fav and res != fav and mkt[res] < config.REVIEW_UPSET_PROB:
         flagged = [pk for pk in picks if pk["selection"] == res]
@@ -325,7 +336,7 @@ def _versions(done: list[dict]) -> dict | None:
     for v in ("am", "pm"):
         picks = []
         for r in both:
-            for pk in r["versions"][v]["picks"]:
+            for pk in merge_picks(r["versions"][v]["picks"]):
                 won = _won(pk["selection"], r)
                 picks.append({"won": won, "profit": (pk["odds"] - 1) if won else -1.0})
         out[v] = {"call_hit": sum(r["versions"][v]["call"] == _res(r) for r in both), "picks": _stats(picks)}

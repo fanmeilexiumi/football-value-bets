@@ -89,3 +89,10 @@ def test_tune_only_adopts_validated_changes(monkeypatch):
     finally:
         for k, v in before.items():
             setattr(config, k, v)
+
+
+def test_value_and_long_odds_pick_on_one_selection_is_one_bet():
+    picks = journal.merge_picks([{"selection": "D", "odds": 4.7, "edge": 0.1, "tags": ["价值"]},
+                                 {"selection": "D", "odds": 4.7, "edge": 0.1, "tags": ["高赔"]},
+                                 {"selection": "A", "odds": 4.9, "edge": 0.1, "tags": ["高赔"]}])
+    assert [(p["selection"], p["tags"]) for p in picks] == [("D", ["价值", "高赔"]), ("A", ["高赔"])]
