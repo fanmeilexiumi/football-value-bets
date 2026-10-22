@@ -96,6 +96,8 @@ def main() -> None:
     journal.record_lottery(periods_j, lottery)
     journal.save("predictions.json", records)
     journal.save("lottery.json", periods_j)
+    # later scheduled slots for the same session stop at the workflow's gate
+    journal.save("runs.json", {**journal.load("runs.json", {}), session: today.isoformat()})
     review = journal.build_review(records, periods_j, now)
     learned_view = {"state": learned, "params": [
         {"name": k, "label": lbl, "default": learn.DEFAULTS[k], "current": getattr(config, k)}

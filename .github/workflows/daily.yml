@@ -1,9 +1,17 @@
 name: daily-report
 
 on:
+  # GitHub often starts scheduled runs hours late, so each session has several slots; the first one that
+  # actually starts does the work and the later ones stop at the gate below (journal/runs.json).
+  # am: review last night, then picks from the model alone. pm: re-price with injuries, rotation,
+  # motivation and weather (adjust.py). Times in Beijing = UTC + 8.
   schedule:
-    - cron: "0 3 * * *"    # 03:00 UTC = 11:00 Beijing: review yesterday, then picks from the model alone
-    - cron: "0 11 * * *"   # 11:00 UTC = 19:00 Beijing: re-price with injuries, rotation, motivation, weather (adjust.py)
+    - cron: "17 23 * * *"  # am 07:17
+    - cron: "17 1 * * *"   # am 09:17
+    - cron: "43 2 * * *"   # am 10:43
+    - cron: "17 8 * * *"   # pm 16:17
+    - cron: "17 10 * * *"  # pm 18:17
+    - cron: "43 10 * * *"  # pm 18:43
   workflow_dispatch:
     inputs:
       session:
@@ -26,29 +34,47 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    outputs:
+      skip: ${{ steps.gate.outputs.skip }}
+    env:
+      # a scheduled run keeps its slot's session even when it starts late; manual runs choose, pushes go by the clock
+      SESSION: ${{ github.event.inputs.session || (github.event_name == 'schedule' && (contains('17 23 * * *|17 1 * * *|43 2 * * *', github.event.schedule) && 'am' || 'pm')) || '' }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main  # a queued run must start from the journal the previous run pushed, not from the commit it was queued at
           fetch-depth: 0
+      - name: Skip a slot whose session already ran today
+        id: gate
+        run: |
+          skip=false
+          if [ "${{ github.event_name }}" = schedule ]; then
+            skip=$(python3 -c "import json,datetime,os;d=(datetime.datetime.utcnow()+datetime.timedelta(hours=8)).date().isoformat();r=json.load(open('journal/runs.json')) if os.path.exists('journal/runs.json') else {};print(str(r.get(os.environ['SESSION'])==d).lower())")
+          fi
+          echo "session $SESSION, skip $skip"
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-python@v5
+        if: steps.gate.outputs.skip != 'true'
         with:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
+        if: steps.gate.outputs.skip != 'true'
       - name: Install browser for OddsHarvester
+        if: steps.gate.outputs.skip != 'true'
         run: python -m playwright install --with-deps chromium
       - run: python -m pytest -q
+        if: steps.gate.outputs.skip != 'true'
       - name: Build report
+        if: steps.gate.outputs.skip != 'true'
         run: python -m footy ${SESSION:+--session $SESSION}
         env:
           # optional repository secrets, see README
-          # a scheduled run keeps its slot even when GitHub starts it hours late; manual runs choose, pushes go by the clock
-          SESSION: ${{ github.event.inputs.session || (github.event.schedule == '0 3 * * *' && 'am') || (github.event.schedule == '0 11 * * *' && 'pm') || '' }}
           THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
           OH_PROXY_URL: ${{ secrets.ODDSPORTAL_PROXY_URL }}
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}  # optional: injuries and formations for 推荐理由
       - name: Save journal
+        if: steps.gate.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -61,11 +87,13 @@ jobs:
           done
           exit 1
       - uses: actions/upload-pages-artifact@v3
+        if: steps.gate.outputs.skip != 'true'
         with:
           path: site
 
   deploy:
     needs: build
+    if: needs.build.outputs.skip != 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
