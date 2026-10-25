@@ -90,3 +90,8 @@ def test_injuries_marked_against_last_starters():
     out = context.af_context(FakeAF(), p, {"home": {"starters": [{"name": "Harry Kane", "pos": "F"}]}})
     assert out["home"]["key_out"][0]["name"] == "Harry Kane" and out["home"]["key_out"][0]["pos"] == "F"
     assert out["away"]["missing"][0]["name"] == "B. Saka" and not out["away"]["starters_known"]
+
+
+def test_same_player_handles_missing_name():
+    assert not context.same_player(None, "Marcus Rashford")
+    assert not context.same_player("M. Rashford", None)

@@ -171,8 +171,8 @@ def pos_group(abbr: str | None) -> str | None:
     return "M" if "M" in a else None
 
 
-def _plain(name: str) -> str:
-    return unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode().lower().replace(".", " ").replace("-", " ")
+def _plain(name: str | None) -> str:
+    return unicodedata.normalize("NFKD", name or "").encode("ascii", "ignore").decode().lower().replace(".", " ").replace("-", " ")
 
 
 def same_player(af_name: str, full_name: str) -> bool:
@@ -310,7 +310,7 @@ def af_context(af: AF, p: dict, lineups: dict | None = None) -> dict:
         missing = []
         for i in inj_team:
             hit = next((x for x in xi or [] if same_player(i["player"]["name"], x["name"])), None)
-            missing.append({"name": hit["name"] if hit else i["player"]["name"], "type": i["player"].get("type"),
+            missing.append({"name": hit["name"] if hit else (i["player"].get("name") or "未知球员"), "type": i["player"].get("type"),
                             "reason": i["player"].get("reason"), "starter": bool(hit), "pos": hit and hit["pos"]})
         out[side] = {"missing": missing, "starters_known": bool(xi),
                      "key_out": [m for m in missing if m["starter"] and m["type"] == "Missing Fixture"]}
@@ -432,7 +432,11 @@ def collect(predictions: list[dict], previous: dict[str, dict], now_utc: datetim
                     c["venue"] = (comp.get("venue") or {}).get("fullName")
                     c["weather"] = weather(addr["city"], addr.get("country"), kick, geo_cache)
             if af:
-                afc = af_context(af, p, {s: c[s].get("lineup") for s in ("home", "away")})
+                try:
+                    afc = af_context(af, p, {s: c[s].get("lineup") for s in ("home", "away")})
+                except Exception as e:  # injuries are optional; never let them stop the report
+                    print(f"injuries skipped for {p['home']} v {p['away']}: {e!r}")
+                    afc = {}
                 for side in ("home", "away"):
                     if side in afc:
                         c[side]["af"] = afc[side]
