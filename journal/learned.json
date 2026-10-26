@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-20",
+ "updated": "2026-10-26",
  "params": {
   "ELO_BLEND": 0.25,
   "ZC_MARKET_SHARE": 0.9,
@@ -7,9 +7,112 @@
   "UPSET_FAV_PROB": 0.55,
   "UPSET_MIN_GAP": 0.03,
   "LONG_MIN_EDGE": 0.05,
-  "ZC_DOUBLE_MAX_P": 0.6
+  "ZC_DOUBLE_MAX_P": 0.6,
+  "CTX_WEIGHT": 1.0
  },
  "log": [
+  {
+   "date": "2026-10-26",
+   "train_rows": 1321,
+   "valid_rows": 1070,
+   "cl_rows": 13,
+   "ctx_rows": 27,
+   "checks": [
+    {
+     "param": "ELO_BLEND",
+     "objective": "logloss",
+     "current": 0.25,
+     "candidate": 0.3,
+     "train_current": -0.9776652728380686,
+     "train_candidate": -0.9776340800464243,
+     "valid_current": -0.9871030935918693,
+     "valid_candidate": -0.9869604419014891,
+     "n_valid": 1070,
+     "adopted": false
+    },
+    {
+     "param": "ZC_MARKET_SHARE",
+     "objective": "logloss",
+     "current": 0.9,
+     "candidate": 0.9,
+     "train_current": -0.9603410777699816,
+     "train_candidate": -0.9603410777699816,
+     "valid_current": -0.9723011026894359,
+     "valid_candidate": -0.9723011026894359,
+     "n_valid": 1083,
+     "adopted": false
+    },
+    {
+     "param": "MIN_EDGE",
+     "objective": "roi",
+     "current": 0.05,
+     "candidate": 0.03,
+     "train_current": -0.09580617495711835,
+     "train_candidate": -0.060386542591267064,
+     "valid_current": -0.014888613861386138,
+     "valid_candidate": -0.02292490118577078,
+     "n_valid": 1012,
+     "adopted": false
+    },
+    {
+     "param": "UPSET_FAV_PROB",
+     "objective": "roi",
+     "current": 0.55,
+     "candidate": 0.55,
+     "train_current": -0.20246212121212123,
+     "train_candidate": -0.20246212121212123,
+     "valid_current": -0.036908396946564864,
+     "valid_candidate": -0.036908396946564864,
+     "n_valid": 262,
+     "adopted": false
+    },
+    {
+     "param": "UPSET_MIN_GAP",
+     "objective": "roi",
+     "current": 0.03,
+     "candidate": 0.02,
+     "train_current": -0.20246212121212123,
+     "train_candidate": -0.15709844559585495,
+     "valid_current": -0.036908396946564864,
+     "valid_candidate": -0.10464516129032261,
+     "n_valid": 310,
+     "adopted": false
+    },
+    {
+     "param": "LONG_MIN_EDGE",
+     "objective": "roi",
+     "current": 0.05,
+     "candidate": 0.03,
+     "train_current": -0.200425101214575,
+     "train_candidate": -0.18293497363796143,
+     "valid_current": -0.05528497409326426,
+     "valid_candidate": -0.04214601769911504,
+     "n_valid": 452,
+     "adopted": false
+    },
+    {
+     "param": "ZC_DOUBLE_MAX_P",
+     "objective": "hits",
+     "current": 0.6,
+     "candidate": 0.5,
+     "train_current": 7.4646739130434785,
+     "train_candidate": 7.4646739130434785,
+     "valid_current": 7.503571428571429,
+     "valid_candidate": 7.503571428571429,
+     "n_valid": 280,
+     "adopted": false
+    },
+    {
+     "param": "CTX_WEIGHT",
+     "current": 1.0,
+     "candidate": null,
+     "valid_current": null,
+     "valid_candidate": null,
+     "adopted": false,
+     "note": "样本不足"
+    }
+   ]
+  },
   {
    "date": "2026-10-20",
    "train_rows": 1306,
