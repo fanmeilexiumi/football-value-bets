@@ -21,3 +21,10 @@ def test_render_with_evening_update_and_weekly_review(tmp_path):
                         site_dir=tmp_path, review=review)
     html = out.read_text(encoding="utf-8")
     assert "19:00 场外因素更新版" in html and "推荐有变" in html and "本周复盘" in html and "11:00 版 vs 19:00 版" in html
+
+
+def test_num_filters_blank_on_undefined():
+    import jinja2
+    from footy import report
+    u = jinja2.Undefined()
+    assert report.num(u, 3) == report.pct(u) == report.signed_pct(None) == "–"

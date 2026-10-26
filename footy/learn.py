@@ -171,7 +171,7 @@ def tune(preds: list[dict], records: list[dict], today: date, state: dict) -> di
             if s is not None and n >= need:
                 trial[v] = s
         if not trial:
-            checks.append({"param": name, "current": params[name], "candidate": None, "adopted": False, "note": "样本不足"})
+            checks.append({"param": name, "current": params[name], "candidate": None, "valid_current": None, "valid_candidate": None, "adopted": False, "note": "样本不足"})
             continue
         best = max(trial, key=trial.get)
         with _patched(**{name: params[name]}):

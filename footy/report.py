@@ -6,6 +6,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+import jinja2
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from . import config
@@ -13,16 +14,20 @@ from . import config
 MARKET_LABEL = {"1X2": "胜平负", "O/U 2.5": "大小球 2.5"}
 
 
+def _blank(v) -> bool:
+    return v is None or isinstance(v, jinja2.Undefined)
+
+
 def pct(v, digits=1):
-    return "–" if v is None else f"{v * 100:.{digits}f}%"
+    return "–" if _blank(v) else f"{v * 100:.{digits}f}%"
 
 
 def signed_pct(v, digits=1):
-    return "–" if v is None else f"{v * 100:+.{digits}f}%"
+    return "–" if _blank(v) else f"{v * 100:+.{digits}f}%"
 
 
 def num(v, digits=2):
-    return "–" if v is None else f"{v:.{digits}f}"
+    return "–" if _blank(v) else f"{v:.{digits}f}"
 
 
 def bankroll_svg(curve: list[list], width: int = 720, height: int = 220) -> str:
