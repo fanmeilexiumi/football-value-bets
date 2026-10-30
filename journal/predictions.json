@@ -5530,7 +5530,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 5,
+   "ag": 1,
+   "source": "football-data"
+  },
   "versions": {
    "am": {
     "model": {
@@ -5645,7 +5649,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 2,
+   "ag": 2,
+   "source": "football-data"
+  },
   "versions": {
    "am": {
     "model": {
