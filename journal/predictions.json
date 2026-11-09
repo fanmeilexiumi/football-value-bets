@@ -14366,5 +14366,73 @@
     ]
    }
   }
+ },
+ {
+  "id": "SP1|2026-11-21|Ath Bilbao|Espanol",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-11-20",
+  "home": "Ath Bilbao",
+  "away": "Espanol",
+  "bj_date": "2026-11-21",
+  "bj_time": "04:00",
+  "day": "2026-11-20",
+  "model": {
+   "H": 0.5152,
+   "D": 0.2789,
+   "A": 0.2059,
+   "O25": 0.3889
+  },
+  "market": {
+   "H": 0.6662,
+   "D": 0.2063,
+   "A": 0.1276,
+   "O25": 0.5284,
+   "U25": 0.4716
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.6,
+    "edge": 0.2829,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "context": null,
+  "model_raw": {
+   "H": 0.5152,
+   "D": 0.2789,
+   "A": 0.2059,
+   "O25": 0.3889
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.5152,
+     "D": 0.2789,
+     "A": 0.2059,
+     "O25": 0.3889
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 4.6,
+      "edge": 0.2829,
+      "tags": [
+       "冷门",
+       "高赔"
+      ]
+     }
+    ]
+   }
+  }
  }
 ]
