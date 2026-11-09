@@ -11504,7 +11504,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 0,
+   "ag": 2,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -11631,7 +11635,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 2,
+   "ag": 0,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -11757,7 +11765,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 3,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -11890,7 +11902,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 2,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -12023,7 +12039,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 0,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -12176,7 +12196,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 0,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -12328,7 +12352,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 4,
+   "ag": 4,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -12461,7 +12489,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 0,
+   "ag": 0,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -12600,7 +12632,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 2,
+   "ag": 0,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -12765,7 +12801,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 2,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -13690,7 +13730,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 1,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -13768,7 +13812,11 @@
   },
   "ctx_adj": null,
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 2,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -13836,7 +13884,11 @@
   },
   "ctx_adj": null,
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 0,
+   "ag": 1,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -13931,7 +13983,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 2,
+   "ag": 0,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -14054,7 +14110,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 2,
+   "ag": 2,
+   "source": "The Odds API"
+  },
   "versions": {
    "pm": {
     "model": {
