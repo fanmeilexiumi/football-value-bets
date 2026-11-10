@@ -14379,8 +14379,8 @@
   "day": "2026-11-20",
   "model": {
    "H": 0.5152,
-   "D": 0.2789,
-   "A": 0.2059,
+   "D": 0.2786,
+   "A": 0.2061,
    "O25": 0.3889
   },
   "market": {
@@ -14395,7 +14395,7 @@
    {
     "selection": "D",
     "odds": 4.6,
-    "edge": 0.2829,
+    "edge": 0.2817,
     "tags": [
      "冷门",
      "高赔"
@@ -14405,8 +14405,8 @@
   "context": null,
   "model_raw": {
    "H": 0.5152,
-   "D": 0.2789,
-   "A": 0.2059,
+   "D": 0.2786,
+   "A": 0.2061,
    "O25": 0.3889
   },
   "ctx_adj": null,
@@ -14416,8 +14416,8 @@
    "pm": {
     "model": {
      "H": 0.5152,
-     "D": 0.2789,
-     "A": 0.2059,
+     "D": 0.2786,
+     "A": 0.2061,
      "O25": 0.3889
     },
     "call": "H",
@@ -14425,7 +14425,7 @@
      {
       "selection": "D",
       "odds": 4.6,
-      "edge": 0.2829,
+      "edge": 0.2817,
       "tags": [
        "冷门",
        "高赔"
@@ -14446,6 +14446,1155 @@
       "selection": "D",
       "odds": 4.6,
       "edge": 0.2829,
+      "tags": [
+       "冷门",
+       "高赔"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "E0|2026-11-21|Man City|Fulham",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-11-21",
+  "home": "Man City",
+  "away": "Fulham",
+  "bj_date": "2026-11-21",
+  "bj_time": "20:30",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.6626,
+   "D": 0.2081,
+   "A": 0.1293,
+   "O25": 0.5559
+  },
+  "market": {
+   "H": 0.6918,
+   "D": 0.1777,
+   "A": 0.1305,
+   "O25": 0.6533,
+   "U25": 0.3467
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 5.2,
+    "edge": 0.0823,
+    "tags": [
+     "价值",
+     "冷门",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 2.66,
+    "edge": 0.1813,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "context": null,
+  "model_raw": {
+   "H": 0.6626,
+   "D": 0.2081,
+   "A": 0.1293,
+   "O25": 0.5559
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.6626,
+     "D": 0.2081,
+     "A": 0.1293,
+     "O25": 0.5559
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 5.2,
+      "edge": 0.0823,
+      "tags": [
+       "价值",
+       "冷门",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "U25",
+      "odds": 2.66,
+      "edge": 0.1813,
+      "tags": [
+       "价值"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "SP1|2026-11-21|Alaves|Deportivo La Coruña",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-11-21",
+  "home": "Alaves",
+  "away": "Deportivo La Coruña",
+  "bj_date": "2026-11-21",
+  "bj_time": "21:00",
+  "day": "2026-11-21",
+  "model": null,
+  "market": {
+   "H": 0.4673,
+   "D": 0.2778,
+   "A": 0.2548,
+   "O25": 0.4291,
+   "U25": 0.5709
+  },
+  "call": "H",
+  "picks": [],
+  "context": null,
+  "model_raw": null,
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": null,
+    "call": "H",
+    "picks": []
+   }
+  }
+ },
+ {
+  "id": "I1|2026-11-21|Como|Cagliari",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-11-21",
+  "home": "Como",
+  "away": "Cagliari",
+  "bj_date": "2026-11-21",
+  "bj_time": "22:00",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.6493,
+   "D": 0.2172,
+   "A": 0.1335,
+   "O25": 0.4596
+  },
+  "market": {
+   "H": 0.761,
+   "D": 0.1567,
+   "A": 0.0823,
+   "O25": 0.6233,
+   "U25": 0.3767
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 5.9,
+    "edge": 0.2813,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 10.0,
+    "edge": 0.3351,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "context": null,
+  "model_raw": {
+   "H": 0.6493,
+   "D": 0.2172,
+   "A": 0.1335,
+   "O25": 0.4596
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.6493,
+     "D": 0.2172,
+     "A": 0.1335,
+     "O25": 0.4596
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 5.9,
+      "edge": 0.2813,
+      "tags": [
+       "冷门",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "A",
+      "odds": 10.0,
+      "edge": 0.3351,
+      "tags": [
+       "冷门",
+       "高赔"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "I1|2026-11-21|Lazio|Lecce",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-11-21",
+  "home": "Lazio",
+  "away": "Lecce",
+  "bj_date": "2026-11-21",
+  "bj_time": "22:00",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.659,
+   "D": 0.2175,
+   "A": 0.1236,
+   "O25": 0.4269
+  },
+  "market": {
+   "H": 0.7321,
+   "D": 0.1712,
+   "A": 0.0967,
+   "O25": 0.6082,
+   "U25": 0.3918
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 5.5,
+    "edge": 0.196,
+    "tags": [
+     "价值",
+     "冷门",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 9.0,
+    "edge": 0.1124,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "context": null,
+  "model_raw": {
+   "H": 0.659,
+   "D": 0.2175,
+   "A": 0.1236,
+   "O25": 0.4269
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.659,
+     "D": 0.2175,
+     "A": 0.1236,
+     "O25": 0.4269
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 5.5,
+      "edge": 0.196,
+      "tags": [
+       "价值",
+       "冷门",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "A",
+      "odds": 9.0,
+      "edge": 0.1124,
+      "tags": [
+       "高赔"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "E0|2026-11-21|Aston Villa|Sunderland",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-11-21",
+  "home": "Aston Villa",
+  "away": "Sunderland",
+  "bj_date": "2026-11-21",
+  "bj_time": "23:00",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.5384,
+   "D": 0.2605,
+   "A": 0.201,
+   "O25": 0.4799
+  },
+  "market": {
+   "H": 0.5633,
+   "D": 0.236,
+   "A": 0.2006,
+   "O25": 0.5465,
+   "U25": 0.4535
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.16,
+    "edge": 0.0838,
+    "tags": [
+     "价值",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 2.15,
+    "edge": 0.1183,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "context": null,
+  "model_raw": {
+   "H": 0.5384,
+   "D": 0.2605,
+   "A": 0.201,
+   "O25": 0.4799
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.5384,
+     "D": 0.2605,
+     "A": 0.201,
+     "O25": 0.4799
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 4.16,
+      "edge": 0.0838,
+      "tags": [
+       "价值",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "U25",
+      "odds": 2.15,
+      "edge": 0.1183,
+      "tags": [
+       "价值"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "E0|2026-11-21|Bournemouth|Nott'm Forest",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-11-21",
+  "home": "Bournemouth",
+  "away": "Nott'm Forest",
+  "bj_date": "2026-11-21",
+  "bj_time": "23:00",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.4875,
+   "D": 0.2685,
+   "A": 0.244,
+   "O25": 0.5008
+  },
+  "market": {
+   "H": 0.4869,
+   "D": 0.2582,
+   "A": 0.2549,
+   "O25": 0.5227,
+   "U25": 0.4773
+  },
+  "call": "H",
+  "picks": [],
+  "context": null,
+  "model_raw": {
+   "H": 0.4875,
+   "D": 0.2685,
+   "A": 0.244,
+   "O25": 0.5008
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.4875,
+     "D": 0.2685,
+     "A": 0.244,
+     "O25": 0.5008
+    },
+    "call": "H",
+    "picks": []
+   }
+  }
+ },
+ {
+  "id": "E0|2026-11-21|Chelsea|Leeds",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-11-21",
+  "home": "Chelsea",
+  "away": "Leeds",
+  "bj_date": "2026-11-21",
+  "bj_time": "23:00",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.4766,
+   "D": 0.2703,
+   "A": 0.2531,
+   "O25": 0.5123
+  },
+  "market": {
+   "H": 0.5284,
+   "D": 0.2445,
+   "A": 0.227,
+   "O25": 0.5506,
+   "U25": 0.4494
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.01,
+    "edge": 0.0839,
+    "tags": [
+     "价值",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 4.4,
+    "edge": 0.1137,
+    "tags": [
+     "价值",
+     "高赔"
+    ]
+   }
+  ],
+  "context": null,
+  "model_raw": {
+   "H": 0.4766,
+   "D": 0.2703,
+   "A": 0.2531,
+   "O25": 0.5123
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.4766,
+     "D": 0.2703,
+     "A": 0.2531,
+     "O25": 0.5123
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 4.01,
+      "edge": 0.0839,
+      "tags": [
+       "价值",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "A",
+      "odds": 4.4,
+      "edge": 0.1137,
+      "tags": [
+       "价值",
+       "高赔"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "E0|2026-11-21|Coventry|Crystal Palace",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-11-21",
+  "home": "Coventry",
+  "away": "Crystal Palace",
+  "bj_date": "2026-11-21",
+  "bj_time": "23:00",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.3745,
+   "D": 0.2735,
+   "A": 0.352,
+   "O25": 0.5493
+  },
+  "market": {
+   "H": 0.4059,
+   "D": 0.2592,
+   "A": 0.3349,
+   "O25": 0.5699,
+   "U25": 0.4301
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 3.8,
+    "edge": 0.0393,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "context": null,
+  "model_raw": {
+   "H": 0.3745,
+   "D": 0.2735,
+   "A": 0.352,
+   "O25": 0.5493
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.3745,
+     "D": 0.2735,
+     "A": 0.352,
+     "O25": 0.5493
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 3.8,
+      "edge": 0.0393,
+      "tags": [
+       "高赔"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "E0|2026-11-21|Tottenham|Ipswich",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-11-21",
+  "home": "Tottenham",
+  "away": "Ipswich",
+  "bj_date": "2026-11-21",
+  "bj_time": "23:00",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.5875,
+   "D": 0.224,
+   "A": 0.1886,
+   "O25": 0.656
+  },
+  "market": {
+   "H": 0.6392,
+   "D": 0.2046,
+   "A": 0.1562,
+   "O25": 0.6091,
+   "U25": 0.3909
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "O25",
+    "odds": 1.66,
+    "edge": 0.089,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "D",
+    "odds": 4.62,
+    "edge": 0.0348,
+    "tags": [
+     "高赔"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 5.9,
+    "edge": 0.1125,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "context": null,
+  "model_raw": {
+   "H": 0.5875,
+   "D": 0.224,
+   "A": 0.1886,
+   "O25": 0.656
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.5875,
+     "D": 0.224,
+     "A": 0.1886,
+     "O25": 0.656
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "O25",
+      "odds": 1.66,
+      "edge": 0.089,
+      "tags": [
+       "价值"
+      ]
+     },
+     {
+      "selection": "D",
+      "odds": 4.62,
+      "edge": 0.0348,
+      "tags": [
+       "高赔"
+      ]
+     },
+     {
+      "selection": "A",
+      "odds": 5.9,
+      "edge": 0.1125,
+      "tags": [
+       "冷门",
+       "高赔"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "SP1|2026-11-21|Vallecano|Valencia",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-11-21",
+  "home": "Vallecano",
+  "away": "Valencia",
+  "bj_date": "2026-11-21",
+  "bj_time": "23:15",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.4521,
+   "D": 0.2951,
+   "A": 0.2528,
+   "O25": 0.3739
+  },
+  "market": {
+   "H": 0.4973,
+   "D": 0.268,
+   "A": 0.2347,
+   "O25": 0.4615,
+   "U25": 0.5385
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 3.6,
+    "edge": 0.0623,
+    "tags": [
+     "价值",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 1.84,
+    "edge": 0.1521,
+    "tags": [
+     "价值"
+    ]
+   }
+  ],
+  "context": null,
+  "model_raw": {
+   "H": 0.4521,
+   "D": 0.2951,
+   "A": 0.2528,
+   "O25": 0.3739
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.4521,
+     "D": 0.2951,
+     "A": 0.2528,
+     "O25": 0.3739
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 3.6,
+      "edge": 0.0623,
+      "tags": [
+       "价值",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "U25",
+      "odds": 1.84,
+      "edge": 0.1521,
+      "tags": [
+       "价值"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "I1|2026-11-22|Parma|Roma",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-11-21",
+  "home": "Parma",
+  "away": "Roma",
+  "bj_date": "2026-11-22",
+  "bj_time": "01:00",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.1303,
+   "D": 0.2247,
+   "A": 0.645,
+   "O25": 0.4331
+  },
+  "market": {
+   "H": 0.0833,
+   "D": 0.1602,
+   "A": 0.7565,
+   "O25": 0.6109,
+   "U25": 0.3891
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 5.75,
+    "edge": 0.2921,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "context": null,
+  "model_raw": {
+   "H": 0.1303,
+   "D": 0.2247,
+   "A": 0.645,
+   "O25": 0.4331
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.1303,
+     "D": 0.2247,
+     "A": 0.645,
+     "O25": 0.4331
+    },
+    "call": "A",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 5.75,
+      "edge": 0.2921,
+      "tags": [
+       "冷门",
+       "高赔"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "E0|2026-11-22|Newcastle|Arsenal",
+  "league": "E0",
+  "league_name": "英超",
+  "date": "2026-11-21",
+  "home": "Newcastle",
+  "away": "Arsenal",
+  "bj_date": "2026-11-22",
+  "bj_time": "01:30",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.1728,
+   "D": 0.248,
+   "A": 0.5792,
+   "O25": 0.4827
+  },
+  "market": {
+   "H": 0.1591,
+   "D": 0.2167,
+   "A": 0.6242,
+   "O25": 0.5673,
+   "U25": 0.4327
+  },
+  "call": "A",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.42,
+    "edge": 0.0961,
+    "tags": [
+     "价值",
+     "冷门",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 2.23,
+    "edge": 0.1535,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "H",
+    "odds": 6.0,
+    "edge": 0.0369,
+    "tags": [
+     "高赔"
+    ]
+   }
+  ],
+  "context": null,
+  "model_raw": {
+   "H": 0.1728,
+   "D": 0.248,
+   "A": 0.5792,
+   "O25": 0.4827
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.1728,
+     "D": 0.248,
+     "A": 0.5792,
+     "O25": 0.4827
+    },
+    "call": "A",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 4.42,
+      "edge": 0.0961,
+      "tags": [
+       "价值",
+       "冷门",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "U25",
+      "odds": 2.23,
+      "edge": 0.1535,
+      "tags": [
+       "价值"
+      ]
+     },
+     {
+      "selection": "H",
+      "odds": 6.0,
+      "edge": 0.0369,
+      "tags": [
+       "高赔"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "SP1|2026-11-22|Sevilla|Betis",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-11-21",
+  "home": "Sevilla",
+  "away": "Betis",
+  "bj_date": "2026-11-22",
+  "bj_time": "01:30",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.3112,
+   "D": 0.2666,
+   "A": 0.4222,
+   "O25": 0.5418
+  },
+  "market": {
+   "H": 0.3207,
+   "D": 0.2637,
+   "A": 0.4156,
+   "O25": 0.5466,
+   "U25": 0.4534
+  },
+  "call": "A",
+  "picks": [],
+  "context": null,
+  "model_raw": {
+   "H": 0.3112,
+   "D": 0.2666,
+   "A": 0.4222,
+   "O25": 0.5418
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.3112,
+     "D": 0.2666,
+     "A": 0.4222,
+     "O25": 0.5418
+    },
+    "call": "A",
+    "picks": []
+   }
+  }
+ },
+ {
+  "id": "I1|2026-11-22|Napoli|Torino",
+  "league": "I1",
+  "league_name": "意甲",
+  "date": "2026-11-21",
+  "home": "Napoli",
+  "away": "Torino",
+  "bj_date": "2026-11-22",
+  "bj_time": "03:45",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.6067,
+   "D": 0.2307,
+   "A": 0.1626,
+   "O25": 0.4774
+  },
+  "market": {
+   "H": 0.6722,
+   "D": 0.1972,
+   "A": 0.1306,
+   "O25": 0.5708,
+   "U25": 0.4292
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 4.7,
+    "edge": 0.0844,
+    "tags": [
+     "价值",
+     "冷门",
+     "高赔"
+    ]
+   },
+   {
+    "selection": "U25",
+    "odds": 2.22,
+    "edge": 0.1602,
+    "tags": [
+     "价值"
+    ]
+   },
+   {
+    "selection": "A",
+    "odds": 6.8,
+    "edge": 0.1054,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "context": null,
+  "model_raw": {
+   "H": 0.6067,
+   "D": 0.2307,
+   "A": 0.1626,
+   "O25": 0.4774
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.6067,
+     "D": 0.2307,
+     "A": 0.1626,
+     "O25": 0.4774
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 4.7,
+      "edge": 0.0844,
+      "tags": [
+       "价值",
+       "冷门",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "U25",
+      "odds": 2.22,
+      "edge": 0.1602,
+      "tags": [
+       "价值"
+      ]
+     },
+     {
+      "selection": "A",
+      "odds": 6.8,
+      "edge": 0.1054,
+      "tags": [
+       "冷门",
+       "高赔"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "SP1|2026-11-22|Real Madrid|Celta",
+  "league": "SP1",
+  "league_name": "西甲",
+  "date": "2026-11-21",
+  "home": "Real Madrid",
+  "away": "Celta",
+  "bj_date": "2026-11-22",
+  "bj_time": "04:00",
+  "day": "2026-11-21",
+  "model": {
+   "H": 0.7329,
+   "D": 0.1728,
+   "A": 0.0943,
+   "O25": 0.5793
+  },
+  "market": {
+   "H": 0.8274,
+   "D": 0.1216,
+   "A": 0.051,
+   "O25": 0.6941,
+   "U25": 0.3059
+  },
+  "call": "H",
+  "picks": [
+   {
+    "selection": "D",
+    "odds": 7.5,
+    "edge": 0.296,
+    "tags": [
+     "冷门",
+     "高赔"
+    ]
+   }
+  ],
+  "context": null,
+  "model_raw": {
+   "H": 0.7329,
+   "D": 0.1728,
+   "A": 0.0943,
+   "O25": 0.5793
+  },
+  "ctx_adj": null,
+  "session": "pm",
+  "result": null,
+  "versions": {
+   "pm": {
+    "model": {
+     "H": 0.7329,
+     "D": 0.1728,
+     "A": 0.0943,
+     "O25": 0.5793
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 7.5,
+      "edge": 0.296,
       "tags": [
        "冷门",
        "高赔"
