@@ -14410,7 +14410,7 @@
    "O25": 0.3889
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
@@ -14436,8 +14436,8 @@
    "am": {
     "model": {
      "H": 0.5152,
-     "D": 0.2789,
-     "A": 0.2059,
+     "D": 0.2786,
+     "A": 0.2061,
      "O25": 0.3889
     },
     "call": "H",
@@ -14445,7 +14445,7 @@
      {
       "selection": "D",
       "odds": 4.6,
-      "edge": 0.2829,
+      "edge": 0.2817,
       "tags": [
        "冷门",
        "高赔"
@@ -14507,10 +14507,39 @@
    "O25": 0.5559
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.6626,
+     "D": 0.2081,
+     "A": 0.1293,
+     "O25": 0.5559
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 5.2,
+      "edge": 0.0823,
+      "tags": [
+       "价值",
+       "冷门",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "U25",
+      "odds": 2.66,
+      "edge": 0.1813,
+      "tags": [
+       "价值"
+      ]
+     }
+    ]
+   },
+   "am": {
     "model": {
      "H": 0.6626,
      "D": 0.2081,
@@ -14564,10 +14593,15 @@
   "context": null,
   "model_raw": null,
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": null,
+    "call": "H",
+    "picks": []
+   },
+   "am": {
     "model": null,
     "call": "H",
     "picks": []
@@ -14591,9 +14625,9 @@
    "O25": 0.4596
   },
   "market": {
-   "H": 0.761,
+   "H": 0.7607,
    "D": 0.1567,
-   "A": 0.0823,
+   "A": 0.0825,
    "O25": 0.6233,
    "U25": 0.3767
   },
@@ -14626,10 +14660,39 @@
    "O25": 0.4596
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.6493,
+     "D": 0.2172,
+     "A": 0.1335,
+     "O25": 0.4596
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 5.9,
+      "edge": 0.2813,
+      "tags": [
+       "冷门",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "A",
+      "odds": 10.0,
+      "edge": 0.3351,
+      "tags": [
+       "冷门",
+       "高赔"
+      ]
+     }
+    ]
+   },
+   "am": {
     "model": {
      "H": 0.6493,
      "D": 0.2172,
@@ -14712,10 +14775,39 @@
    "O25": 0.4269
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.659,
+     "D": 0.2175,
+     "A": 0.1236,
+     "O25": 0.4269
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 5.5,
+      "edge": 0.196,
+      "tags": [
+       "价值",
+       "冷门",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "A",
+      "odds": 9.0,
+      "edge": 0.1124,
+      "tags": [
+       "高赔"
+      ]
+     }
+    ]
+   },
+   "am": {
     "model": {
      "H": 0.659,
      "D": 0.2175,
@@ -14797,10 +14889,38 @@
    "O25": 0.4799
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.5384,
+     "D": 0.2605,
+     "A": 0.201,
+     "O25": 0.4799
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 4.16,
+      "edge": 0.0838,
+      "tags": [
+       "价值",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "U25",
+      "odds": 2.15,
+      "edge": 0.1183,
+      "tags": [
+       "价值"
+      ]
+     }
+    ]
+   },
+   "am": {
     "model": {
      "H": 0.5384,
      "D": 0.2605,
@@ -14863,10 +14983,20 @@
    "O25": 0.5008
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.4875,
+     "D": 0.2685,
+     "A": 0.244,
+     "O25": 0.5008
+    },
+    "call": "H",
+    "picks": []
+   },
+   "am": {
     "model": {
      "H": 0.4875,
      "D": 0.2685,
@@ -14930,10 +15060,39 @@
    "O25": 0.5123
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.4766,
+     "D": 0.2703,
+     "A": 0.2531,
+     "O25": 0.5123
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 4.01,
+      "edge": 0.0839,
+      "tags": [
+       "价值",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "A",
+      "odds": 4.4,
+      "edge": 0.1137,
+      "tags": [
+       "价值",
+       "高赔"
+      ]
+     }
+    ]
+   },
+   "am": {
     "model": {
      "H": 0.4766,
      "D": 0.2703,
@@ -14981,8 +15140,8 @@
    "O25": 0.5493
   },
   "market": {
-   "H": 0.4059,
-   "D": 0.2592,
+   "H": 0.4063,
+   "D": 0.2588,
    "A": 0.3349,
    "O25": 0.5699,
    "U25": 0.4301
@@ -15006,10 +15165,29 @@
    "O25": 0.5493
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.3745,
+     "D": 0.2735,
+     "A": 0.352,
+     "O25": 0.5493
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 3.8,
+      "edge": 0.0393,
+      "tags": [
+       "高赔"
+      ]
+     }
+    ]
+   },
+   "am": {
     "model": {
      "H": 0.3745,
      "D": 0.2735,
@@ -15050,8 +15228,8 @@
    "H": 0.6392,
    "D": 0.2046,
    "A": 0.1562,
-   "O25": 0.6091,
-   "U25": 0.3909
+   "O25": 0.6082,
+   "U25": 0.3918
   },
   "call": "H",
   "picks": [
@@ -15089,10 +15267,46 @@
    "O25": 0.656
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.5875,
+     "D": 0.224,
+     "A": 0.1886,
+     "O25": 0.656
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "O25",
+      "odds": 1.66,
+      "edge": 0.089,
+      "tags": [
+       "价值"
+      ]
+     },
+     {
+      "selection": "D",
+      "odds": 4.62,
+      "edge": 0.0348,
+      "tags": [
+       "高赔"
+      ]
+     },
+     {
+      "selection": "A",
+      "odds": 5.9,
+      "edge": 0.1125,
+      "tags": [
+       "冷门",
+       "高赔"
+      ]
+     }
+    ]
+   },
+   "am": {
     "model": {
      "H": 0.5875,
      "D": 0.224,
@@ -15181,10 +15395,38 @@
    "O25": 0.3739
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.4521,
+     "D": 0.2951,
+     "A": 0.2528,
+     "O25": 0.3739
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 3.6,
+      "edge": 0.0623,
+      "tags": [
+       "价值",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "U25",
+      "odds": 1.84,
+      "edge": 0.1521,
+      "tags": [
+       "价值"
+      ]
+     }
+    ]
+   },
+   "am": {
     "model": {
      "H": 0.4521,
      "D": 0.2951,
@@ -15257,10 +15499,30 @@
    "O25": 0.4331
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.1303,
+     "D": 0.2247,
+     "A": 0.645,
+     "O25": 0.4331
+    },
+    "call": "A",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 5.75,
+      "edge": 0.2921,
+      "tags": [
+       "冷门",
+       "高赔"
+      ]
+     }
+    ]
+   },
+   "am": {
     "model": {
      "H": 0.1303,
      "D": 0.2247,
@@ -15342,10 +15604,47 @@
    "O25": 0.4827
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.1728,
+     "D": 0.248,
+     "A": 0.5792,
+     "O25": 0.4827
+    },
+    "call": "A",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 4.42,
+      "edge": 0.0961,
+      "tags": [
+       "价值",
+       "冷门",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "U25",
+      "odds": 2.23,
+      "edge": 0.1535,
+      "tags": [
+       "价值"
+      ]
+     },
+     {
+      "selection": "H",
+      "odds": 6.0,
+      "edge": 0.0369,
+      "tags": [
+       "高赔"
+      ]
+     }
+    ]
+   },
+   "am": {
     "model": {
      "H": 0.1728,
      "D": 0.248,
@@ -15402,10 +15701,10 @@
   },
   "market": {
    "H": 0.3207,
-   "D": 0.2637,
-   "A": 0.4156,
-   "O25": 0.5466,
-   "U25": 0.4534
+   "D": 0.2642,
+   "A": 0.4151,
+   "O25": 0.5465,
+   "U25": 0.4535
   },
   "call": "A",
   "picks": [],
@@ -15417,10 +15716,20 @@
    "O25": 0.5418
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.3112,
+     "D": 0.2666,
+     "A": 0.4222,
+     "O25": 0.5418
+    },
+    "call": "A",
+    "picks": []
+   },
+   "am": {
     "model": {
      "H": 0.3112,
      "D": 0.2666,
@@ -15493,10 +15802,48 @@
    "O25": 0.4774
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.6067,
+     "D": 0.2307,
+     "A": 0.1626,
+     "O25": 0.4774
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 4.7,
+      "edge": 0.0844,
+      "tags": [
+       "价值",
+       "冷门",
+       "高赔"
+      ]
+     },
+     {
+      "selection": "U25",
+      "odds": 2.22,
+      "edge": 0.1602,
+      "tags": [
+       "价值"
+      ]
+     },
+     {
+      "selection": "A",
+      "odds": 6.8,
+      "edge": 0.1054,
+      "tags": [
+       "冷门",
+       "高赔"
+      ]
+     }
+    ]
+   },
+   "am": {
     "model": {
      "H": 0.6067,
      "D": 0.2307,
@@ -15553,9 +15900,9 @@
    "O25": 0.5793
   },
   "market": {
-   "H": 0.8274,
-   "D": 0.1216,
-   "A": 0.051,
+   "H": 0.8275,
+   "D": 0.1214,
+   "A": 0.0511,
    "O25": 0.6941,
    "U25": 0.3059
   },
@@ -15579,10 +15926,30 @@
    "O25": 0.5793
   },
   "ctx_adj": null,
-  "session": "pm",
+  "session": "am",
   "result": null,
   "versions": {
    "pm": {
+    "model": {
+     "H": 0.7329,
+     "D": 0.1728,
+     "A": 0.0943,
+     "O25": 0.5793
+    },
+    "call": "H",
+    "picks": [
+     {
+      "selection": "D",
+      "odds": 7.5,
+      "edge": 0.296,
+      "tags": [
+       "冷门",
+       "高赔"
+      ]
+     }
+    ]
+   },
+   "am": {
     "model": {
      "H": 0.7329,
      "D": 0.1728,
