@@ -14438,7 +14438,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 0,
+   "ag": 1,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -14580,7 +14584,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 1,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -14772,7 +14780,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 2,
+   "ag": 0,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -14899,7 +14911,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 3,
+   "ag": 0,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -15018,7 +15034,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 0,
+   "ag": 0,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -15104,7 +15124,11 @@
   },
   "ctx_adj": null,
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 2,
+   "ag": 0,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -15185,7 +15209,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 4,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -15262,7 +15290,11 @@
   },
   "ctx_adj": null,
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 3,
+   "ag": 2,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -15356,7 +15388,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 2,
+   "ag": 0,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -15503,7 +15539,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 0,
+   "ag": 1,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -15650,7 +15690,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 5,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -15797,7 +15841,11 @@
    "O25": -0.02
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 2,
+   "ag": 2,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -15900,7 +15948,11 @@
   },
   "ctx_adj": null,
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 1,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -16014,7 +16066,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 0,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -16127,7 +16183,11 @@
   },
   "ctx_adj": null,
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 2,
+   "ag": 1,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -16210,7 +16270,11 @@
    "O25": -0.02
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 4,
+   "ag": 0,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -16313,7 +16377,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 3,
+   "ag": 2,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -16391,7 +16459,11 @@
   },
   "ctx_adj": null,
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 2,
+   "ag": 0,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -16473,7 +16545,11 @@
    "O25": -0.02
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 1,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -16550,7 +16626,11 @@
   },
   "ctx_adj": null,
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 0,
+   "ag": 2,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -16646,7 +16726,11 @@
   },
   "ctx_adj": null,
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 4,
+   "ag": 0,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -16744,7 +16828,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 5,
+   "ag": 1,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -16863,7 +16951,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 1,
+   "ag": 0,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -16997,7 +17089,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 4,
+   "ag": 4,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -17168,7 +17264,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 0,
+   "ag": 3,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -21466,7 +21566,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 3,
+   "ag": 1,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
@@ -21595,7 +21699,11 @@
    "O25": 0.0
   },
   "session": "pm",
-  "result": null,
+  "result": {
+   "hg": 3,
+   "ag": 2,
+   "source": "football-data"
+  },
   "versions": {
    "pm": {
     "model": {
